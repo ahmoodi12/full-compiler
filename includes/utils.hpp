@@ -1,19 +1,25 @@
+// utils.hpp
+
 #pragma once
 
 #include "combined_include.hpp"
+#include "json.hpp"
+#include "ansi_colors.hpp"
+
+using json = nlohmann::json;
 
 namespace utils {
 
 void error(
-    std::string prompt,
-    std::string filename = "",
+    string prompt,
+    string filename = "",
     bool show_warnings = false,
     bool is_warning = false,
     bool fatal = true
 );
 
-filesystem::path get_file_path(std::string filename);
-std::string read_file(const filesystem::path& path);
+filesystem::path get_file_path(string filename);
+string read_file(const filesystem::path& path);
 
 class JsonValidator {
 public:
@@ -25,26 +31,35 @@ public:
         Object
     };
 
-    struct ObjectSchema {
-        std::string name;
+    struct Schema {
+        string name;
         Type type;
-
-        std::vector<ObjectSchema> fields; // recursive children
+        vector<Schema> fields;
         bool optional = false;
     };
 
-    struct Schema {
-        std::string root_name; // empty = whole JSON is root
-        ObjectSchema root;
-    };
+    const Schema& schema;
+    
+    JsonValidator(const Schema& schema) : schema(schema) {}
 
-    static void validate(const json& j, const Schema& schema);
+    bool validate(const json& j);
 
 private:
-    static void validate_node(
+    vector<string> find_patterns_in_json(
+        const string& pattern,
+        const json& j
+    );
+
+    bool validate_node(
         const json& node,
-        const ObjectSchema& schema,
-        const std::string& path
+        const Schema& schema,
+        const string& path
+    );
+
+    bool validate_children(
+        const json& node,
+        const Schema& schema,
+        const string& path
     );
 };
 

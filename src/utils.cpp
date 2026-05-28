@@ -1,11 +1,9 @@
-#include "../includes/utils.hpp"
-#include "../includes/combined_include.hpp"
-#include "../includes/ansi_colors.hpp"
-#include "../includes/json.hpp"
+// utils.cpp
 
-using json = nlohmann::json;
+#include "../includes/utils.hpp"
 
 namespace utils {
+
 void error(
     string prompt,
     string filename,
@@ -18,21 +16,24 @@ void error(
     if (is_warning) {
         cerr << ansiColors::yellow << "Warning";
     } else {
-        string color = "\033[0;33m";   // orange-ish
-        if (fatal) color = "\033[1;31m";    // red
+        string color = "\033[0;33m";
+
+        if (fatal) color = "\033[1;31m";
 
         cerr << color << "Error";
     }
 
     if (!filename.empty()) {
         cerr << ansiColors::reset
-                  << " in file '" << ansiColors::yellow << filename << "'";
+             << " in file '" << ansiColors::yellow
+             << filename << "'";
     }
 
     cerr << ":\n";
+
     cerr << ansiColors::bright_blue
-              << ">> " << prompt << " <<\n\n"
-              << ansiColors::reset;
+         << ">> " << prompt << " <<\n\n"
+         << ansiColors::reset;
 
     if (!is_warning && fatal) {
         exit(1);
@@ -66,87 +67,161 @@ string read_file(const filesystem::path& path) {
     );
 }
 
+vector<string> JsonValidator::find_patterns_in_json(
+    const string& pattern,
+    const json& j
+) {
+    vector<string> matches;
 
-static string join_path(const string& a, const string& b) {
-    return a.empty() ? b : a + "." + b;
-}
+    regex r(pattern);
 
-string find_pattern_in_json(string& pattern, json& j) {
     for (auto& [key, value] : j.items()) {
-        smatch m;
-        if (regex_match(key, m, regex(pattern))) {
-            return key;
+        if (regex_match(key, r)) {
+            matches.push_back(key);
         }
     }
-}
 
-void JsonValidator::validate(const json& j, const Schema& schema) {
-
-    if (!schema.root_name.empty() && !j.contains(schema.root_name)) {
-        utils::error("Missing root: " + schema.root_name);
-    }
-
-    const json& root = schema.root_name.empty() ? j : j.at(schema.root_name);
-
-    for (const auto& item : (root.is_array() ? root : json::array({root}))) {
-        validate_node(item, schema.root, schema.root_name);
-    }
+    return matches;
 }
 
 
-void JsonValidator::validate_node(
+bool JsonValidator::validate_children(    
     const json& node,
-    const ObjectSchema& schema,
+    const JsonValidator::Schema& schema,
+    const string& path
+    ) {
+    for (const auto& child : schema.fields) {
+
+        vector<string> matches =
+            find_patterns_in_json(child.name, node);
+
+        if (matches.empty()) {
+
+            if (child.optional) {
+                continue;
+            }
+
+            utils::error(
+                "Missing field (pattern): " + child.name +
+                " at " + path
+            );
+
+            return 0;
+        }
+
+        for (const auto& matched_key : matches) {
+
+            if (!validate_node(
+                node.at(matched_key),
+                child,
+                path + "." + matched_key
+            )) {
+                return 0;
+            }
+        }
+    }
+    return 1;
+}
+
+
+bool JsonValidator::validate(const json& j) {
+    vector<string> root_matches;
+
+    if (!schema.name.empty()) {
+        root_matches = find_patterns_in_json(schema.name, j);
+
+        if (root_matches.empty()) {
+            utils::error("Missing root key: " + schema.name);
+            return 0;
+        }
+    } else {
+        for (auto& [key, val] : j.items()) {
+            root_matches.push_back(key);
+        }
+    }
+
+    for (const auto& key : root_matches) {
+        if (!validate_node(j.at(key), schema, key)) {
+            return 0;
+        }
+    }
+
+    return 1;
+}
+
+
+bool JsonValidator::validate_node(
+    const json& node,
+    const JsonValidator::Schema& schema,
     const string& path
 ) {
-    const string current_path =
-        path.empty() ? schema.name : path + "." + schema.name;
+    const string current_path = path;
 
-    if (schema.type != Type::Object) {
+    switch (schema.type) {
 
-        switch (schema.type) {
-            case Type::String:
-                if (!node.is_string())
-                    utils::error("Type mismatch (expected string): " + current_path);
-                break;
+        case Type::String:
+            if (!node.is_string()) {
+                utils::error(
+                    "Type mismatch (expected string): " + current_path
+                );
+                return 0;
+            }
+            return 1;
 
-            case Type::Int:
-                if (!node.is_number_integer())
-                    utils::error("Type mismatch (expected int): " + current_path);
-                break;
+        case Type::Int:
+            if (!node.is_number_integer()) {
+                utils::error(
+                    "Type mismatch (expected int): " + current_path
+                );
+                return 0;
+            }
+            return 1;
 
-            case Type::Bool:
-                if (!node.is_boolean())
-                    utils::error("Type mismatch (expected bool): " + current_path);
-                break;
+        case Type::Bool:
+            if (!node.is_boolean()) {
+                utils::error(
+                    "Type mismatch (expected bool): " + current_path
+                );
+                return 0;
+            }
+            return 1;
 
-            case Type::Array:
-                if (!node.is_array())
-                    utils::error("Type mismatch (expected array): " + current_path);
-                break;
+        case Type::Array:
+            if (!node.is_array()) {
+                utils::error(
+                    "Type mismatch (expected array): " + current_path
+                );
+                return 0;
+            }
 
-            default:
-                break;
-        }
+            for (size_t i = 0; i < node.size(); i++) {
 
-        return;
+                for (const auto& child : schema.fields) {
+
+                    if (!validate_node(
+                        node[i],
+                        child,
+                        current_path + "[" + to_string(i) + "]"
+                    )) {
+                        return 0;
+                    }
+                }
+            }
+
+            return 1;
+
+        case Type::Object:
+            break;
     }
 
     if (!node.is_object()) {
-        utils::error("Type mismatch (expected object): " + current_path);
+        utils::error(
+            "Type mismatch (expected object): " + current_path
+        );
+        return 0;
     }
 
-    for (const auto& child : schema.fields) {
-
-        string child_path = current_path + "." + child.name;
-
-        if (!node.contains(child.name)) {
-            if (child.optional) continue;
-            utils::error("Missing field: " + child_path);
-        }
-
-        validate_node(node.at(child.name), child, current_path);
-    }
+    return validate_children(node, schema, current_path);
 }
 
 }

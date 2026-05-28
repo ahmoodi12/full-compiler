@@ -1,0 +1,14 @@
+[
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/include\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\test\\testing.cpp.obj -c \"C:\\projects\\full compiler\\test\\testing.cpp\"",
+  "file": "C:/projects/full compiler/test/testing.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/test/testing.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/include\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\utils.cpp.obj -c \"C:\\projects\\full compiler\\src\\utils.cpp\"",
+  "file": "C:/projects/full compiler/src/utils.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/src/utils.cpp.obj"
+}
+]

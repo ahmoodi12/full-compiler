@@ -1,0 +1,3 @@
+C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir
+C:/projects/full compiler/build/CMakeFiles/edit_cache.dir
+C:/projects/full compiler/build/CMakeFiles/rebuild_cache.dir
