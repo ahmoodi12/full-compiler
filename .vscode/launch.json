@@ -1,0 +1,20 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (clang + gdb)",
+            "type": "cppdbg",
+            "request": "launch",
+
+            "program": "${workspaceFolder}/builds/windows/main.exe",
+            "cwd": "${workspaceFolder}",
+
+            "MIMode": "gdb",
+            "miDebuggerPath": "C:/msys64/ucrt64/bin/gdb.exe",
+
+            "preLaunchTask": "ninja",
+
+            "externalConsole": false
+        }
+    ]
+}
