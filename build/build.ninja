@@ -71,6 +71,17 @@ build CMakeFiles/compiler_tests.dir/src/utils.cpp.obj: CXX_COMPILER__compiler_te
   TARGET_PDB = compiler_tests.pdb
   TARGET_SUPPORT_DIR = CMakeFiles\compiler_tests.dir
 
+build CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj: CXX_COMPILER__compiler_tests_unscanned_Debug C$:/projects/full$ compiler/src/json_validator.cpp || cmake_object_order_depends_target_compiler_tests
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_tests.dir\src\json_validator.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/include"
+  OBJECT_DIR = CMakeFiles\compiler_tests.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_tests.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_tests.dir\
+  TARGET_PDB = compiler_tests.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_tests.dir
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target compiler_tests
@@ -79,7 +90,7 @@ build CMakeFiles/compiler_tests.dir/src/utils.cpp.obj: CXX_COMPILER__compiler_te
 #############################################
 # Link the executable compiler_tests.exe
 
-build compiler_tests.exe: CXX_EXECUTABLE_LINKER__compiler_tests_Debug CMakeFiles/compiler_tests.dir/test/testing.cpp.obj CMakeFiles/compiler_tests.dir/src/utils.cpp.obj
+build compiler_tests.exe: CXX_EXECUTABLE_LINKER__compiler_tests_Debug CMakeFiles/compiler_tests.dir/test/testing.cpp.obj CMakeFiles/compiler_tests.dir/src/utils.cpp.obj CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj
   CONFIG = Debug
   FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
   LINK_FLAGS = -Xlinker /subsystem:console -fuse-ld=lld-link

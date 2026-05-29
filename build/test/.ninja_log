@@ -1,4 +1,5 @@
 # ninja log v7
-42	11753	8017074039600791	CMakeFiles/compiler_tests.dir/test/testing.cpp.obj	10f84644d4608c26
-63	11789	8017074039836602	CMakeFiles/compiler_tests.dir/src/utils.cpp.obj	10f5fda2ee22a30
-11790	11985	8017074157077435	compiler_tests.exe	b41baec5fbebe231
+92	4055	8017596832298853	CMakeFiles/compiler_tests.dir/test/testing.cpp.obj	fa9d99b41bb60ba2
+83	3232	8017599343226818	CMakeFiles/compiler_tests.dir/src/utils.cpp.obj	12fa0d34d2e60e03
+3233	4483	8017599374717533	compiler_tests.exe	77c3a51e53514d78
+1335	4728	8017596844713186	CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj	6efc50433da26f3b

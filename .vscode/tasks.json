@@ -2,11 +2,22 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "build tests",
+      "label": "cmake",
       "type": "shell",
-      "command": "cmake --build build/test",
-      "group": "build",
-      "problemMatcher": []
+      "command": "cmake -S . -B build/test -G Ninja -DCMAKE_BUILD_TYPE=Debug"
+    },
+    {
+      "label": "compile",
+      "type": "shell",
+      "command": "cmake --build build/test"
+    },
+    {
+      "label": "build tests",
+      "dependsOn": [
+        "cmake",
+        "compile"
+      ],
+      "dependsOrder": "sequence"
     }
   ]
 }

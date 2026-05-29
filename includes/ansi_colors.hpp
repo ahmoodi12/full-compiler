@@ -23,6 +23,7 @@ namespace ansiColors {
     constexpr const char* magenta = "\033[35m";
     constexpr const char* cyan    = "\033[36m";
     constexpr const char* white   = "\033[37m";
+    constexpr const char* orange  = "\033[38;5;208m";
 
     // bright foreground
     constexpr const char* bright_black   = "\033[90m";
@@ -43,6 +44,7 @@ namespace ansiColors {
     constexpr const char* bg_magenta = "\033[45m";
     constexpr const char* bg_cyan    = "\033[46m";
     constexpr const char* bg_white   = "\033[47m";
+    constexpr const char* bg_orange  = "\033[48;5;208m";
 
     // bright background
     constexpr const char* bg_bright_black   = "\033[100m";

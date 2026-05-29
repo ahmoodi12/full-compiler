@@ -15,26 +15,26 @@
 ########################
 
 //Path to a program.
-CMAKE_ADDR2LINE:FILEPATH=C:/LLVM/bin/llvm-addr2line.exe
+CMAKE_ADDR2LINE:FILEPATH=CMAKE_ADDR2LINE-NOTFOUND
 
 //Path to a program.
-CMAKE_AR:FILEPATH=C:/LLVM/bin/llvm-ar.exe
+CMAKE_AR:FILEPATH=C:/Program Files/LLVM/bin/llvm-ar.exe
 
 //Choose the type of build, options are: None Debug Release RelWithDebInfo
 // MinSizeRel ...
 CMAKE_BUILD_TYPE:STRING=Debug
 
 //CXX compiler
-CMAKE_CXX_COMPILER:FILEPATH=C:/LLVM/bin/clang++.exe
+CMAKE_CXX_COMPILER:FILEPATH=C:/Program Files/LLVM/bin/clang++.exe
 
 //LLVM archiver
-CMAKE_CXX_COMPILER_AR:FILEPATH=C:/LLVM/bin/llvm-ar.exe
+CMAKE_CXX_COMPILER_AR:FILEPATH=C:/Program Files/LLVM/bin/llvm-ar.exe
 
 //`clang-scan-deps` dependency scanner
-CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS:FILEPATH=C:/LLVM/bin/clang-scan-deps.exe
+CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS:FILEPATH=C:/Program Files/LLVM/bin/clang-scan-deps.exe
 
 //Generate index for LLVM archive
-CMAKE_CXX_COMPILER_RANLIB:FILEPATH=C:/LLVM/bin/llvm-ranlib.exe
+CMAKE_CXX_COMPILER_RANLIB:FILEPATH=C:/Program Files/LLVM/bin/llvm-ranlib.exe
 
 //Flags used by the CXX compiler during all build types.
 CMAKE_CXX_FLAGS:STRING=
@@ -55,16 +55,16 @@ CMAKE_CXX_FLAGS_RELWITHDEBINFO:STRING=-O2 -DNDEBUG -g -Xclang -gcodeview
 CMAKE_CXX_STANDARD_LIBRARIES:STRING=-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames
 
 //C compiler
-CMAKE_C_COMPILER:FILEPATH=C:/LLVM/bin/clang.exe
+CMAKE_C_COMPILER:FILEPATH=C:/Program Files/LLVM/bin/clang.exe
 
 //LLVM archiver
-CMAKE_C_COMPILER_AR:FILEPATH=C:/LLVM/bin/llvm-ar.exe
+CMAKE_C_COMPILER_AR:FILEPATH=C:/Program Files/LLVM/bin/llvm-ar.exe
 
 //`clang-scan-deps` dependency scanner
-CMAKE_C_COMPILER_CLANG_SCAN_DEPS:FILEPATH=C:/LLVM/bin/clang-scan-deps.exe
+CMAKE_C_COMPILER_CLANG_SCAN_DEPS:FILEPATH=C:/Program Files/LLVM/bin/clang-scan-deps.exe
 
 //Generate index for LLVM archive
-CMAKE_C_COMPILER_RANLIB:FILEPATH=C:/LLVM/bin/llvm-ranlib.exe
+CMAKE_C_COMPILER_RANLIB:FILEPATH=C:/Program Files/LLVM/bin/llvm-ranlib.exe
 
 //Flags used by the C compiler during all build types.
 CMAKE_C_FLAGS:STRING=
@@ -85,7 +85,7 @@ CMAKE_C_FLAGS_RELWITHDEBINFO:STRING=-O2 -DNDEBUG -g -Xclang -gcodeview
 CMAKE_C_STANDARD_LIBRARIES:STRING=-lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames
 
 //Path to a program.
-CMAKE_DLLTOOL:FILEPATH=C:/LLVM/bin/llvm-dlltool.exe
+CMAKE_DLLTOOL:FILEPATH=C:/Program Files/LLVM/bin/llvm-dlltool.exe
 
 //Flags used by the linker during all build types.
 CMAKE_EXE_LINKER_FLAGS:STRING=
@@ -115,7 +115,7 @@ CMAKE_FIND_PACKAGE_REDIRECTS_DIR:STATIC=C:/projects/full compiler/build/test/CMa
 CMAKE_INSTALL_PREFIX:PATH=C:/Program Files (x86)/compiler
 
 //Path to a program.
-CMAKE_LINKER:FILEPATH=C:/LLVM/bin/lld-link.exe
+CMAKE_LINKER:FILEPATH=C:/Program Files/LLVM/bin/lld-link.exe
 
 //make program
 CMAKE_MAKE_PROGRAM:FILEPATH=C:/PROGRA~1/ninja/ninja.exe
@@ -141,13 +141,13 @@ CMAKE_MODULE_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_NM:FILEPATH=C:/LLVM/bin/llvm-nm.exe
+CMAKE_NM:FILEPATH=C:/Program Files/LLVM/bin/llvm-nm.exe
 
 //Path to a program.
-CMAKE_OBJCOPY:FILEPATH=C:/LLVM/bin/llvm-objcopy.exe
+CMAKE_OBJCOPY:FILEPATH=C:/Program Files/LLVM/bin/llvm-objcopy.exe
 
 //Path to a program.
-CMAKE_OBJDUMP:FILEPATH=C:/LLVM/bin/llvm-objdump.exe
+CMAKE_OBJDUMP:FILEPATH=C:/Program Files/LLVM/bin/llvm-objdump.exe
 
 //Value Computed by CMake
 CMAKE_PROJECT_COMPAT_VERSION:STATIC=
@@ -165,10 +165,10 @@ CMAKE_PROJECT_NAME:STATIC=compiler
 CMAKE_PROJECT_SPDX_LICENSE:STATIC=
 
 //Path to a program.
-CMAKE_RANLIB:FILEPATH=C:/LLVM/bin/llvm-ranlib.exe
+CMAKE_RANLIB:FILEPATH=C:/Program Files/LLVM/bin/llvm-ranlib.exe
 
 //RC compiler
-CMAKE_RC_COMPILER:FILEPATH=C:/LLVM/bin/llvm-rc.exe
+CMAKE_RC_COMPILER:FILEPATH=C:/Program Files/LLVM/bin/llvm-rc.exe
 
 //Flags for Windows Resource Compiler during all build types.
 CMAKE_RC_FLAGS:STRING=
@@ -186,7 +186,7 @@ CMAKE_RC_FLAGS_RELEASE:STRING=
 CMAKE_RC_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_READELF:FILEPATH=C:/LLVM/bin/llvm-readelf.exe
+CMAKE_READELF:FILEPATH=CMAKE_READELF-NOTFOUND
 
 //Flags used by the linker during the creation of shared libraries
 // during all build types.
@@ -236,7 +236,7 @@ CMAKE_STATIC_LINKER_FLAGS_RELEASE:STRING=
 CMAKE_STATIC_LINKER_FLAGS_RELWITHDEBINFO:STRING=
 
 //Path to a program.
-CMAKE_STRIP:FILEPATH=C:/LLVM/bin/llvm-strip.exe
+CMAKE_STRIP:FILEPATH=C:/Program Files/LLVM/bin/llvm-strip.exe
 
 //Path to a program.
 CMAKE_TAPI:FILEPATH=CMAKE_TAPI-NOTFOUND
