@@ -2,6 +2,16 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "Debug main (LLDB)",
+      "type": "lldb",
+      "request": "launch",
+      "program": "${workspaceFolder}/build/main/compiler_main.exe",
+      "args": ["C:/projects/full compiler/test/test_file.c"],
+      "cwd": "${workspaceFolder}",
+      "preLaunchTask": "build main",
+      "terminal": "integrated"
+    },
+    {
       "name": "Debug Tests (LLDB)",
       "type": "lldb",
       "request": "launch",

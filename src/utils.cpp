@@ -1,7 +1,7 @@
 // utils.cpp
 
-#include "../includes/utils.hpp"
-#include "../includes/ansi_colors.hpp"
+#include "utils.hpp"
+#include "ansi_colors.hpp"
 
 namespace utils {
 

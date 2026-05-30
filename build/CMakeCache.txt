@@ -273,6 +273,15 @@ compiler_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 compiler_SOURCE_DIR:STATIC=C:/projects/full compiler
 
+//Value Computed by CMake
+compiler_testing_BINARY_DIR:STATIC=C:/projects/full compiler/build
+
+//Value Computed by CMake
+compiler_testing_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+compiler_testing_SOURCE_DIR:STATIC=C:/projects/full compiler
+
 
 ########################
 # INTERNAL cache entries

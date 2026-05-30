@@ -1,35 +1,23 @@
 
-#include "../includes/combined_include.hpp"
-#include "../includes/json_validator.hpp"
+#include "lexer.hpp"
+
 
 /*
 cd builds/windows/test
 ninja
 */
 
+CompilerCxt cxt;
+
+string lex_data_file = "C:/projects/full compiler/data/c frontend data/lex_data.json";
+
 int main() {
-    CompilerCxt cxt;
 
-    cxt.current_file = utils::get_file_path("C:/projects/full compiler/data/c frontend data/lex_data.json");
+    Lexer lexer(cxt, lex_data_file);
 
-    JsonValidator validator(cxt, {
-        "",
-        JsonValidator::Type::Object,
-        {
-            {
-                "regexes",
-                JsonValidator::Type::Object,
-                {
-                    {
-                        "\\d+",
-                        JsonValidator::Type::Int
-                    }
-                }
-            }
-        }
-    });
+    lexer.run(utils::read_file(utils::get_file_path("C:/projects/full compiler/test/test_file.c")));
 
-    validator.validate(json::parse(utils::read_file(cxt.current_file)));
+    lexer.print_last_output();
 
     return 0;
 }

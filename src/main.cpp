@@ -1,27 +1,26 @@
 /*
 # windows
-cd builds\windows
+cd builds/windows
 ninja 
 
 # linux
-cd builds\linux
+cd builds/linux
 ninja 
 
 */
 
-#include "../includes/cxxopts.hpp"
-#include "../includes/utils.hpp"
-#include "../includes/combined_include.hpp"
-#include "../includes/compiler_cxt.hpp"
+#include "cxxopts.hpp"
+#include "lexer.hpp"
 
 namespace argparse = cxxopts;
 
 // for now, later this will be a part of the arguments in form of a language to choose
-string lexer_data_file = "../data/c frontend data/lex_data.json";
+string lexer_data_file = "C:/projects/full compiler/data/c frontend data/lex_data.json";
 
+CompilerCxt cxt;
 
 // exit on 0
-CompilerCxt parse_args(CompilerCxt& cxt, int argc, char **argv) {
+void parse_args(CompilerCxt& cxt, int argc, char **argv) {
     argparse::Options argparser("main", "llvm compiler");
 
     argparser.add_options()
@@ -58,16 +57,17 @@ CompilerCxt parse_args(CompilerCxt& cxt, int argc, char **argv) {
         cxt.output_file = cxt.program_file;
         cxt.output_file.replace_extension(".asm");
     }
+    cxt.current_file = cxt.program_file;
 }
 
 
 int main(int argc, char **argv)
 {
-    CompilerCxt cxt;
     parse_args(cxt, argc, argv);
 
+    Lexer lexer(cxt, lexer_data_file);
     
-    
+    lexer.run(utils::read_file(cxt.program_file));
 
     return 0;
 }

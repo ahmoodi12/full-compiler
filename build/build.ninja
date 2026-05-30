@@ -41,6 +41,92 @@ include CMakeFiles/rules.ninja
 
 cmake_ninja_workdir = C$:/projects/full$ compiler/build/
 # =============================================================================
+# Object build statements for EXECUTABLE target compiler_main
+
+
+#############################################
+# Order-only phony target for compiler_main
+
+build cmake_object_order_depends_target_compiler_main: phony || .
+
+build CMakeFiles/compiler_main.dir/src/compiler_cxt.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/compiler_cxt.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\compiler_cxt.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+build CMakeFiles/compiler_main.dir/src/json_validator.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/json_validator.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\json_validator.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+build CMakeFiles/compiler_main.dir/src/lexer.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/lexer.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\lexer.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+build CMakeFiles/compiler_main.dir/src/main.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/main.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\main.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+build CMakeFiles/compiler_main.dir/src/utils.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/utils.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\utils.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+
+# =============================================================================
+# Link build statements for EXECUTABLE target compiler_main
+
+
+#############################################
+# Link the executable compiler_main.exe
+
+build compiler_main.exe: CXX_EXECUTABLE_LINKER__compiler_main_Debug CMakeFiles/compiler_main.dir/src/compiler_cxt.cpp.obj CMakeFiles/compiler_main.dir/src/json_validator.cpp.obj CMakeFiles/compiler_main.dir/src/lexer.cpp.obj CMakeFiles/compiler_main.dir/src/main.cpp.obj CMakeFiles/compiler_main.dir/src/utils.cpp.obj
+  CONFIG = Debug
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  LINK_FLAGS = -Xlinker /subsystem:console -fuse-ld=lld-link
+  LINK_LIBRARIES = -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  POST_BUILD = cd .
+  PRE_LINK = cd .
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_FILE = compiler_main.exe
+  TARGET_IMPLIB = compiler_main.lib
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+# =============================================================================
 # Object build statements for EXECUTABLE target compiler_tests
 
 
@@ -53,7 +139,7 @@ build CMakeFiles/compiler_tests.dir/test/testing.cpp.obj: CXX_COMPILER__compiler
   CONFIG = Debug
   DEP_FILE = CMakeFiles\compiler_tests.dir\test\testing.cpp.obj.d
   FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
-  INCLUDES = -I"C:/projects/full compiler/include"
+  INCLUDES = -I"C:/projects/full compiler/includes"
   OBJECT_DIR = CMakeFiles\compiler_tests.dir
   OBJECT_FILE_DIR = CMakeFiles\compiler_tests.dir\test
   TARGET_COMPILE_PDB = CMakeFiles\compiler_tests.dir\
@@ -64,7 +150,7 @@ build CMakeFiles/compiler_tests.dir/src/utils.cpp.obj: CXX_COMPILER__compiler_te
   CONFIG = Debug
   DEP_FILE = CMakeFiles\compiler_tests.dir\src\utils.cpp.obj.d
   FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
-  INCLUDES = -I"C:/projects/full compiler/include"
+  INCLUDES = -I"C:/projects/full compiler/includes"
   OBJECT_DIR = CMakeFiles\compiler_tests.dir
   OBJECT_FILE_DIR = CMakeFiles\compiler_tests.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\compiler_tests.dir\
@@ -75,7 +161,29 @@ build CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj: CXX_COMPILER__co
   CONFIG = Debug
   DEP_FILE = CMakeFiles\compiler_tests.dir\src\json_validator.cpp.obj.d
   FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
-  INCLUDES = -I"C:/projects/full compiler/include"
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_tests.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_tests.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_tests.dir\
+  TARGET_PDB = compiler_tests.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_tests.dir
+
+build CMakeFiles/compiler_tests.dir/src/lexer.cpp.obj: CXX_COMPILER__compiler_tests_unscanned_Debug C$:/projects/full$ compiler/src/lexer.cpp || cmake_object_order_depends_target_compiler_tests
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_tests.dir\src\lexer.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_tests.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_tests.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_tests.dir\
+  TARGET_PDB = compiler_tests.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_tests.dir
+
+build CMakeFiles/compiler_tests.dir/src/compiler_cxt.cpp.obj: CXX_COMPILER__compiler_tests_unscanned_Debug C$:/projects/full$ compiler/src/compiler_cxt.cpp || cmake_object_order_depends_target_compiler_tests
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_tests.dir\src\compiler_cxt.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
   OBJECT_DIR = CMakeFiles\compiler_tests.dir
   OBJECT_FILE_DIR = CMakeFiles\compiler_tests.dir\src
   TARGET_COMPILE_PDB = CMakeFiles\compiler_tests.dir\
@@ -90,7 +198,7 @@ build CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj: CXX_COMPILER__co
 #############################################
 # Link the executable compiler_tests.exe
 
-build compiler_tests.exe: CXX_EXECUTABLE_LINKER__compiler_tests_Debug CMakeFiles/compiler_tests.dir/test/testing.cpp.obj CMakeFiles/compiler_tests.dir/src/utils.cpp.obj CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj
+build compiler_tests.exe: CXX_EXECUTABLE_LINKER__compiler_tests_Debug CMakeFiles/compiler_tests.dir/test/testing.cpp.obj CMakeFiles/compiler_tests.dir/src/utils.cpp.obj CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj CMakeFiles/compiler_tests.dir/src/lexer.cpp.obj CMakeFiles/compiler_tests.dir/src/compiler_cxt.cpp.obj
   CONFIG = Debug
   FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
   LINK_FLAGS = -Xlinker /subsystem:console -fuse-ld=lld-link
@@ -131,6 +239,8 @@ build rebuild_cache: phony CMakeFiles/rebuild_cache.util
 # =============================================================================
 # Target aliases.
 
+build compiler_main: phony compiler_main.exe
+
 build compiler_tests: phony compiler_tests.exe
 
 # =============================================================================
@@ -141,7 +251,7 @@ build compiler_tests: phony compiler_tests.exe
 #############################################
 # Folder: C:/projects/full compiler/build
 
-build all: phony compiler_tests.exe
+build all: phony compiler_main.exe compiler_tests.exe
 
 # =============================================================================
 # Built-in targets

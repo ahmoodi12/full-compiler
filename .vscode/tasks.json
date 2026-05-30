@@ -2,20 +2,36 @@
   "version": "2.0.0",
   "tasks": [
     {
-      "label": "cmake",
+      "label": "cmake test",
       "type": "shell",
       "command": "cmake -S . -B build/test -G Ninja -DCMAKE_BUILD_TYPE=Debug"
     },
     {
-      "label": "compile",
+      "label": "compile test",
       "type": "shell",
-      "command": "cmake --build build/test"
+      "command": "cmake --build build/test --target compiler_tests --parallel"
     },
     {
       "label": "build tests",
       "dependsOn": [
-        "cmake",
-        "compile"
+        "compile test"
+      ],
+      "dependsOrder": "sequence"
+    },
+    {
+      "label": "cmake main",
+      "type": "shell",
+      "command": "cmake -S . -B build/main -G Ninja -DCMAKE_BUILD_TYPE=Debug"
+    },
+    {
+      "label": "compile main",
+      "type": "shell",
+      "command": "cmake --build build/main --target compiler_main --parallel"
+    },
+    {
+      "label": "build main",
+      "dependsOn": [
+        "compile main"
       ],
       "dependsOrder": "sequence"
     }

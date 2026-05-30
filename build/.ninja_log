@@ -1,0 +1,6 @@
+# ninja log v7
+1227	4394	8018435375071850	CMakeFiles/compiler_tests.dir/test/testing.cpp.obj	23284d113c2876b
+65	1815	8018436188156026	CMakeFiles/compiler.dir/src/compiler_cxt.cpp.obj	1323c08f6f6cc3de
+137	1967	8018436188886454	CMakeFiles/compiler.dir/src/utils.cpp.obj	8d137810b4dae83
+87	3438	8018436188378604	CMakeFiles/compiler.dir/src/json_validator.cpp.obj	b4fc56e5d24c35b1
+120	4242	8018436188708613	CMakeFiles/compiler.dir/src/main.cpp.obj	fa75271aacf2a8a9

@@ -1,0 +1,11 @@
+# ninja log v7
+60	1833	8018440971112305	CMakeFiles/compiler_main.dir/src/compiler_cxt.cpp.obj	395e6fa86dbf17e
+126	2157	8018440971877444	CMakeFiles/compiler_main.dir/src/utils.cpp.obj	3932c7f24cdcbc6f
+78	3964	8018440971411444	CMakeFiles/compiler_main.dir/src/json_validator.cpp.obj	9b3809747e65d538
+109	4864	8018440971719444	CMakeFiles/compiler_main.dir/src/main.cpp.obj	3a5b554272d0aac9
+61	5186	8018444858208488	CMakeFiles/compiler_main.dir/src/lexer.cpp.obj	d6164da68fe25f70
+82	4958	8018450358714473	CMakeFiles/compiler_main.dir/src/lexer.cpp.obj	d6164da68fe25f70
+1406	5376	8018450371943261	CMakeFiles/compiler_main.dir/src/main.cpp.obj	3a5b554272d0aac9
+5406	6629	8018450411934933	compiler_main.exe	fa26121924a99c6b
+67	5872	8018450863657011	CMakeFiles/compiler_main.dir/src/main.cpp.obj	3a5b554272d0aac9
+5875	7142	8018450921795892	compiler_main.exe	fa26121924a99c6b

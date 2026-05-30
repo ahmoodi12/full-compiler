@@ -1,4 +1,4 @@
-#include "../includes/json_validator.hpp"
+#include "json_validator.hpp"
 
 using namespace std;
 
@@ -181,7 +181,6 @@ bool JsonValidator::validate(const json& j) {
         }
     }
 
-    // 🔥 PRINT FAILING SUBTREE
     if (!error_path.empty()) {
 
         vector<string> parts = split_path(error_path[0]);
@@ -261,9 +260,7 @@ bool JsonValidator::validate_node(
 
         case Type::Array:
             if (!node.is_array()) {
-
-                if (error_path.empty())
-                    error_path.push_back(path);
+                if (error_path.empty()) error_path.push_back(path);
 
                 utils::error(
                     "Type mismatch (expected array): " + path,
@@ -272,27 +269,75 @@ bool JsonValidator::validate_node(
                     false,
                     false
                 );
-
                 return false;
             }
 
-            for (size_t i = 0; i < node.size(); i++) {
-                for (const auto& child : schema.fields) {
+            if (schema.is_tuple) {
+                if (node.size() != schema.fields.size()) {
+                    if (error_path.empty())
+                        error_path.push_back(path);
 
-                    string new_path = path + "[" + to_string(i) + "]";
+                    utils::error(
+                        "Tuple size mismatch: " + path +
+                        " (expected " + to_string(schema.fields.size()) +
+                        ", got " + to_string(node.size()) + ")",
+                        cxt.current_file.string(),
+                        cxt.show_warnings,
+                        false,
+                        false
+                    );
 
+                    return false;
+                }
+
+                for (size_t i = 0; i < node.size(); i++) {
                     if (!validate_node(
-                        node[i],
-                        child,
-                        new_path,
-                        depth + 1,
-                        error_path
-                    )) {
+                            node[i],
+                            schema.fields[i],
+                            path + "[" + to_string(i) + "]",
+                            depth + 1,
+                            error_path))
+                    {
+                        return false;
+                    }
+                }
+            } else {
+                for (size_t i = 0; i < node.size(); i++) {
+                    bool matched = false;
+                    for (auto& field : schema.fields) {
+                        vector<string> tmp_error;
+
+                        if (validate_node(
+                                node[i],
+                                field,
+                                path + "[" + to_string(i) + "]",
+                                depth + 1,
+                                tmp_error))
+                        {
+                            matched = true;
+                            break;
+                        }
+                    }
+
+                    if (!matched) {
+                        if (error_path.empty())
+                            error_path.push_back(
+                                path + "[" + to_string(i) + "]"
+                            );
+
+                        utils::error(
+                            "Array element does not match any allowed schema: " +
+                            path + "[" + to_string(i) + "]",
+                            cxt.current_file.string(),
+                            cxt.show_warnings,
+                            false,
+                            false
+                        );
+
                         return false;
                     }
                 }
             }
-
             return true;
 
         case Type::Object:

@@ -1,20 +1,62 @@
 [
 {
   "directory": "C:/projects/full compiler/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/include\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\test\\testing.cpp.obj -c \"C:\\projects\\full compiler\\test\\testing.cpp\"",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_main.dir\\src\\compiler_cxt.cpp.obj -c \"C:\\projects\\full compiler\\src\\compiler_cxt.cpp\"",
+  "file": "C:/projects/full compiler/src/compiler_cxt.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_main.dir/src/compiler_cxt.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_main.dir\\src\\json_validator.cpp.obj -c \"C:\\projects\\full compiler\\src\\json_validator.cpp\"",
+  "file": "C:/projects/full compiler/src/json_validator.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_main.dir/src/json_validator.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_main.dir\\src\\lexer.cpp.obj -c \"C:\\projects\\full compiler\\src\\lexer.cpp\"",
+  "file": "C:/projects/full compiler/src/lexer.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_main.dir/src/lexer.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_main.dir\\src\\main.cpp.obj -c \"C:\\projects\\full compiler\\src\\main.cpp\"",
+  "file": "C:/projects/full compiler/src/main.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_main.dir/src/main.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_main.dir\\src\\utils.cpp.obj -c \"C:\\projects\\full compiler\\src\\utils.cpp\"",
+  "file": "C:/projects/full compiler/src/utils.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_main.dir/src/utils.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\test\\testing.cpp.obj -c \"C:\\projects\\full compiler\\test\\testing.cpp\"",
   "file": "C:/projects/full compiler/test/testing.cpp",
   "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/test/testing.cpp.obj"
 },
 {
   "directory": "C:/projects/full compiler/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/include\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\utils.cpp.obj -c \"C:\\projects\\full compiler\\src\\utils.cpp\"",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\utils.cpp.obj -c \"C:\\projects\\full compiler\\src\\utils.cpp\"",
   "file": "C:/projects/full compiler/src/utils.cpp",
   "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/src/utils.cpp.obj"
 },
 {
   "directory": "C:/projects/full compiler/build",
-  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/include\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\json_validator.cpp.obj -c \"C:\\projects\\full compiler\\src\\json_validator.cpp\"",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\json_validator.cpp.obj -c \"C:\\projects\\full compiler\\src\\json_validator.cpp\"",
   "file": "C:/projects/full compiler/src/json_validator.cpp",
   "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\lexer.cpp.obj -c \"C:\\projects\\full compiler\\src\\lexer.cpp\"",
+  "file": "C:/projects/full compiler/src/lexer.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/src/lexer.cpp.obj"
+},
+{
+  "directory": "C:/projects/full compiler/build",
+  "command": "C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -I\"C:/projects/full compiler/includes\" -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -o CMakeFiles\\compiler_tests.dir\\src\\compiler_cxt.cpp.obj -c \"C:\\projects\\full compiler\\src\\compiler_cxt.cpp\"",
+  "file": "C:/projects/full compiler/src/compiler_cxt.cpp",
+  "output": "C:/projects/full compiler/build/CMakeFiles/compiler_tests.dir/src/compiler_cxt.cpp.obj"
 }
 ]

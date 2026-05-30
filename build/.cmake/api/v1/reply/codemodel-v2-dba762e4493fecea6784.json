@@ -16,7 +16,8 @@
 					"source" : ".",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -31,7 +32,8 @@
 					"name" : "compiler",
 					"targetIndexes" : 
 					[
-						0
+						0,
+						1
 					]
 				}
 			],
@@ -39,8 +41,15 @@
 			[
 				{
 					"directoryIndex" : 0,
+					"id" : "compiler_main::@6890427a1f51a3e7e1df",
+					"jsonFile" : "target-compiler_main-Debug-0e87284cb0e5e6a1a489.json",
+					"name" : "compiler_main",
+					"projectIndex" : 0
+				},
+				{
+					"directoryIndex" : 0,
 					"id" : "compiler_tests::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-compiler_tests-Debug-05914ffa32fe4d91f111.json",
+					"jsonFile" : "target-compiler_tests-Debug-abbbb9a428390e17ff17.json",
 					"name" : "compiler_tests",
 					"projectIndex" : 0
 				}

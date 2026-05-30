@@ -6,10 +6,10 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 file(GLOB SOURCES src/*.cpp)
 
-#add_executable(compiler ${SOURCES})
-#target_include_directories(compiler PRIVATE include/)
+add_executable(compiler_main ${SOURCES})
+target_include_directories(compiler_main PRIVATE includes/)
 
 file(GLOB TEST_SOURCES test/*.cpp)
 
-add_executable(compiler_tests ${TEST_SOURCES} src/utils.cpp src/json_validator.cpp)
-target_include_directories(compiler_tests PRIVATE include/) 
+add_executable(compiler_tests ${TEST_SOURCES} src/utils.cpp src/json_validator.cpp src/lexer.cpp src/compiler_cxt.cpp )
+target_include_directories(compiler_tests PRIVATE includes/) 
