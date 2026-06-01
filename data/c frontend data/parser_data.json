@@ -1,0 +1,37 @@
+{
+  "expr data": {
+    "+": {
+      "lbp": 10,
+      "rbp": 11,
+
+      "prefix": "positive", 
+      "infix": "plus"
+    },
+
+    "-": {
+      "lbp": 10,
+      "rbp": 11,
+
+      "prefix": "negative", 
+      "infix": "minus"
+    },
+
+    "*": {
+      "lbp": 20,
+      "rbp": 21,
+
+      "prefix": "derefence", 
+      "infix": "multiply"
+    },
+    
+    "/": {
+      "lbp": 20,
+      "rbp": 21,
+
+      "infix": "divide"
+    },
+    "identifier": {
+      "value": "ident"
+    }
+  }
+}

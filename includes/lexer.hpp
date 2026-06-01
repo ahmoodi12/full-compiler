@@ -2,45 +2,39 @@
 
 #pragma once
 
-// throw both cpp file includes and hpp file includes here
-#include "compiler_cxt.hpp"
-#include "combined_include.hpp"
-#include "utils.hpp"
 #include "json.hpp"
-#include "json_validator.hpp"
+
+class JsonValidator;
 
 using json = nlohmann::json;
 
 class Lexer {
 public:
-    const JsonValidator::Schema lexer_json_schema {
+    const JsonValidator::Schema json_schema {
         "",
         JsonValidator::Type::Object,
         {
-            {
+            JsonValidator::Schema {
                 "regexes",
                 JsonValidator::Type::Object,
                 {
-                    {
+                    JsonValidator::Schema {
                         "\\d+",
                         JsonValidator::Type::Array,
                         {
-                            {.type = JsonValidator::Type::String},
-                            {.type = JsonValidator::Type::Bool}
-
+                            JsonValidator::Schema{"", JsonValidator::Type::String},
+                            JsonValidator::Schema{"", JsonValidator::Type::Bool}
                         },
-                        .is_tuple = true
+                        false,
+                        true
                     }
-                },
+                }
             },
-            {
+            JsonValidator::Schema {
                 "debug_names",
                 JsonValidator::Type::Object,
                 {
-                    {
-                        "\\d+",
-                        JsonValidator::Type::String
-                    }
+                    JsonValidator::Schema{"\\d+", JsonValidator::Type::String}
                 },
                 true
             }

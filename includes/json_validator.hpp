@@ -1,15 +1,15 @@
 #pragma once
 
-#include "utils.hpp"
 #include "combined_include.hpp"
 #include "json.hpp"
-#include "compiler_cxt.hpp"
 
+class CompilerCxt;
 using json = nlohmann::json;
 
 
 class JsonValidator {
 public:
+    // TODO: add float handling
     enum class Type {
         String,
         Int,
@@ -61,3 +61,5 @@ private:
         vector<string>& error_path
     );
 };
+
+json load_and_validate_json(CompilerCxt& cxt, const string& filename, JsonValidator& validator);

@@ -93,6 +93,28 @@ build CMakeFiles/compiler_main.dir/src/main.cpp.obj: CXX_COMPILER__compiler_main
   TARGET_PDB = compiler_main.pdb
   TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
 
+build CMakeFiles/compiler_main.dir/src/parser.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/parser.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\parser.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
+build CMakeFiles/compiler_main.dir/src/pratt_parser.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/pratt_parser.cpp || cmake_object_order_depends_target_compiler_main
+  CONFIG = Debug
+  DEP_FILE = CMakeFiles\compiler_main.dir\src\pratt_parser.cpp.obj.d
+  FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -std=gnu++17 -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
+  INCLUDES = -I"C:/projects/full compiler/includes"
+  OBJECT_DIR = CMakeFiles\compiler_main.dir
+  OBJECT_FILE_DIR = CMakeFiles\compiler_main.dir\src
+  TARGET_COMPILE_PDB = CMakeFiles\compiler_main.dir\
+  TARGET_PDB = compiler_main.pdb
+  TARGET_SUPPORT_DIR = CMakeFiles\compiler_main.dir
+
 build CMakeFiles/compiler_main.dir/src/utils.cpp.obj: CXX_COMPILER__compiler_main_unscanned_Debug C$:/projects/full$ compiler/src/utils.cpp || cmake_object_order_depends_target_compiler_main
   CONFIG = Debug
   DEP_FILE = CMakeFiles\compiler_main.dir\src\utils.cpp.obj.d
@@ -112,7 +134,7 @@ build CMakeFiles/compiler_main.dir/src/utils.cpp.obj: CXX_COMPILER__compiler_mai
 #############################################
 # Link the executable compiler_main.exe
 
-build compiler_main.exe: CXX_EXECUTABLE_LINKER__compiler_main_Debug CMakeFiles/compiler_main.dir/src/compiler_cxt.cpp.obj CMakeFiles/compiler_main.dir/src/json_validator.cpp.obj CMakeFiles/compiler_main.dir/src/lexer.cpp.obj CMakeFiles/compiler_main.dir/src/main.cpp.obj CMakeFiles/compiler_main.dir/src/utils.cpp.obj
+build compiler_main.exe: CXX_EXECUTABLE_LINKER__compiler_main_Debug CMakeFiles/compiler_main.dir/src/compiler_cxt.cpp.obj CMakeFiles/compiler_main.dir/src/json_validator.cpp.obj CMakeFiles/compiler_main.dir/src/lexer.cpp.obj CMakeFiles/compiler_main.dir/src/main.cpp.obj CMakeFiles/compiler_main.dir/src/parser.cpp.obj CMakeFiles/compiler_main.dir/src/pratt_parser.cpp.obj CMakeFiles/compiler_main.dir/src/utils.cpp.obj
   CONFIG = Debug
   FLAGS = -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd
   LINK_FLAGS = -Xlinker /subsystem:console -fuse-ld=lld-link

@@ -75,7 +75,9 @@
 				1,
 				2,
 				3,
-				4
+				4,
+				5,
+				6
 			]
 		}
 	],
@@ -120,7 +122,9 @@
 				1,
 				2,
 				3,
-				4
+				4,
+				5,
+				6
 			]
 		}
 	],
@@ -148,6 +152,18 @@
 			"backtrace" : 1,
 			"compileGroupIndex" : 0,
 			"path" : "src/main.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/parser.cpp",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 1,
+			"compileGroupIndex" : 0,
+			"path" : "src/pratt_parser.cpp",
 			"sourceGroupIndex" : 0
 		},
 		{

@@ -2,17 +2,17 @@
 
 #include "utils.hpp"
 #include "ansi_colors.hpp"
+#include "compiler_cxt.hpp"
 
 namespace utils {
 
 void error(
     string prompt,
-    string filename,
-    bool show_warnings,
+    CompilerCxt cxt,
     bool is_warning,
     bool fatal
 ) {
-    if (!show_warnings && is_warning) return;
+    if (!cxt.show_warnings && is_warning) return;
 
     if (is_warning) {
         cerr << ansiColors::yellow
@@ -28,12 +28,12 @@ void error(
              << "Error";
     }
 
-    if (!filename.empty()) {
+    if (!cxt.current_file.empty()) {
         cerr << ansiColors::reset
              << " in file '"
              << ansiColors::bright_cyan
              << ansiColors::underline
-             << filename
+             << cxt.current_file.string()
              << ansiColors::reset
              << "'";
     }
@@ -77,6 +77,27 @@ string read_file(const filesystem::path& path) {
         istreambuf_iterator<char>(file),
         istreambuf_iterator<char>()
     );
+}
+
+string visualize_whitespaces(const string& s) {
+    string out;
+    out.reserve(s.size());
+
+    for (unsigned char c : s) {
+        switch (c) {
+            case '\n': out += "\\n"; break;
+            case '\t': out += "\\t"; break;
+            case '\r': out += "\\r"; break;
+
+            // normal space
+            case ' ':  out += "#"; break;
+
+            default:
+                out += c;
+                break;
+        }
+    }
+    return out;
 }
 
 }

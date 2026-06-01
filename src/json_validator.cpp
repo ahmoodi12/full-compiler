@@ -1,4 +1,6 @@
 #include "json_validator.hpp"
+#include "compiler_cxt.hpp"
+#include "utils.hpp"
 
 using namespace std;
 
@@ -111,8 +113,7 @@ bool JsonValidator::validate_children(
 
             utils::error(
                 "Missing field (pattern): " + child.name,
-                cxt.current_file.string(),
-                cxt.show_warnings,
+                cxt,
                 false,
                 false
             );
@@ -153,8 +154,7 @@ bool JsonValidator::validate(const json& j) {
 
             utils::error(
                 "Missing root key: " + schema.name,
-                cxt.current_file.string(),
-                cxt.show_warnings,
+                cxt,
                 false,
                 false
             );
@@ -212,8 +212,7 @@ bool JsonValidator::validate_node(
 
                 utils::error(
                     "Type mismatch (expected string): " + path,
-                    cxt.current_file.string(),
-                    cxt.show_warnings,
+                    cxt,
                     false,
                     false
                 );
@@ -230,8 +229,7 @@ bool JsonValidator::validate_node(
 
                 utils::error(
                     "Type mismatch (expected int): " + path,
-                    cxt.current_file.string(),
-                    cxt.show_warnings,
+                    cxt,
                     false,
                     false
                 );
@@ -248,8 +246,7 @@ bool JsonValidator::validate_node(
 
                 utils::error(
                     "Type mismatch (expected bool): " + path,
-                    cxt.current_file.string(),
-                    cxt.show_warnings,
+                    cxt,
                     false,
                     false
                 );
@@ -264,8 +261,7 @@ bool JsonValidator::validate_node(
 
                 utils::error(
                     "Type mismatch (expected array): " + path,
-                    cxt.current_file.string(),
-                    cxt.show_warnings,
+                    cxt,
                     false,
                     false
                 );
@@ -281,8 +277,7 @@ bool JsonValidator::validate_node(
                         "Tuple size mismatch: " + path +
                         " (expected " + to_string(schema.fields.size()) +
                         ", got " + to_string(node.size()) + ")",
-                        cxt.current_file.string(),
-                        cxt.show_warnings,
+                        cxt,
                         false,
                         false
                     );
@@ -328,8 +323,7 @@ bool JsonValidator::validate_node(
                         utils::error(
                             "Array element does not match any allowed schema: " +
                             path + "[" + to_string(i) + "]",
-                            cxt.current_file.string(),
-                            cxt.show_warnings,
+                            cxt,
                             false,
                             false
                         );
@@ -348,8 +342,7 @@ bool JsonValidator::validate_node(
 
                 utils::error(
                     "Type mismatch (expected object): " + path,
-                    cxt.current_file.string(),
-                    cxt.show_warnings,
+                    cxt,
                     false,
                     false
                 );
@@ -361,4 +354,21 @@ bool JsonValidator::validate_node(
     }
 
     return true;
+}
+
+
+json load_and_validate_json(CompilerCxt& cxt, const string& filename, JsonValidator& validator) {
+    filesystem::path file_path = utils::get_file_path(filename);
+
+    filesystem::path old_file = cxt.current_file;
+    cxt.current_file = file_path;
+
+    json data = json::parse(utils::read_file(file_path));
+
+    if (!validator.validate(data))
+        exit(1);
+
+    cxt.current_file = old_file;
+
+    return data;
 }

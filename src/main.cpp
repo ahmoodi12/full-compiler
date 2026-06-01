@@ -11,6 +11,9 @@ ninja
 
 #include "cxxopts.hpp"
 #include "lexer.hpp"
+#include "combined_include.hpp"
+#include "compiler_cxt.hpp"
+#include "utils.hpp"
 
 namespace argparse = cxxopts;
 

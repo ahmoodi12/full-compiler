@@ -1,26 +1,23 @@
 // lexer.cpp
 
 #include "lexer.hpp"
+#include "json_validator.hpp"
+#include "utils.hpp"
+#include "compiler_cxt.hpp"
+#include "ansi_colors.hpp"
 
 Lexer::Lexer(
     CompilerCxt& cxt,
-    string lex_data_file,
+    string filename,
     vector<TokenRule> Rules,
     unordered_map<uint32_t, string> names
 ) : cxt(cxt),
     rules(Rules),
     debug_names(names),
-    json_validator(cxt, lexer_json_schema)
+    json_validator(cxt, json_schema)
 {   
-    if (!lex_data_file.empty()) {
-        filesystem::path lex_data_path = utils::get_file_path(lex_data_file);
-
-        filesystem::path cxt_file_temp = cxt.current_file;
-        cxt.current_file = lex_data_path;
-
-        json lex_data = json::parse(utils::read_file(lex_data_path));
-
-        if (!json_validator.validate(lex_data)) exit(1);
+    if (!filename.empty()) {
+        json lex_data = load_and_validate_json(cxt, filename, json_validator);
 
         for (auto& [key, val] : lex_data.at("regexes").items()) {
             rules.emplace_back(stoi(key), val[0], val[1]);
@@ -31,8 +28,6 @@ Lexer::Lexer(
                 debug_names[stoi(key)] = val.get<string>();
             }
         }
-
-        cxt.current_file = cxt_file_temp;
     }
 }
 
@@ -65,7 +60,7 @@ vector<Lexer::Token> Lexer::run(const string& input) {
         }
         if (temp_holder.empty()) {
             utils::error("wasn't able to lex from position " + to_string(pos) + ", invalid char or unadded Lexer::token type.", 
-            cxt.program_file.string(), cxt.show_warnings, false);
+            cxt, false, false);
         } else {
             int longest = 0;
             Lexer::Token* longest_token = nullptr;
@@ -86,31 +81,6 @@ vector<Lexer::Token> Lexer::run(const string& input) {
     return last_output;
 }
 
-static string escape_ws(const string& s) {
-    string out;
-    out.reserve(s.size());
-
-    for (unsigned char c : s) {
-        switch (c) {
-            case '\n': out += "\\n"; break;
-            case '\t': out += "\\t"; break;
-            case '\r': out += "\\r"; break;
-
-            // normal space
-            case ' ':  out += "-"; break;
-
-            // weird NBSP (your ┬À issue source most likely)
-            case 0xC2: case 0xA0:
-                out += "⍽";
-                break;
-
-            default:
-                out += c;
-                break;
-        }
-    }
-    return out;
-}
 
 void Lexer::print_last_output() const {
     using namespace ansiColors;
@@ -123,7 +93,7 @@ void Lexer::print_last_output() const {
         cout
             << bright_yellow << setw(4) << t.id << reset << "  "
             << bright_green  << setw(12) << t.name << reset << "  "
-            << bright_white  << escape_ws(t.data) << reset
+            << bright_white  << utils::visualize_whitespaces(t.data) << reset
             << "\n";
     }
 
