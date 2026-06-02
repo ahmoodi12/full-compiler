@@ -1,21 +1,24 @@
-// utils.cpp
-
 #include "utils.hpp"
 #include "ansi_colors.hpp"
 #include "compiler_cxt.hpp"
 
+#include <iostream>
+#include <fstream>
+#include <filesystem>
+#include <iterator>
+
 namespace utils {
 
 void error(
-    string prompt,
-    CompilerCxt cxt,
+    std::string prompt,
+    CompilerCxt& cxt,
     bool is_warning,
     bool fatal
 ) {
     if (!cxt.show_warnings && is_warning) return;
 
     if (is_warning) {
-        cerr << ansiColors::yellow
+        std::cerr << ansiColors::yellow
              << "Warning";
     } else {
         const char* color = ansiColors::orange;
@@ -24,12 +27,12 @@ void error(
             color = ansiColors::bright_red;
         }
 
-        cerr << color
+        std::cerr << color
              << "Error";
     }
 
     if (!cxt.current_file.empty()) {
-        cerr << ansiColors::reset
+        std::cerr << ansiColors::reset
              << " in file '"
              << ansiColors::bright_cyan
              << ansiColors::underline
@@ -38,49 +41,49 @@ void error(
              << "'";
     }
 
-    cerr << ansiColors::reset
+    std::cerr << ansiColors::reset
          << ":\n";
 
-    cerr << ansiColors::bright_blue
+    std::cerr << ansiColors::bright_blue
          << ">> "
          << prompt
          << " <<\n\n"
          << ansiColors::reset;
 
     if (!is_warning && fatal) {
-        exit(1);
+        std::exit(1);
     }
 }
 
-filesystem::path get_file_path(string filename) {
-    filesystem::path file_path(filename);
+std::filesystem::path get_file_path(std::string filename, CompilerCxt& cxt) {
+    std::filesystem::path file_path(filename);
 
     if (file_path.is_relative()) {
-        file_path = filesystem::current_path() / file_path;
+        file_path = std::filesystem::current_path() / file_path;
     }
 
-    if (!filesystem::exists(file_path)) {
-        utils::error("File does not exist: " + filename);
+    if (!std::filesystem::exists(file_path)) {
+        utils::error("File does not exist: " + filename, cxt);
     }
 
     return file_path;
 }
 
-string read_file(const filesystem::path& path) {
-    ifstream file(path, ios::binary);
+std::string read_file(const std::filesystem::path& path, CompilerCxt& cxt) {
+    std::ifstream file(path, std::ios::binary);
 
     if (!file) {
-        utils::error("Failed to open file: " + path.string());
+        utils::error("Failed to open file: " + path.string(), cxt);
     }
 
-    return string(
-        istreambuf_iterator<char>(file),
-        istreambuf_iterator<char>()
+    return std::string(
+        std::istreambuf_iterator<char>(file),
+        std::istreambuf_iterator<char>()
     );
 }
 
-string visualize_whitespaces(const string& s) {
-    string out;
+std::string visualize_whitespaces(const std::string& s) {
+    std::string out;
     out.reserve(s.size());
 
     for (unsigned char c : s) {
@@ -89,7 +92,6 @@ string visualize_whitespaces(const string& s) {
             case '\t': out += "\\t"; break;
             case '\r': out += "\\r"; break;
 
-            // normal space
             case ' ':  out += "#"; break;
 
             default:

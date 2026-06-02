@@ -2,50 +2,51 @@
 #include "compiler_cxt.hpp"
 #include "utils.hpp"
 
-using namespace std;
+#include <filesystem>
+#include <regex>
 
 namespace {
 
-// split "a.b[0].c" → ["a", "b", "[0]", "c"]
-vector<string> split_path(const string& path) {
-    vector<string> parts;
-    string cur;
+std::vector<std::string> split_path(const std::string& path) {
+    std::vector<std::string> parts;
+    std::string cur;
+    parts.reserve(8);
 
     for (char c : path) {
         if (c == '.') {
-            if (!cur.empty()) parts.push_back(cur);
+            if (!cur.empty()) parts.emplace_back(std::move(cur));
             cur.clear();
         }
         else if (c == '[') {
             if (!cur.empty()) {
-                parts.push_back(cur);
+                parts.emplace_back(std::move(cur));
                 cur.clear();
             }
-            cur += c;
+            cur.push_back(c);
         }
         else if (c == ']') {
-            cur += c;
-            parts.push_back(cur);
+            cur.push_back(c);
+            parts.emplace_back(std::move(cur));
             cur.clear();
         }
         else {
-            cur += c;
+            cur.push_back(c);
         }
     }
 
-    if (!cur.empty()) parts.push_back(cur);
+    if (!cur.empty())
+        parts.emplace_back(std::move(cur));
+
     return parts;
 }
 
-// keep only the failing branch inside JSON
-json keep_only_path(json node, const vector<string>& path, size_t idx = 0) {
+json keep_only_path(const json& node, const std::vector<std::string>& path, size_t idx = 0) {
     if (idx >= path.size()) return node;
 
-    const string& part = path[idx];
+    const auto& part = path[idx];
 
-    // array index like [2]
     if (!part.empty() && part.front() == '[') {
-        size_t i = stoi(part.substr(1, part.size() - 2));
+        const size_t i = std::stoul(part.substr(1, part.size() - 2));
 
         json arr = json::array();
 
@@ -56,12 +57,12 @@ json keep_only_path(json node, const vector<string>& path, size_t idx = 0) {
         return arr;
     }
 
-    // object key
     if (node.is_object()) {
         json obj;
 
-        if (node.contains(part)) {
-            obj[part] = keep_only_path(node.at(part), path, idx + 1);
+        auto it = node.find(part);
+        if (it != node.end()) {
+            obj[part] = keep_only_path(*it, path, idx + 1);
         }
 
         return obj;
@@ -73,17 +74,26 @@ json keep_only_path(json node, const vector<string>& path, size_t idx = 0) {
 } // namespace
 
 
-vector<string> JsonValidator::find_patterns_in_json(
-    const string& pattern,
+std::vector<std::string> JsonValidator::find_patterns_in_json(
+    const std::string& pattern,
     const json& j
 ) {
-    vector<string> matches;
+    static std::unordered_map<std::string, std::regex> cache;
 
-    regex r(pattern);
+    auto it = cache.find(pattern);
 
-    for (auto& [key, value] : j.items()) {
-        if (regex_match(key, r)) {
-            matches.push_back(key);
+    if (it == cache.end()) {
+        it = cache.emplace(pattern, std::regex(pattern)).first;
+    }
+
+    const std::regex& r = it->second;
+
+    std::vector<std::string> matches;
+    matches.reserve(j.size());
+
+    for (const auto& [key, _] : j.items()) {
+        if (std::regex_match(key, r)) {
+            matches.emplace_back(key);
         }
     }
 
@@ -94,22 +104,19 @@ vector<string> JsonValidator::find_patterns_in_json(
 bool JsonValidator::validate_children(
     const json& node,
     const JsonValidator::Schema& schema,
-    const string& path,
+    const std::string& path,
     int depth,
-    vector<string>& error_path
+    std::vector<std::string>& error_path
 ) {
-    bool valid = true;
-
     for (const auto& child : schema.fields) {
 
-        vector<string> matches = find_patterns_in_json(child.name, node);
+        const auto matches = find_patterns_in_json(child.name, node);
 
         if (matches.empty()) {
-
             if (child.optional) continue;
 
             if (error_path.empty())
-                error_path.push_back(path);
+                error_path.emplace_back(path);
 
             utils::error(
                 "Missing field (pattern): " + child.name,
@@ -118,165 +125,141 @@ bool JsonValidator::validate_children(
                 false
             );
 
-            valid = false;
-            continue;
+            return false;
         }
+
+        std::string new_path;
+        new_path.reserve(path.size() + 32);
 
         for (const auto& key : matches) {
 
-            string new_path = path.empty() ? key : path + "." + key;
+            new_path.clear();
+            if (!path.empty()) {
+                new_path = path;
+                new_path.push_back('.');
+            }
+            new_path += key;
 
             if (!validate_node(
-                node.at(key),
-                child,
-                new_path,
-                depth + 1,
-                error_path
-            )) {
-                valid = false;
+                    node.at(key),
+                    child,
+                    new_path,
+                    depth + 1,
+                    error_path))
+            {
+                return false;
             }
         }
     }
 
-    return valid;
+    return true;
 }
 
 
 bool JsonValidator::validate(const json& j) {
-    bool valid = true;
-    vector<string> error_path;
+    std::vector<std::string> error_path;
 
     if (!schema.name.empty()) {
 
-        auto root_matches = find_patterns_in_json(schema.name, j);
+        const auto root_matches = find_patterns_in_json(schema.name, j);
 
         if (root_matches.empty()) {
-
-            utils::error(
-                "Missing root key: " + schema.name,
-                cxt,
-                false,
-                false
-            );
-
+            utils::error("Missing root key: " + schema.name, cxt, false, false);
             return false;
         }
 
         for (const auto& key : root_matches) {
-
-            if (!validate_node(
-                j.at(key),
-                schema,
-                key,
-                0,
-                error_path
-            )) {
-                valid = false;
-            }
+            if (!validate_node(j.at(key), schema, key, 0, error_path))
+                return false;
         }
     }
     else {
-        if (!validate_node(j, schema, "", 0, error_path)) {
-            valid = false;
-        }
+        if (!validate_node(j, schema, "", 0, error_path))
+            return false;
     }
 
     if (!error_path.empty()) {
+        auto parts = split_path(error_path.front());
+        auto subtree = keep_only_path(j, parts);
 
-        vector<string> parts = split_path(error_path[0]);
-
-        json subtree = keep_only_path(j, parts);
-
-        cout << "\n--- FAILED SUBTREE ---\n";
-        cout << subtree.dump(4) << endl;
+        std::cout << "\n--- FAILED SUBTREE ---\n";
+        std::cout << subtree.dump(4) << '\n';
     }
 
-    return valid;
+    return true;
 }
 
 
 bool JsonValidator::validate_node(
     const json& node,
     const JsonValidator::Schema& schema,
-    const string& path,
+    const std::string& path,
     int depth,
-    vector<string>& error_path
+    std::vector<std::string>& error_path
 ) {
     switch (schema.type) {
 
         case Type::String:
-            if (!node.is_string()) {
-
-                if (error_path.empty())
-                    error_path.push_back(path);
-
-                utils::error(
-                    "Type mismatch (expected string): " + path,
-                    cxt,
-                    false,
-                    false
-                );
-
-                return false;
-            }
+            if (!node.is_string()) goto type_error;
             return true;
 
         case Type::Int:
-            if (!node.is_number_integer()) {
-
-                if (error_path.empty())
-                    error_path.push_back(path);
-
-                utils::error(
-                    "Type mismatch (expected int): " + path,
-                    cxt,
-                    false,
-                    false
-                );
-
-                return false;
-            }
+            if (!node.is_number_integer()) goto type_error;
             return true;
 
         case Type::Bool:
-            if (!node.is_boolean()) {
-
-                if (error_path.empty())
-                    error_path.push_back(path);
-
-                utils::error(
-                    "Type mismatch (expected bool): " + path,
-                    cxt,
-                    false,
-                    false
-                );
-
-                return false;
-            }
+            if (!node.is_boolean()) goto type_error;
             return true;
 
-        case Type::Array:
-            if (!node.is_array()) {
-                if (error_path.empty()) error_path.push_back(path);
+        case Type::Array: {
+            if (!node.is_array()) goto type_error;
 
-                utils::error(
-                    "Type mismatch (expected array): " + path,
-                    cxt,
-                    false,
-                    false
-                );
-                return false;
-            }
+            const size_t n = node.size();
 
             if (schema.is_tuple) {
-                if (node.size() != schema.fields.size()) {
+                if (n != schema.fields.size()) {
+                    goto type_error;
+                }
+
+                for (size_t i = 0; i < n; i++) {
+                    if (!validate_node(
+                            node[i],
+                            schema.fields[i],
+                            path + "[" + std::to_string(i) + "]",
+                            depth + 1,
+                            error_path))
+                        return false;
+                }
+
+                return true;
+            }
+
+            for (size_t i = 0; i < n; i++) {
+
+                bool matched = false;
+
+                for (const auto& field : schema.fields) {
+                    std::vector<std::string> tmp;
+
+                    if (validate_node(
+                            node[i],
+                            field,
+                            path + "[" + std::to_string(i) + "]",
+                            depth + 1,
+                            tmp))
+                    {
+                        matched = true;
+                        break;
+                    }
+                }
+
+                if (!matched) {
                     if (error_path.empty())
-                        error_path.push_back(path);
+                        error_path.emplace_back(path + "[" + std::to_string(i) + "]");
 
                     utils::error(
-                        "Tuple size mismatch: " + path +
-                        " (expected " + to_string(schema.fields.size()) +
-                        ", got " + to_string(node.size()) + ")",
+                        "Array element does not match schema: " +
+                        path + "[" + std::to_string(i) + "]",
                         cxt,
                         false,
                         false
@@ -284,91 +267,49 @@ bool JsonValidator::validate_node(
 
                     return false;
                 }
-
-                for (size_t i = 0; i < node.size(); i++) {
-                    if (!validate_node(
-                            node[i],
-                            schema.fields[i],
-                            path + "[" + to_string(i) + "]",
-                            depth + 1,
-                            error_path))
-                    {
-                        return false;
-                    }
-                }
-            } else {
-                for (size_t i = 0; i < node.size(); i++) {
-                    bool matched = false;
-                    for (auto& field : schema.fields) {
-                        vector<string> tmp_error;
-
-                        if (validate_node(
-                                node[i],
-                                field,
-                                path + "[" + to_string(i) + "]",
-                                depth + 1,
-                                tmp_error))
-                        {
-                            matched = true;
-                            break;
-                        }
-                    }
-
-                    if (!matched) {
-                        if (error_path.empty())
-                            error_path.push_back(
-                                path + "[" + to_string(i) + "]"
-                            );
-
-                        utils::error(
-                            "Array element does not match any allowed schema: " +
-                            path + "[" + to_string(i) + "]",
-                            cxt,
-                            false,
-                            false
-                        );
-
-                        return false;
-                    }
-                }
             }
+
             return true;
+        }
 
         case Type::Object:
-            if (!node.is_object()) {
-
-                if (error_path.empty())
-                    error_path.push_back(path);
-
-                utils::error(
-                    "Type mismatch (expected object): " + path,
-                    cxt,
-                    false,
-                    false
-                );
-
-                return false;
-            }
-
+            if (!node.is_object()) goto type_error;
             return validate_children(node, schema, path, depth, error_path);
     }
 
     return true;
+
+type_error:
+    if (error_path.empty())
+        error_path.emplace_back(path);
+
+    utils::error(
+        "Type mismatch at: " + path,
+        cxt,
+        false,
+        false
+    );
+
+    return false;
 }
 
 
-json load_and_validate_json(CompilerCxt& cxt, const string& filename, JsonValidator& validator) {
-    filesystem::path file_path = utils::get_file_path(filename);
+json load_and_validate_json(
+    CompilerCxt& cxt,
+    const std::string& filename,
+    JsonValidator& validator
+) {
+    auto file_path = utils::get_file_path(filename, cxt);
 
-    filesystem::path old_file = cxt.current_file;
+    auto old = cxt.current_file;
     cxt.current_file = file_path;
 
-    json data = json::parse(utils::read_file(file_path));
+    json data = json::parse(utils::read_file(file_path, cxt));
 
     if (!validator.validate(data))
-        exit(1);
+        std::exit(1);
 
-    cxt.current_file = old_file;
+    cxt.current_file = old;
 
     return data;
 }

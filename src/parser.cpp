@@ -5,13 +5,13 @@
 
 Parser::Parser(
         CompilerCxt& cxt, 
-        const string& filename,
-        vector<Lexer::TokenRule> lexer_rules,
-        vector<PrattParser::ParseRule> pratt_rules) 
+        const std::string& filename,
+        std::vector<Lexer::Rule> lexer_rules,
+        std::vector<PrattParser::Rule> pratt_rules) 
         : cxt(cxt), pratt_parser(cxt, pratt_rules), json_validator(cxt, json_schema) {
     if (!filename.empty()) {
         json data = load_and_validate_json(cxt, filename, json_validator);
         
-        pratt_parser.read_json(data, lexer_rules);
+        pratt_parser.load_json(data, lexer_rules);
     }
 }

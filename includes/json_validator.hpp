@@ -6,7 +6,6 @@
 class CompilerCxt;
 using json = nlohmann::json;
 
-
 class JsonValidator {
 public:
     // TODO: add float handling
@@ -19,47 +18,53 @@ public:
     };
 
     struct Schema {
-        string name;
+        std::string name;
         Type type;
-        vector<Schema> fields;
+        std::vector<Schema> fields;
         bool optional = false;
         bool is_tuple = false;
     };
     
     CompilerCxt& cxt;
     const Schema schema;
-    JsonValidator(CompilerCxt& cxt, const Schema schema) : schema(schema), cxt(cxt) {}
+
+    JsonValidator(CompilerCxt& cxt, const Schema schema)
+        : schema(schema), cxt(cxt) {}
 
     bool validate(const json& j);
 
 private:
-    vector<string> find_patterns_in_json(
-        const string& pattern,
+    std::vector<std::string> find_patterns_in_json(
+        const std::string& pattern,
         const json& j
     );
 
     bool check_type(
         const json& node,
         const Schema& schema,
-        const string& path,
-        vector<string>& error_path
+        const std::string& path,
+        std::vector<std::string>& error_path
     );
 
     bool validate_node(
         const json& node,
         const Schema& schema,
-        const string& path,
+        const std::string& path,
         int depth,
-        vector<string>& error_path
+        std::vector<std::string>& error_path
     );
 
     bool validate_children(
         const json& node,
         const Schema& schema,
-        const string& path,
+        const std::string& path,
         int depth,
-        vector<string>& error_path
+        std::vector<std::string>& error_path
     );
 };
 
-json load_and_validate_json(CompilerCxt& cxt, const string& filename, JsonValidator& validator);
+json load_and_validate_json(
+    CompilerCxt& cxt,
+    const std::string& filename,
+    JsonValidator& validator
+);

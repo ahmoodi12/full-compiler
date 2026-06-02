@@ -8,96 +8,108 @@
 
 Lexer::Lexer(
     CompilerCxt& cxt,
-    string filename,
-    vector<TokenRule> Rules,
-    unordered_map<uint32_t, string> names
+    std::string filename,
+    std::vector<Rule> Rules
 ) : cxt(cxt),
-    rules(Rules),
-    debug_names(names),
+    rules(std::move(Rules)),
     json_validator(cxt, json_schema)
-{   
+{
     if (!filename.empty()) {
         json lex_data = load_and_validate_json(cxt, filename, json_validator);
 
-        for (auto& [key, val] : lex_data.at("regexes").items()) {
-            rules.emplace_back(stoi(key), val[0], val[1]);
-        }
+        auto& arr = lex_data.at("rules");
+        rules.reserve(rules.size() + arr.size());
 
-        if (lex_data.contains("debug_names")) {
-            for (auto& [key, val] : lex_data.at("debug_names").items()) {
-                debug_names[stoi(key)] = val.get<string>();
-            }
+        for (auto& [key, val] : arr.items()) {
+            rules.emplace_back(
+                std::stoi(key),
+                val[0].get<std::string>(),
+                val[1].get<std::string>(),
+                val[2].get<bool>()
+            );
         }
     }
 }
 
-vector<Lexer::Token> Lexer::run(const string& input) {
+std::vector<Lexer::Token> Lexer::run(const std::string& input) {
+    std::vector<Token> output;
+    output.reserve(input.size() / 2);
 
-    last_output.clear();
+    size_t pos = 0;
+    const size_t n = input.size();
 
-    uint64_t pos = 0;
+    while (pos < n) {
 
-    vector<Lexer::Token> temp_holder;
+        std::string_view remaining(input.data() + pos, n - pos);
 
-    while (pos < input.size()) {
-        string remaining = input.substr(pos);
-        temp_holder.clear();
+        size_t best_len = 0;
+        const Rule* best_rule = nullptr;
+        std::string best_match;
 
-        for (auto& rule : rules) {
-            smatch m;
+        for (const auto& rule : rules) {
 
-            if (regex_search(remaining, m, rule.pattern)) {
-                string matched_str = m.str();
+            const char* begin = remaining.data();
+            const char* end   = begin + remaining.size();
 
-                temp_holder.emplace_back(
-                    Lexer::Token {
-                        rule.id,
-                        debug_names[rule.id],
-                        matched_str,
-                        rule.skip
-                });
-            }
-        }
-        if (temp_holder.empty()) {
-            utils::error("wasn't able to lex from position " + to_string(pos) + ", invalid char or unadded Lexer::token type.", 
-            cxt, false, false);
-        } else {
-            int longest = 0;
-            Lexer::Token* longest_token = nullptr;
-            for (auto& match : temp_holder) {
-                int length = match.data.length();
-                if (length > longest || 
-                   (length == longest && longest_token 
-                    && (longest_token->id > match.id))) {
-                    longest = length;
-                    longest_token = &match;
+            std::cmatch m;
+
+            if (std::regex_search(begin, end, m, rule.pattern)) {
+
+                std::string match = m.str();
+                size_t len = match.size();
+
+                if (len > best_len ||
+                    (len == best_len && best_rule && rule.id < best_rule->id)) {
+
+                    best_len = len;
+                    best_rule = &rule;
+                    best_match = match;
                 }
             }
-
-            if (!longest_token->skip) last_output.push_back(*longest_token);
-            pos += longest;
         }
+
+        if (!best_rule) {
+            utils::error(
+                "wasn't able to lex at position " + std::to_string(pos) +
+                ", invalid or unrecognized token.",
+                cxt,
+                false,
+                false
+            );
+            break;
+        }
+
+        if (!best_rule->skip) {
+            output.emplace_back(Token{
+                best_rule->id,
+                best_rule->label,
+                best_match,
+                best_rule->skip
+            });
+        }
+
+        pos += best_len;
     }
-    return last_output;
+
+    return output;
 }
 
-
-void Lexer::print_last_output() const {
+void Lexer::print_output(std::vector<Token> output) const {
     using namespace ansiColors;
 
-    cout << bold << cyan
+    std::cout << bold << cyan
               << "\n===== LEXER OUTPUT =====\n"
               << reset;
 
-    for (const auto& t : last_output) {
-        cout
-            << bright_yellow << setw(4) << t.id << reset << "  "
-            << bright_green  << setw(12) << t.name << reset << "  "
+    for (const auto& t : output) {
+        std::cout
+            << bright_yellow << std::setw(4) << t.id << reset << "  "
+            << bright_green  << std::setw(12) << t.label << reset << "  "
             << bright_white  << utils::visualize_whitespaces(t.data) << reset
             << "\n";
     }
 
-    cout << bold << cyan
+    std::cout << bold << cyan
               << "========================\n"
               << reset;
 }

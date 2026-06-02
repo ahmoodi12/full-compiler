@@ -1,21 +1,21 @@
-// utils.hpp
-
 #pragma once
 
 #include "combined_include.hpp"
 
+class CompilerCxt;
+
 namespace utils {
 
 void error(
-    string prompt,
-    CompilerCxt cxt = {},
+    std::string prompt,
+    CompilerCxt& cxt,
     bool is_warning = false,
     bool fatal = true
 );
 
-filesystem::path get_file_path(string filename);
-string read_file(const filesystem::path& path);
+std::filesystem::path get_file_path(std::string filename, CompilerCxt& cxt);
+std::string read_file(const std::filesystem::path& path, CompilerCxt& cxt);
 
-string visualize_whitespaces(const string& s);
+std::string visualize_whitespaces(const std::string& s);
 
 }

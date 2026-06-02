@@ -11,6 +11,16 @@ class Parser {
         JsonValidator::Type::Object,
         {
             JsonValidator::Schema {
+                "expr wrapper",
+                JsonValidator::Type::Object,
+                {
+                    JsonValidator::Schema {
+                        "(opening|closing)",
+                        JsonValidator::Type::String,
+                    }
+                }
+            },
+            JsonValidator::Schema {
                 "expr data",
                 JsonValidator::Type::Object,
                 {
@@ -25,7 +35,7 @@ class Parser {
                                 true
                             },
                             JsonValidator::Schema {
-                                "(value|prefix|infix)",
+                                "(value|prefix|infix|)",
                                 JsonValidator::Type::String,
                                 {{}},
                                 true
@@ -39,9 +49,15 @@ class Parser {
     };
 
     CompilerCxt& cxt;
-    json data_json;
+
+public:
     PrattParser pratt_parser;
     JsonValidator json_validator;
 
-    Parser(CompilerCxt& cxt, const string& filename, vector<Lexer::TokenRule> lexer_rules, vector<PrattParser::ParseRule> pratt_rules);
+    Parser(
+        CompilerCxt& cxt, 
+        const std::string& filename, 
+        std::vector<Lexer::Rule> lexer_rules,
+        std::vector<PrattParser::Rule> pratt_rules = {}
+    );
 };

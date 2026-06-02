@@ -1,10 +1,13 @@
-// lexer.hpp
-
 #pragma once
 
 #include "json.hpp"
+#include "json_validator.hpp"
+#include "rule_base.hpp"
+#include "combined_include.hpp"
 
-class JsonValidator;
+#include <regex>
+#include <string>
+#include <vector>
 
 using json = nlohmann::json;
 
@@ -15,7 +18,7 @@ public:
         JsonValidator::Type::Object,
         {
             JsonValidator::Schema {
-                "regexes",
+                "rules",
                 JsonValidator::Type::Object,
                 {
                     JsonValidator::Schema {
@@ -23,57 +26,50 @@ public:
                         JsonValidator::Type::Array,
                         {
                             JsonValidator::Schema{"", JsonValidator::Type::String},
-                            JsonValidator::Schema{"", JsonValidator::Type::Bool}
+                            JsonValidator::Schema{"", JsonValidator::Type::String},
+                            JsonValidator::Schema{"", JsonValidator::Type::Bool},
                         },
                         false,
                         true
                     }
                 }
             },
-            JsonValidator::Schema {
-                "debug_names",
-                JsonValidator::Type::Object,
-                {
-                    JsonValidator::Schema{"\\d+", JsonValidator::Type::String}
-                },
-                true
-            }
         }
     };
 
     struct Token {
-        uint32_t id;
-        string name; // debug
-        string data;
+        std::uint32_t id;
+        std::string label;
+        std::string data;
         bool skip;
     };
 
-    struct TokenRule {
-        uint32_t id;
-        regex pattern;
+    struct Rule : RuleBase {
+        std::regex pattern;
         bool skip;
-        TokenRule(uint32_t id, string pattern, bool skip) 
-        : id(id), pattern("^" + pattern), skip(skip) {}
+
+        Rule(
+            std::uint32_t id,
+            std::string label,
+            std::string pattern,
+            bool skip_
+        )
+            : RuleBase(id, std::move(label)),
+              pattern("^" + pattern),
+              skip(skip_)
+        {}
     };
 
     CompilerCxt& cxt;
-
-    vector<Token> last_output; 
-
-    vector<TokenRule> rules;
-
-    unordered_map<uint32_t, string> debug_names;
-
+    std::vector<Rule> rules;
     JsonValidator json_validator;
 
     Lexer(
         CompilerCxt& cxt,
-        string lex_data_file,
-        vector<TokenRule> rules = {},
-        unordered_map<uint32_t, string> names = {}
+        std::string lex_data_file,
+        std::vector<Rule> rules = {}
     );
 
-    vector<Token> run(const string& input);
-
-    void print_last_output() const;
+    std::vector<Token> run(const std::string& input);
+    void print_output(std::vector<Token> output) const;
 };
