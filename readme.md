@@ -176,7 +176,7 @@ The design is expected to evolve significantly throughout development.
 | ------------------------- | ------------- |
 | JSON Configuration System | ✅ Complete    |
 | Lexer                     | ✅ Complete    |
-| Pratt Parser              | ⏳ In Progress |
+| Pratt Parser              | ✅ complete |
 | AST                       | ⏳ In Progress |
 | Semantic Analysis         | ❌ Not Started |
 | IR                        | ❌ Not Started |
@@ -191,8 +191,8 @@ The design is expected to evolve significantly throughout development.
 
 * [x] Data-driven lexer
 * [x] JSON schema validation
-* [ ] Pratt parser
-* [ ] AST generation
+* [x] Pratt parser
+* [-] AST generation
 
 ## Phase 2 — Semantics
 

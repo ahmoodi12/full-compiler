@@ -1,51 +1,59 @@
-#pragma once 
+#pragma once
 
 #include "combined_include.hpp"
 #include "compiler_cxt.hpp"
-#include "lexer.hpp"
-#include "rule_base.hpp"
 #include "ast.hpp"
+#include "token.hpp"
+#include "json.hpp"
+#include "lexer.hpp"
 
+#include <unordered_map>
+#include <vector>
 
 class PrattParser {
 public:
-    enum RuleType {
-        Prefix,
-        Infix,
-        Value,
-        OpeningWrapper,
-        ClosingWrapper
+    enum TypeMask : uint32_t {
+        None = 0,
+        Value = 1 << 0,
+        Prefix = 1 << 1,
+        Infix = 1 << 2,
+        Postfix = 1 << 3,
+        Ternary = 1 << 4,
+        OpeningWrapper = 1 << 5,
+        ClosingWrapper = 1 << 6,
+        ExprEnd = 1 << 7
     };
 
     struct Rule : RuleBase {
-        std::vector<RuleType> types;
-        std::uint16_t left_power = 0;
-        std::uint16_t right_power = 0;
+        uint32_t type_mask = 0;
+        uint16_t lbp = 0;
+        uint16_t rbp = 0;
     };
-
-    std::vector<Rule> rules;
-    Rule func_param_seperator;
-    std::pair<Rule, Rule> expr_wrapper;
-    uint16_t prefix_bp;
-
-    std::span<Lexer::Token> current_set;
 
     CompilerCxt& cxt;
 
-    Lexer::Token& peek();
+    std::vector<Rule> rules;
+    std::unordered_map<uint32_t, Rule*> by_id;
+    std::unordered_map<std::string, Rule*> by_label;
 
-    Lexer::Token consume();
+    std::vector<Token>* tokens = nullptr;
+    size_t pos = 0;
 
-    ASTNode parse_atom();
+    uint16_t prefix_bp = 100;
 
-    bool check_type(RuleType exp_type, Rule* rule);
-    bool check_type(RuleType exp_type, Lexer::Token& token);
-
-    Rule* find_rule(const Lexer::Token& token);
-    
     PrattParser(CompilerCxt& cxt, std::vector<Rule> rules);
 
     void load_json(json& data, const std::vector<Lexer::Rule>& lexer_rules);
-    
+
     ASTNode parse_expr(uint16_t rbp);
+    ASTNode parse_atom();
+
+private:
+    Token& peek();
+    Token consume();
+    bool eof();
+
+    Rule* find_rule(const Token& t);
+
+    static bool has(uint32_t mask, TypeMask t);
 };

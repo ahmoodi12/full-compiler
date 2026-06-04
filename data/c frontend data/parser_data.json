@@ -1,49 +1,65 @@
 {
   "pratt parser": {
-    "expr wrapper": {
-      "opening": "(",
-      "closing": ")"
-    },
-    "func param seperator": ",",
     "prefix binding power": 100,
 
     "expr data": {
+      "(": {
+        "types": ["opening wrapper"]
+      },
+      ")": {
+        "types": ["closing wrapper"]
+      },
       "+": {
         "lbp": 10,
         "rbp": 11,
 
-        "prefix": "positive", 
-        "infix": "plus"
+        "types": [
+          "prefix",
+          "infix"
+        ]
       },
 
       "-": {
         "lbp": 10,
         "rbp": 11,
 
-        "prefix": "negative", 
-        "infix": "minus"
+        "types": [
+          "prefix",
+          "infix"
+        ]
       },
 
       "*": {
         "lbp": 20,
         "rbp": 21,
 
-        "prefix": "derefence", 
-        "infix": "multiply"
+        "types": [
+          "prefix",
+          "infix"
+        ]
       },
       
       "/": {
         "lbp": 20,
         "rbp": 21,
 
-        "infix": "divide"
+        "types": [
+          "infix"
+        ]
       },
       "identifier": {
-        "value": "ident"
+        "types": ["value"]
       },
       "int_literal": {
-        "value": "int_literal"
+        "types": ["value"]
+      },
+      ";": {
+        "types": ["expr terminator"]
+      },
+      ",": {
+        "types": ["expr terminator"]
       }
     }
   }
 }
+

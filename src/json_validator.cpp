@@ -71,8 +71,32 @@ json keep_only_path(const json& node, const std::vector<std::string>& path, size
     return node;
 }
 
+std::string format_json_path(std::string path) {
+    std::string out = "\"";
+    for (char c : path) {
+        if (c == '.') {
+            out += "\" -> \"";
+        } else {
+            out += c;
+        }
+    }
+    return out;
+}
+
 } // namespace
 
+const char* JsonValidator::Schema::type_name() const {
+    switch (type)
+    {
+    case Type::String:  return "string";
+    case Type::Int:     return "int";
+    case Type::Bool:    return "bool";
+    case Type::Array:   return "array";
+    case Type::Object:  return "object";
+    }
+
+    return "unknown";
+}
 
 std::vector<std::string> JsonValidator::find_patterns_in_json(
     const std::string& pattern,
@@ -169,13 +193,11 @@ bool JsonValidator::validate(const json& j) {
         }
 
         for (const auto& key : root_matches) {
-            if (!validate_node(j.at(key), schema, key, 0, error_path))
-                return false;
+            validate_node(j.at(key), schema, key, 0, error_path);
         }
     }
     else {
-        if (!validate_node(j, schema, "", 0, error_path))
-            return false;
+        validate_node(j, schema, "", 0, error_path);
     }
 
     if (!error_path.empty()) {
@@ -184,6 +206,7 @@ bool JsonValidator::validate(const json& j) {
 
         std::cout << "\n--- FAILED SUBTREE ---\n";
         std::cout << subtree.dump(4) << '\n';
+        return false;
     }
 
     return true;
@@ -255,11 +278,11 @@ bool JsonValidator::validate_node(
 
                 if (!matched) {
                     if (error_path.empty())
-                        error_path.emplace_back(path + "[" + std::to_string(i) + "]");
+                        error_path.emplace_back(format_json_path(path) + "[" + std::to_string(i) + "]");
 
                     utils::error(
                         "Array element does not match schema: " +
-                        path + "[" + std::to_string(i) + "]",
+                        format_json_path(path) + "[" + std::to_string(i) + "]",
                         cxt,
                         false,
                         false
@@ -284,7 +307,12 @@ type_error:
         error_path.emplace_back(path);
 
     utils::error(
-        "Type mismatch at: " + path,
+        std::string("Type mismatch, expected a ") +
+        schema.type_name() +
+        " got a " +
+        node.type_name() +
+        " at: " +
+        format_json_path(path),
         cxt,
         false,
         false

@@ -1,10 +1,13 @@
 #pragma once
 
-#include "lexer.hpp"
+#include "token.hpp"
 #include <memory>
 #include <vector>
 
 struct ASTNode {
-    Lexer::Token token;
+    Token token;
     std::vector<std::unique_ptr<ASTNode>> children;
+
+    ASTNode() = default;
+    explicit ASTNode(Token t) : token(std::move(t)) {}
 };

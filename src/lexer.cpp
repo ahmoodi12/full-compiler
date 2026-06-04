@@ -31,7 +31,7 @@ Lexer::Lexer(
     }
 }
 
-std::vector<Lexer::Token> Lexer::run(const std::string& input) {
+std::vector<Token> Lexer::run(const std::string& input) {
     std::vector<Token> output;
     output.reserve(input.size() / 2);
 

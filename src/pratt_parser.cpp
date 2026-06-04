@@ -1,215 +1,225 @@
 #include "pratt_parser.hpp"
-#include "lexer.hpp"
 #include "utils.hpp"
-#include "combined_include.hpp"
-#include "parser.hpp"
+#include "lexer.hpp"
+#include "json.hpp"
+
+using json = nlohmann::json;
+
+
+bool PrattParser::has(uint32_t mask, TypeMask t) {
+    return mask & (uint32_t)t;
+}
+
+Token& PrattParser::peek() {
+    if (eof()) utils::error("peek on empty token stream", cxt);
+    return (*tokens)[pos];
+}
+
+Token PrattParser::consume() {
+    if (eof()) utils::error("consume on empty token stream", cxt);
+    return (*tokens)[pos++];
+}
+
+bool PrattParser::eof() {
+    return tokens == nullptr || pos >= tokens->size();
+}
+
+PrattParser::Rule* PrattParser::find_rule(const Token& t) {
+    auto it = by_id.find(t.id);
+    if (it == by_id.end()) {
+        utils::error("unknown token rule: " + t.label, cxt);
+        return nullptr;
+    }
+    return it->second;
+}
 
 
 PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules)
-    : cxt(cxt), rules(std::move(rules)) {}
+    : cxt(cxt), rules(std::move(rules)) {
 
-
-static const Lexer::Rule* find_lex_rule(
-    const std::vector<Lexer::Rule>& lexer_rules,
-    const std::string& key
-) {
-    for (auto& r : lexer_rules) {
-        if (r.label == key || std::to_string(r.id) == key)
-            return &r;
+    // build lookup tables
+    for (auto& r : this->rules) {
+        by_id[r.id] = &r;
+        by_label[r.label] = &r;
     }
-    return nullptr;
 }
 
 void PrattParser::load_json(json& data, const std::vector<Lexer::Rule>& lexer_rules) {
     rules.clear();
-    rules.reserve(data.at("expr data").size()); 
-
-    auto& wrapper = data.at("expr wrapper");
-
-    for (auto& [key, value] : wrapper.items()) {
-        if (auto* lex = find_lex_rule(lexer_rules, value); lex) {
-            Rule rule;
-            rule.id = lex->id;
-            rule.label = lex->label;
-
-            if (key == "closing") {
-                rule.types.push_back(RuleType::ClosingWrapper);
-                expr_wrapper.second = rule;
-            } else if (key == "opening") {
-                rule.types.push_back(RuleType::OpeningWrapper);
-                expr_wrapper.first = rule;
-            }
-        } else {
-            utils::error("wrapper key '" + key + "' not found in lexer rules", cxt);
-        }
-    }
-
-    auto* lex = find_lex_rule(lexer_rules, data.at("func param seperator"));
-    func_param_seperator = {lex->id, lex->label};
+    by_id.clear();
+    by_label.clear();
 
     prefix_bp = data.at("prefix binding power");
 
     auto& expr_data = data.at("expr data");
 
+    rules.reserve(expr_data.size());
+
     for (auto& [key, value] : expr_data.items()) {
-        if (auto* lex = find_lex_rule(lexer_rules, key); lex) {
-            Rule rule;
-            rule.id = lex->id;
-            rule.label = lex->label;
+        Rule rule;
 
-            const bool is_prefix = value.contains("prefix");
-            const bool is_infix  = value.contains("infix");
-            const bool is_value  = value.contains("value");
-
-            if (!is_prefix && !is_infix && !is_value) {
-                utils::error("rule '" + key + "' missing type (prefix/infix/value)", cxt);
+        // map lexer rule
+        bool found = false;
+        for (auto& lex : lexer_rules) {
+            if (lex.label == key || std::to_string(lex.id) == key) {
+                rule.id = lex.id;
+                rule.label = lex.label;
+                found = true;
+                break;
             }
-
-            if (is_prefix) rule.types.push_back(RuleType::Prefix);
-            if (is_infix)  rule.types.push_back(RuleType::Infix);
-            if (is_value)  rule.types.push_back(RuleType::Value);
-
-            if (is_infix) {
-                if (!value.contains("lbp") || !value.contains("rbp")) {
-                    utils::error("infix rule missing lbp/rbp: " + key, cxt);
-                }
-
-                rule.left_power  = value["lbp"].get<uint8_t>();
-                rule.right_power = value["rbp"].get<uint8_t>();
-            }
-
-            rules.push_back(std::move(rule));
-        } else {
-            utils::error("rule key '" + key + "' not found in lexer rules", cxt);
         }
+
+        if (!found) {
+            utils::error("unknown lexer rule: " + key, cxt);
+        }
+
+        // types → bitmask
+        if (!value.contains("types")) {
+            utils::error("rule missing types: " + key, cxt);
+        }
+
+        for (auto& type : value["types"]) {
+            std::string t = type;
+
+            if (t == "value") rule.type_mask |= Value;
+            else if (t == "prefix") rule.type_mask |= Prefix;
+            else if (t == "infix") rule.type_mask |= Infix;
+            else if (t == "postfix") rule.type_mask |= Postfix;
+            else if (t == "ternary") rule.type_mask |= Ternary;
+            else if (t == "opening wrapper") rule.type_mask |= OpeningWrapper;
+            else if (t == "closing wrapper") rule.type_mask |= ClosingWrapper;
+            else if (t == "expr terminator") rule.type_mask |= ExprEnd;
+        }
+
+        // precedence
+        if (has(rule.type_mask, Infix)) {
+            if (value.contains("lbp") && value.contains("rbp")) {
+                rule.lbp = value["lbp"];
+                rule.rbp = value["rbp"];
+            } else if (value.contains("precedence") && value.contains("associativity")) {
+                uint16_t p = value["precedence"];
+                std::string assoc = value.value("associativity", "left");
+
+                rule.lbp = p;
+                rule.rbp = (assoc == "right") ? p - 1 : p + 1;
+            } else {
+                utils::error("infix missing precedence or associativity: " + key, cxt);
+            }
+        }
+
+        rules.push_back(rule);
+    }
+
+    // rebuild lookup tables
+    for (auto& r : rules) {
+        by_id[r.id] = &r;
+        by_label[r.label] = &r;
     }
 }
-
-Lexer::Token& PrattParser::peek() {
-    if (current_set.empty()) utils::error("peeking into empty token stream", cxt);
-    return current_set.front();
-}
-
-Lexer::Token PrattParser::consume() {
-    if (current_set.empty()) utils::error("peeking into empty token stream", cxt);
-    Lexer::Token out = current_set.front();
-    current_set = current_set.subspan(1);
-    return out;
-}
-
-
-PrattParser::Rule* PrattParser::find_rule(const Lexer::Token& token) {
-    for (auto& rule : rules) {
-        if (rule.id == token.id) {
-            return &rule;
-        }
-    }
-    utils::error("unable to find the rule for token, id: " + std::to_string(token.id) + ", label: " + token.label, cxt, true, false);
-    return nullptr;
-}
-
-bool PrattParser::check_type(RuleType exp_type, PrattParser::Rule* rule) {
-    return rule ? (bool)std::count(rule->types.begin(), rule->types.end(), exp_type) : 0;
-}
-
-bool PrattParser::check_type(RuleType exp_type, Lexer::Token& token) {
-    auto* rule = find_rule(token);
-    return rule ? (bool)std::count(rule->types.begin(), rule->types.end(), exp_type) : 0;
-}
-
 
 ASTNode PrattParser::parse_atom() {
-    Lexer::Token token = consume();
-    auto* rule = find_rule(token);
+    Token tok = consume();
+    Rule* rule = find_rule(tok);
 
-    // literal, identifier, etc.
-    if (check_type(RuleType::Value, rule)) {
-        return ASTNode{
-            .token = token
-        };
+    if (!rule) utils::error("null rule in atom", cxt);
+
+    if (has(rule->type_mask, Value)) {
+        return ASTNode(tok);
     }
 
-    // ( expr )
-    if (check_type(RuleType::OpeningWrapper, rule)) {
-        auto expr = parse_expr(0);
-
-        Lexer::Token closing = consume();
-
-        if (!check_type(RuleType::ClosingWrapper, closing)) {
-            utils::error(
-                "expected closing wrapper, got token id: " +
-                std::to_string(closing.id) +
-                ", label: '" + closing.label + "'",
-                cxt
-            );
-        }
-
-        return expr;
-    }
-
-    // prefix operator
-    if (check_type(RuleType::Prefix, rule)) {
-
-        auto operand = parse_expr(prefix_bp);
-
-        ASTNode node;
-        node.token = token;
+    if (has(rule->type_mask, Prefix)) {
+        ASTNode node(tok);
 
         node.children.push_back(
-            std::make_unique<ASTNode>(
-                std::move(operand)
-            )
+            std::make_unique<ASTNode>(parse_expr(prefix_bp))
         );
 
         return node;
     }
 
-    utils::error(
-        "expected value, wrapper, or prefix operator. got token id: " +
-        std::to_string(token.id) +
-        ", label: '" + token.label + "'",
-        cxt
-    );
-    //std::unreachable();
+    if (has(rule->type_mask, OpeningWrapper)) {
+        ASTNode expr = parse_expr(0);
+
+        if (eof() || !has(find_rule(consume())->type_mask, ClosingWrapper)) {
+            utils::error("expected closing wrapper", cxt);
+        }
+
+        return expr;
+    }
+
+    utils::error("invalid atom: " + tok.label, cxt);
+    return {};
 }
 
-
 ASTNode PrattParser::parse_expr(uint16_t rbp) {
-    auto left = parse_atom();
+    if (eof()) return {};
+    ASTNode left = parse_atom();
 
-    while (true) {
-        auto& op = peek();
-        auto* op_rule = find_rule(op);
+    while (!eof()) {
+        Token& tok = peek();
+        Rule* rule = find_rule(tok);
 
-        // function call
-        if (check_type(RuleType::OpeningWrapper, op_rule)){
-            consume();
+        if (!rule) break;
 
-            Rule* ending_token_rule = find_rule(peek());
-            ASTNode node;
-            node.children.push_back(std::make_unique<ASTNode>(std::move(left)));
+        // ----------------------------
+        // FUNCTION CALL: f(...)
+        // ----------------------------
+        if (has(rule->type_mask, OpeningWrapper)) {
 
-            while (true) {
-                auto arg = parse_expr(0);
-                node.children.push_back(std::make_unique<ASTNode>(std::move(arg)));
-                ending_token_rule = find_rule(consume());  // should be commas or seperator then closingWrapper
-                
-                if (check_type(RuleType::ClosingWrapper, ending_token_rule)) {
-                    break;
-                } else if (ending_token_rule->id != func_param_seperator.id) {
-                    utils::error("the function '" + left.token.data + "' has invalid argument seperation.", cxt);
+            consume(); // '('
+
+            ASTNode call;
+            call.token.label = "CALL";
+
+            call.children.push_back(
+                std::make_unique<ASTNode>(std::move(left))
+            );
+
+            // empty call
+            if (!eof() && !has(find_rule(peek())->type_mask, ClosingWrapper)) {
+
+                while (true) {
+                    call.children.push_back(
+                        std::make_unique<ASTNode>(parse_expr(0))
+                    );
+
+                    if (eof()) {
+                        utils::error("unclosed function call", cxt);
+                    }
+
+                    Rule* next = find_rule(peek());
+
+                    // end call
+                    if (has(next->type_mask, ClosingWrapper)) {
+                        consume();
+                        break;
+                    }
+
+                    // comma / separator
+                    if (has(next->type_mask, ExprEnd)) {
+                        consume();
+                        continue;
+                    }
+
+                    utils::error("invalid function argument separator", cxt);
                 }
+            } else {
+                // consume ')'
+                consume();
             }
-            
-            left = std::move(node); 
+
+            left = std::move(call);
             continue;
         }
 
-        if (!check_type(RuleType::Infix, op_rule) || rbp > op_rule->left_power) {
-            break;
-        }
+        // ----------------------------
+        // INFIX STOP CONDITION
+        // ----------------------------
+        if (!has(rule->type_mask, Infix) || rule->lbp <= rbp) break;
 
-        auto sub_expr = parse_expr(op_rule->right_power);
+        Token op = consume();
+
+        ASTNode right = parse_expr(rule->rbp);
 
         ASTNode node;
         node.token = op;
@@ -219,11 +229,11 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
         );
 
         node.children.push_back(
-            std::make_unique<ASTNode>(std::move(sub_expr))
+            std::make_unique<ASTNode>(std::move(right))
         );
-
 
         left = std::move(node);
     }
+
     return left;
 }

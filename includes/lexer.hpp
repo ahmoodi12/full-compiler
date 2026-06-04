@@ -4,6 +4,7 @@
 #include "json_validator.hpp"
 #include "rule_base.hpp"
 #include "combined_include.hpp"
+#include "token.hpp"
 
 #include <regex>
 #include <string>
@@ -35,13 +36,6 @@ public:
                 }
             },
         }
-    };
-
-    struct Token {
-        std::uint32_t id;
-        std::string label;
-        std::string data;
-        bool skip;
     };
 
     struct Rule : RuleBase {

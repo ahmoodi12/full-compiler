@@ -21,7 +21,17 @@ Parser::Parser(
     }
 }
 
-ASTNode Parser::run(std::vector<Lexer::Token> input) {
-    pratt_parser.current_set = std::span<Lexer::Token>(input);
-    return pratt_parser.parse_expr(0);
+std::vector<ASTNode> Parser::run(std::vector<Token> input) {
+    pratt_parser.tokens = &input;
+    std::vector<ASTNode> out;
+
+    int line_count = 0;
+    while (pratt_parser.pos < input.size())
+    {
+        ASTNode output = pratt_parser.parse_expr(0);
+        out.push_back(std::move(output));
+        line_count++;
+        pratt_parser.pos += 1;
+    }
+    return out;
 }

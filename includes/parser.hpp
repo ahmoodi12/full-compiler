@@ -13,20 +13,6 @@ class Parser {
         JsonValidator::Type::Object,
         {
             JsonValidator::Schema {
-                "expr wrapper",
-                JsonValidator::Type::Object,
-                {
-                    JsonValidator::Schema {
-                        "(opening|closing)",
-                        JsonValidator::Type::String,
-                    }
-                }
-            },
-            JsonValidator::Schema {
-                "func param seperator",
-                JsonValidator::Type::String
-            },
-            JsonValidator::Schema {
                 "prefix binding power",
                 JsonValidator::Type::Int
             },
@@ -39,17 +25,26 @@ class Parser {
                         JsonValidator::Type::Object,
                         {
                             JsonValidator::Schema {
-                                "[rl]bp",
+                                "([rl]bp|precedence)",
                                 JsonValidator::Type::Int,
                                 {{}},
                                 true
                             },
                             JsonValidator::Schema {
-                                "(value|prefix|infix|)",
+                                "associativity",
                                 JsonValidator::Type::String,
                                 {{}},
                                 true
                             },
+                            JsonValidator::Schema {
+                                "types",
+                                JsonValidator::Type::Array,
+                                {
+                                    JsonValidator::Schema {
+                                        "(value|prefix|infix|callabe|expr terminator|opening wrapper|closing wrapper)"
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -71,7 +66,7 @@ public:
         std::vector<PrattParser::Rule> pratt_rules = {}
     );
 
-    ASTNode run(std::vector<Lexer::Token> input);
+    std::vector<ASTNode> run(std::vector<Token> input);
 };
 
 
@@ -104,12 +99,12 @@ private:
         if (!node) return;
 
         // indentation + tree structure
-        for (int i = 0; i < depth; i++) {
-            std::cout << "│   ";
+        for (int i = 0; i < depth-1; i++) {
+            std::cout << "|   ";
         }
 
         if (depth > 0) {
-            std::cout << (is_last ? "└── " : "├── ");
+            std::cout << (is_last ? "'- " : "|-- ");
         }
 
         // node info

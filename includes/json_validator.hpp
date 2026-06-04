@@ -23,6 +23,8 @@ public:
         std::vector<Schema> fields;
         bool optional = false;
         bool is_tuple = false;
+
+        const char* type_name() const;
     };
     
     CompilerCxt& cxt;
@@ -37,13 +39,6 @@ private:
     std::vector<std::string> find_patterns_in_json(
         const std::string& pattern,
         const json& j
-    );
-
-    bool check_type(
-        const json& node,
-        const Schema& schema,
-        const std::string& path,
-        std::vector<std::string>& error_path
     );
 
     bool validate_node(
