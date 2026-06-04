@@ -10,6 +10,7 @@
 #include <unordered_map>
 #include <vector>
 
+// TODO add ternary and postfix operators
 class PrattParser {
 public:
     enum TypeMask : uint32_t {
