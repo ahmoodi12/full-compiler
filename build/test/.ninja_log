@@ -36,3 +36,11 @@
 6339	8234	8021281545303417	compiler_tests.exe	4da2839f11303074
 83	7365	8021284312677686	CMakeFiles/compiler_tests.dir/src/json_validator.cpp.obj	243fcc01375099fc
 7367	9351	8021284385474911	compiler_tests.exe	4da2839f11303074
+7	4963	8022271763660113	CMakeFiles/compiler_tests.dir/test/testing.cpp.obj	89f8a67950a27197
+1242	5196	8022271776028569	CMakeFiles/compiler_tests.dir/src/parser.cpp.obj	68870419dbc2ced9
+67	5173	8022273534701046	CMakeFiles/compiler_tests.dir/test/testing.cpp.obj	89f8a67950a27197
+1398	5475	8022273548005325	CMakeFiles/compiler_tests.dir/src/parser.cpp.obj	68870419dbc2ced9
+9	7071	8022278558047127	CMakeFiles/compiler_tests.dir/src/pratt_parser.cpp.obj	5f678a9f5d98b1ea
+7073	10205	8022278628716838	compiler_tests.exe	4da2839f11303074
+5	4996	8022280070742643	CMakeFiles/compiler_tests.dir/src/pratt_parser.cpp.obj	5f678a9f5d98b1ea
+4998	5383	8022280120592634	compiler_tests.exe	4da2839f11303074

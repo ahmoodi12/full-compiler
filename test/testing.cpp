@@ -19,11 +19,13 @@ int main() {
     Lexer lexer(cxt, lex_data_file);
     Parser parser(cxt, parse_data_file, lexer.rules);
 
-    std::vector<Lexer::Token> output = lexer.run(utils::read_file(utils::get_file_path("C:/projects/full compiler/test/test_file.c", cxt), cxt));
+    std::vector<Lexer::Token> lex_output = lexer.run(utils::read_file(utils::get_file_path("C:/projects/full compiler/test/test_file.c", cxt), cxt));
 
-    lexer.print_output(output);
+    lexer.print_output(lex_output);
 
-    parser.run(output);
+    auto parse_output = parser.run(lex_output);
+
+    ASTPrinter().print(&parse_output);
 
     return 0;
 }

@@ -12,6 +12,16 @@ Parser::Parser(
     if (!filename.empty()) {
         json data = load_and_validate_json(cxt, filename, json_validator);
         
-        pratt_parser.load_json(data, lexer_rules);
+        auto old = cxt.current_file;
+        cxt.current_file = filename;
+
+        pratt_parser.load_json(data.at("pratt parser"), lexer_rules);
+
+        cxt.current_file = old;
     }
+}
+
+ASTNode Parser::run(std::vector<Lexer::Token> input) {
+    pratt_parser.current_set = std::span<Lexer::Token>(input);
+    return pratt_parser.parse_expr(0);
 }
