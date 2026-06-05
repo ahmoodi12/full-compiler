@@ -47,6 +47,17 @@
           "infix"
         ]
       },
+      "?": {
+        "types": [
+          "ternary"
+        ]
+      },
+      ":": {
+        "types": [
+          "ternary seperator"
+        ]
+      },
+
       "identifier": {
         "types": ["value"]
       },

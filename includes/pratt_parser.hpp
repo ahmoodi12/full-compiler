@@ -10,7 +10,6 @@
 #include <unordered_map>
 #include <vector>
 
-// TODO add ternary and postfix operators
 class PrattParser {
 public:
     enum TypeMask : uint32_t {
@@ -22,7 +21,8 @@ public:
         Ternary = 1 << 4,
         OpeningWrapper = 1 << 5,
         ClosingWrapper = 1 << 6,
-        ExprEnd = 1 << 7
+        ExprEnd = 1 << 7,
+        TernarySeperator = 1 << 8
     };
 
     struct Rule : RuleBase {
@@ -30,6 +30,19 @@ public:
         uint16_t lbp = 0;
         uint16_t rbp = 0;
     };
+
+    const std::unordered_map<std::string, TypeMask> type_map = {
+        {"value", Value},
+        {"prefix", Prefix},
+        {"infix", Infix},
+        {"postfix", Postfix},
+        {"ternary", Ternary},
+        {"opening wrapper", OpeningWrapper},
+        {"closing wrapper", ClosingWrapper},
+        {"expr terminator", ExprEnd},
+        {"ternary seperator", TernarySeperator},
+    };
+
 
     CompilerCxt& cxt;
 

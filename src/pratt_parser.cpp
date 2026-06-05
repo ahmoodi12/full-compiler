@@ -5,7 +5,6 @@
 
 using json = nlohmann::json;
 
-
 bool PrattParser::has(uint32_t mask, TypeMask t) {
     return mask & (uint32_t)t;
 }
@@ -79,16 +78,8 @@ void PrattParser::load_json(json& data, const std::vector<Lexer::Rule>& lexer_ru
         }
 
         for (auto& type : value["types"]) {
-            std::string t = type;
-
-            if (t == "value") rule.type_mask |= Value;
-            else if (t == "prefix") rule.type_mask |= Prefix;
-            else if (t == "infix") rule.type_mask |= Infix;
-            else if (t == "postfix") rule.type_mask |= Postfix;
-            else if (t == "ternary") rule.type_mask |= Ternary;
-            else if (t == "opening wrapper") rule.type_mask |= OpeningWrapper;
-            else if (t == "closing wrapper") rule.type_mask |= ClosingWrapper;
-            else if (t == "expr terminator") rule.type_mask |= ExprEnd;
+            if (auto it = type_map.find(type); it != type_map.end())
+                rule.type_mask |= it->second;
         }
 
         // precedence
@@ -151,6 +142,14 @@ ASTNode PrattParser::parse_atom() {
     return {};
 }
 
+void add_child(ASTNode& node, ASTNode& child) {
+    node.children.push_back(std::make_unique<ASTNode>(std::move(child)));
+}
+void add_child(ASTNode& node, ASTNode&& child) {
+    node.children.push_back(std::make_unique<ASTNode>(std::move(child)));
+}
+
+
 ASTNode PrattParser::parse_expr(uint16_t rbp) {
     if (eof()) return {};
     ASTNode left = parse_atom();
@@ -171,17 +170,13 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
             ASTNode call;
             call.token.label = "CALL";
 
-            call.children.push_back(
-                std::make_unique<ASTNode>(std::move(left))
-            );
+            add_child(call, left);
 
             // empty call
             if (!eof() && !has(find_rule(peek())->type_mask, ClosingWrapper)) {
 
                 while (true) {
-                    call.children.push_back(
-                        std::make_unique<ASTNode>(parse_expr(0))
-                    );
+                    add_child(call, parse_expr(0));
 
                     if (eof()) {
                         utils::error("unclosed function call", cxt);
@@ -212,27 +207,50 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
             continue;
         }
 
-        // ----------------------------
-        // INFIX STOP CONDITION
-        // ----------------------------
+        if (has(rule->type_mask, Ternary)) {
+            consume();  // "?", cond op
+
+            ASTNode node;
+            node.token = tok;
+
+            add_child(node, left);  
+
+            ASTNode true_stmt = parse_expr(0);
+
+            add_child(node, true_stmt);
+
+            Token stmt_sep = consume();
+
+            if (!has(find_rule(stmt_sep)->type_mask, TernarySeperator)) {
+                utils::error("ternary seperarator is invalid.", cxt);}
+            
+            ASTNode false_stmt = parse_expr(0);
+
+            add_child(node, false_stmt);
+
+            left = std::move(node);
+                
+            continue;
+        }
+        
         if (!has(rule->type_mask, Infix) || rule->lbp <= rbp) break;
 
         Token op = consume();
 
-        ASTNode right = parse_expr(rule->rbp);
-
         ASTNode node;
         node.token = op;
 
-        node.children.push_back(
-            std::make_unique<ASTNode>(std::move(left))
-        );
-
-        node.children.push_back(
-            std::make_unique<ASTNode>(std::move(right))
-        );
+        add_child(node, left);
 
         left = std::move(node);
+
+        if (has(rule->type_mask, Postfix)) {
+            continue;
+        }
+
+        ASTNode right = parse_expr(rule->rbp);
+
+        add_child(left, right);
     }
 
     return left;

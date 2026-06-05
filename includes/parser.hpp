@@ -41,7 +41,7 @@ class Parser {
                                 JsonValidator::Type::Array,
                                 {
                                     JsonValidator::Schema {
-                                        "(value|prefix|infix|callabe|expr terminator|opening wrapper|closing wrapper)"
+                                        "(value|prefix|infix|callabe|expr terminator|opening wrapper|closing wrapper|ternary seperator)"
                                     }
                                 }
                             }
