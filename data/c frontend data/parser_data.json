@@ -1,75 +1,131 @@
 {
-  "pratt parser": {
-    "prefix binding power": 100,
+  "prefix binding power": 100,
 
-    "expr data": {
-      "(": {
-        "types": ["opening wrapper"]
-      },
-      ")": {
-        "types": ["closing wrapper"]
-      },
-      "+": {
-        "lbp": 10,
-        "rbp": 11,
+  "expr definition": {
+    "(": {
+      "types": ["opening wrapper"]
+    },
+    ")": {
+      "types": ["closing wrapper"]
+    },
+    "+": {
+      "lbp": 10,
+      "rbp": 11,
 
-        "types": [
-          "prefix",
-          "infix"
+      "types": [
+        "prefix",
+        "infix"
+      ]
+    },
+
+    "-": {
+      "lbp": 10,
+      "rbp": 11,
+
+      "types": [
+        "prefix",
+        "infix"
+      ]
+    },
+
+    "*": {
+      "lbp": 20,
+      "rbp": 21,
+
+      "types": [
+        "prefix",
+        "infix"
+      ]
+    },
+    
+    "/": {
+      "lbp": 20,
+      "rbp": 21,
+
+      "types": [
+        "infix"
+      ]
+    },
+    "?": {
+      "types": [
+        "ternary"
+      ]
+    },
+    ":": {
+      "types": [
+        "ternary seperator"
+      ]
+    },
+
+    "identifier": {
+      "types": ["value"]
+    },
+    "int_literal": {
+      "types": ["value"]
+    },
+    ";": {
+      "types": ["expr terminator"]
+    },
+    ",": {
+      "types": ["expr terminator"]
+    }
+  },
+
+  "grammar": {
+    "statements": [
+      "if",
+      "while",
+      "for",
+      "return",
+      "function",
+      "declaration",
+      "assignment",
+      "block",
+      "expression"
+    ],
+
+    "statement rules": {
+      "if": {
+        "pattern": ["IF", "(", "expr", ")", "block", ["optional", "ELSE", "block"]]
+      },
+
+      "while": {
+        "pattern": ["WHILE", "(", "expr", ")", "block"]
+      },
+
+      "return": {
+        "pattern": ["RETURN", ["optional", "expr"], ";"]
+      },
+
+      "block": {
+        "pattern": ["{", "statements", "}"]
+      },
+
+      "assignment": {
+        "pattern": ["identifier", "=", "expr", ";"]
+      },
+
+      "declaration": {
+        "pattern": ["identifier", "identifier", ["optional", "=", "expr"], ";"]
+      },
+
+      "function": {
+        "pattern": [
+          "FN",
+          "identifier",
+          "(",
+          "expr*",
+          ")",
+          "block"
         ]
       },
-
-      "-": {
-        "lbp": 10,
-        "rbp": 11,
-
-        "types": [
-          "prefix",
-          "infix"
+      "expression": {
+        "pattern": [
+          "expr",
+          ";"
         ]
-      },
-
-      "*": {
-        "lbp": 20,
-        "rbp": 21,
-
-        "types": [
-          "prefix",
-          "infix"
-        ]
-      },
-      
-      "/": {
-        "lbp": 20,
-        "rbp": 21,
-
-        "types": [
-          "infix"
-        ]
-      },
-      "?": {
-        "types": [
-          "ternary"
-        ]
-      },
-      ":": {
-        "types": [
-          "ternary seperator"
-        ]
-      },
-
-      "identifier": {
-        "types": ["value"]
-      },
-      "int_literal": {
-        "types": ["value"]
-      },
-      ";": {
-        "types": ["expr terminator"]
-      },
-      ",": {
-        "types": ["expr terminator"]
       }
+
     }
   }
 }

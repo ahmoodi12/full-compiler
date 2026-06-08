@@ -51,11 +51,11 @@ public:
     std::unordered_map<std::string, Rule*> by_label;
 
     std::vector<Token>* tokens = nullptr;
-    size_t pos = 0;
+    size_t& pos;
 
     uint16_t prefix_bp = 100;
 
-    PrattParser(CompilerCxt& cxt, std::vector<Rule> rules);
+    PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, size_t& pos);
 
     void load_json(json& data, const std::vector<Lexer::Rule>& lexer_rules);
 
@@ -63,9 +63,6 @@ public:
     ASTNode parse_atom();
 
 private:
-    Token& peek();
-    Token consume();
-    bool eof();
 
     Rule* find_rule(const Token& t);
 

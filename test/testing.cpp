@@ -23,8 +23,7 @@ int main() {
 
     lexer.print_output(lex_output);
 
-
-    auto parse_output = parser.run(lex_output);
+    auto parse_output = parser.run(&lex_output);
 
     for (auto& out : parse_output){
         ASTPrinter().print(&out);

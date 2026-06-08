@@ -19,12 +19,29 @@ public:
 
     struct Schema {
         std::string name;
-        Type type;
+        Type type = Type::Object;
         std::vector<Schema> fields;
         bool optional = false;
         bool is_tuple = false;
 
         const char* type_name() const;
+
+        Schema() = default;
+
+        Schema(
+            std::string name,
+            Type type,
+            std::vector<Schema> fields = {},
+            bool optional = false,
+            bool is_tuple = false
+        )
+            : name(std::move(name)),
+            type(type),
+            fields(std::move(fields)),
+            optional(optional),
+            is_tuple(is_tuple) {}
+
+        Schema(std::string name) : name(std::move(name)) {}
     };
     
     CompilerCxt& cxt;
@@ -46,7 +63,8 @@ private:
         const Schema& schema,
         const std::string& path,
         int depth,
-        std::vector<std::string>& error_path
+        std::vector<std::string>& error_path,
+        bool report_error = 1
     );
 
     bool validate_children(
@@ -54,7 +72,8 @@ private:
         const Schema& schema,
         const std::string& path,
         int depth,
-        std::vector<std::string>& error_path
+        std::vector<std::string>& error_path,
+        bool report_error
     );
 };
 

@@ -130,7 +130,8 @@ bool JsonValidator::validate_children(
     const JsonValidator::Schema& schema,
     const std::string& path,
     int depth,
-    std::vector<std::string>& error_path
+    std::vector<std::string>& error_path,
+    bool report_error
 ) {
     for (const auto& child : schema.fields) {
 
@@ -142,7 +143,7 @@ bool JsonValidator::validate_children(
             if (error_path.empty())
                 error_path.emplace_back(path);
 
-            utils::error(
+            if (report_error) utils::error(
                 "Missing field (pattern): " + child.name,
                 cxt,
                 false,
@@ -218,7 +219,8 @@ bool JsonValidator::validate_node(
     const JsonValidator::Schema& schema,
     const std::string& path,
     int depth,
-    std::vector<std::string>& error_path
+    std::vector<std::string>& error_path,
+    bool report_error
 ) {
     switch (schema.type) {
 
@@ -269,7 +271,9 @@ bool JsonValidator::validate_node(
                             field,
                             path + "[" + std::to_string(i) + "]",
                             depth + 1,
-                            tmp))
+                            tmp, 
+                            false
+                        ))
                     {
                         matched = true;
                         break;
@@ -280,7 +284,7 @@ bool JsonValidator::validate_node(
                     if (error_path.empty())
                         error_path.emplace_back(format_json_path(path) + "[" + std::to_string(i) + "]");
 
-                    utils::error(
+                    if (report_error) utils::error(
                         "Array element does not match schema: " +
                         format_json_path(path) + "[" + std::to_string(i) + "]",
                         cxt,
@@ -297,7 +301,7 @@ bool JsonValidator::validate_node(
 
         case Type::Object:
             if (!node.is_object()) goto type_error;
-            return validate_children(node, schema, path, depth, error_path);
+            return validate_children(node, schema, path, depth, error_path, report_error);
     }
 
     return true;
@@ -306,7 +310,7 @@ type_error:
     if (error_path.empty())
         error_path.emplace_back(path);
 
-    utils::error(
+    if (report_error) utils::error(
         std::string("Type mismatch, expected a ") +
         schema.type_name() +
         " got a " +
