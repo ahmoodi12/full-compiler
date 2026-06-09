@@ -65,5 +65,8 @@ public:
     );
 
     std::vector<Token> run(const std::string& input);
+
+    Rule* find_lex_rule(std::string key);
+
     void print_output(std::vector<Token> output) const;
 };

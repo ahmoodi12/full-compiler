@@ -49,18 +49,26 @@ class Parser {
 public:
     struct PatternItem {
         bool optional = false;
-        std::vector<std::string> sequence;
+        std::vector<RuleBase> sequence;
     };
 
     struct Rule {
         std::string statement;
+        RuleBase keyword;
         std::vector<PatternItem> pattern;
+    };
+
+    struct StmtMatch {
+        bool valid;
+        int size;
+        std::vector<ASTNode> exprs; // ONLY expr results
     };
         
     PrattParser pratt_parser;
     JsonValidator json_validator;
 
     std::vector<std::string> statements;
+    Lexer& lexer;
 
     std::vector<Rule> rules;
     std::unordered_map<std::string, Rule*> by_statement;
@@ -71,16 +79,17 @@ public:
     CompilerCxt& cxt;
 
     Parser(
-        CompilerCxt& cxt, 
-        const std::string& filename, 
-        std::vector<Lexer::Rule> lexer_rules,
-        std::vector<PrattParser::Rule> pratt_rules = {}
-    );
+            CompilerCxt& cxt, 
+            const std::string& filename,
+            Lexer& lexer,
+            std::vector<PrattParser::Rule> pratt_rules = {});
 
-    std::vector<ASTNode> run(std::vector<Token>* input);
+    ASTNode* parse_stmt(Rule rule);
+
+    StmtMatch match_stmt(Rule rule);
+
+    std::vector<ASTNode> run(std::vector<Token> *input);
 };
-
-
 
 class ASTPrinter {
 public:

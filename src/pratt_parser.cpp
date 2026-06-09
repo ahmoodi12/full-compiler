@@ -30,7 +30,7 @@ PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, size_t& pos)
     }
 }
 
-void PrattParser::load_json(json& data, const std::vector<Lexer::Rule>& lexer_rules) {
+void PrattParser::load_json(json& data, Lexer& lexer) {
     rules.clear();
     by_id.clear();
     by_label.clear();
@@ -44,19 +44,13 @@ void PrattParser::load_json(json& data, const std::vector<Lexer::Rule>& lexer_ru
     for (auto& [key, value] : expr_data.items()) {
         Rule rule;
 
-        // map lexer rule
-        bool found = false;
-        for (auto& lex : lexer_rules) {
-            if (lex.label == key || std::to_string(lex.id) == key) {
-                rule.id = lex.id;
-                rule.label = lex.label;
-                found = true;
-                break;
-            }
-        }
-
-        if (!found) {
+        Lexer::Rule* lex_rule = lexer.find_lex_rule(key);
+        
+        if (!lex_rule) {
             utils::error("unknown lexer rule: " + key, cxt);
+        } else {
+            rule.id = lex_rule->id;
+            rule.label = lex_rule->label;
         }
 
         // types → bitmask

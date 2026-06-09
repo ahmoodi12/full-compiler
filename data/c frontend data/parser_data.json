@@ -73,32 +73,32 @@
 
   "grammar": {
     "statements": [
-      "if",
-      "while",
-      "for",
-      "return",
+      "if_stmt",
+      "while_stmt",
+      "for_stmt",
+      "return_stmt",
       "function",
       "declaration",
       "assignment",
       "block",
       "expression"
-    ],
+  ],
 
     "statement rules": {
-      "if": {
-        "pattern": ["IF", "(", "expr", ")", "block", ["optional", "ELSE", "block"]]
+      "if_stmt": {
+        "pattern": ["if", "(", "expr", ")", "block", ["optional", "ELSE", "block"]]
       },
 
-      "while": {
-        "pattern": ["WHILE", "(", "expr", ")", "block"]
+      "while_stmt": {
+        "pattern": ["while", "(", "expr", ")", "block"]
       },
 
-      "return": {
-        "pattern": ["RETURN", ["optional", "expr"], ";"]
+      "return_stmt": {
+        "pattern": ["return", ["optional", "expr"], ";"]
       },
 
       "block": {
-        "pattern": ["{", "statements", "}"]
+        "pattern": ["{", "statement rules", "}"]
       },
 
       "assignment": {
@@ -111,7 +111,7 @@
 
       "function": {
         "pattern": [
-          "FN",
+          "identifier",
           "identifier",
           "(",
           "expr*",

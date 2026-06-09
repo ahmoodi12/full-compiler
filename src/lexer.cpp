@@ -94,6 +94,14 @@ std::vector<Token> Lexer::run(const std::string& input) {
     return output;
 }
 
+Lexer::Rule* Lexer::find_lex_rule(std::string key) {
+    for (auto& lex : rules) {
+        if (lex.label == key || std::to_string(lex.id) == key)
+            return &lex;
+    }
+    return nullptr;
+}
+
 void Lexer::print_output(std::vector<Token> output) const {
     using namespace ansiColors;
 

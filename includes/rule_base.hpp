@@ -3,6 +3,6 @@
 #include "combined_include.hpp"
 
 struct RuleBase {
-    uint32_t id;
+    int32_t id = -1;
     std::string label;
 };

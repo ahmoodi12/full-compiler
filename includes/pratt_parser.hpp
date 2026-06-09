@@ -57,7 +57,7 @@ public:
 
     PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, size_t& pos);
 
-    void load_json(json& data, const std::vector<Lexer::Rule>& lexer_rules);
+    void load_json(json& data, Lexer& lexer);
 
     ASTNode parse_expr(uint16_t rbp);
     ASTNode parse_atom();
