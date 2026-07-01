@@ -72,60 +72,26 @@
   },
 
   "grammar": {
-    "statements": [
-      "if_stmt",
-      "while_stmt",
-      "for_stmt",
-      "return_stmt",
-      "function",
-      "declaration",
-      "assignment",
-      "block",
-      "expression"
-  ],
-
-    "statement rules": {
-      "if_stmt": {
-        "pattern": ["if", "(", "expr", ")", "block", ["optional", "ELSE", "block"]]
-      },
-
-      "while_stmt": {
-        "pattern": ["while", "(", "expr", ")", "block"]
-      },
-
-      "return_stmt": {
-        "pattern": ["return", ["optional", "expr"], ";"]
-      },
-
-      "block": {
-        "pattern": ["{", "statement rules", "}"]
-      },
-
-      "assignment": {
-        "pattern": ["identifier", "=", "expr", ";"]
-      },
-
-      "declaration": {
-        "pattern": ["identifier", "identifier", ["optional", "=", "expr"], ";"]
-      },
-
-      "function": {
-        "pattern": [
-          "identifier",
-          "identifier",
-          "(",
-          "expr*",
-          ")",
-          "block"
-        ]
-      },
-      "expression": {
-        "pattern": [
-          "expr",
-          ";"
-        ]
+    "variables": {
+      "#block": {
+        "pattern": [["{", "__statements__", "}"]]
       }
+    },
 
+  "statement_rules": {
+    "if_stmt": { "pattern": [["if", "(", "__expr__", ")", "#block"], { "optional": ["else", "#block"] }] },
+    
+    "while_stmt": { "pattern": [["while", "(", "__expr__", ")", "#block"]] },
+    
+    "return_stmt": { "pattern": [["return"], { "optional": ["__expr__"] }, [";"]] },
+    
+    "assignment": { "pattern": [["identifier", "=", "__expr__", ";"]] },
+    
+    "declaration": { "pattern": [["identifier", "identifier"], { "optional": ["=", "__expr__"] }, [";"]] },
+    
+    "function": { "pattern": [["identifier", "identifier", "(", "_exprs", ")", "#block"]] },
+    
+    "expression": { "pattern": [["__expr__", ";"]] }
     }
   }
 }

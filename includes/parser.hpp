@@ -28,14 +28,15 @@ class Parser {
             }},
 
             {"grammar", T::Object, {
-                {"statements", T::Array, {
-                    {".+", T::String}
-                }},
-
-                {"statement rules", T::Object, {
+                {"(statement rules|variables)", T::Object, {
                     {".+", T::Object, {
                         {"pattern", T::Array, {
-                            {".+", T::String, {}, true},
+                            {".+", T::Object, {
+                                {"optional", T::Array, {
+                                    {".+", T::String, {}, true}
+                                }}
+                            }, true},
+                            
                             {".+", T::Array, {
                                 {".+", T::String, {}, true}
                             }, true}
@@ -47,46 +48,80 @@ class Parser {
     };
 
 public:
-    struct PatternItem {
+    struct TokenRule : RuleBase {
+        bool commit_point = false;
+    };
+
+    struct Sequence {
         bool optional = false;
-        std::vector<RuleBase> sequence;
+        std::vector<TokenRule> sequence;
     };
 
     struct Rule {
         std::string statement;
-        RuleBase keyword;
-        std::vector<PatternItem> pattern;
+        std::vector<Sequence> pattern;
+
+        std::string stringify_pattern() {
+            std::string out = "[";
+            for (auto& item : pattern) {
+                out += item.optional ? "{\"optional\": [" : "[";
+
+                for (auto& token : item.sequence) {
+                    out += token.label + ", ";
+                }
+                
+                out += item.optional ? "]}, " : "], ";
+            }
+            out += "]";
+            return out;
+        }
     };
 
     struct StmtMatch {
-        bool valid;
-        int size;
+        bool valid = false;
+        int size = 0;
         std::vector<ASTNode> exprs; // ONLY expr results
+        std::vector<ASTNode> sub_stmts;
+        Rule* rule;
     };
         
     PrattParser pratt_parser;
     JsonValidator json_validator;
 
-    std::vector<std::string> statements;
     Lexer& lexer;
 
-    std::vector<Rule> rules;
+    std::vector<Rule> grammar_rules;
+
     std::unordered_map<std::string, Rule*> by_statement;
+    
+    std::vector<Rule> variable_sub_statements;
 
     size_t pos = 0;
     std::vector<Token>* tokens = nullptr;
 
     CompilerCxt& cxt;
 
+    void add_seq_tokens(json sequence, Sequence &item);
+
+    void parse_grammar_rule(json &pattern, Parser::Rule &rule, std::string &statement_str);
+
+    void parse_grammar_rules(json &grammar, std::vector<Parser::Rule> &rules, bool add_to_by_statement);
+
+    bool token_is_unique(Rule stmt, TokenRule token, int tok_i);
+
+    int parse_commit_points(Rule stmt, int tok_i, Sequence seq);
+
     Parser(
-            CompilerCxt& cxt, 
-            const std::string& filename,
-            Lexer& lexer,
-            std::vector<PrattParser::Rule> pratt_rules = {});
+        CompilerCxt &cxt,
+        const std::string &filename,
+        Lexer &lexer,
+        std::vector<PrattParser::Rule> pratt_rules = {});
 
-    ASTNode* parse_stmt(Rule rule);
+    void parse_statements(std::vector<ASTNode> &output);
 
-    StmtMatch match_stmt(Rule rule);
+    StmtMatch match_stmt(Rule rule, bool committed = 0);
+
+    ASTNode parse_stmt(Rule *rule, StmtMatch *match);
 
     std::vector<ASTNode> run(std::vector<Token> *input);
 };
@@ -113,39 +148,6 @@ public:
     }
 
 private:
-    static const char* type_name(ASTNode::Type type) {
-        switch (type) {
-            case ASTNode::Type::None:              return "None";
-
-            // statements
-            case ASTNode::Type::Call:              return "Call";
-            case ASTNode::Type::While:             return "While";
-            case ASTNode::Type::For:               return "For";
-            case ASTNode::Type::If:                return "If";
-            case ASTNode::Type::Else:              return "Else";
-            case ASTNode::Type::Return:            return "Return";
-            case ASTNode::Type::Continue:          return "Continue";
-            case ASTNode::Type::Break:             return "Break";
-            case ASTNode::Type::Block:             return "Block";
-            case ASTNode::Type::Declaration:       return "Declaration";
-            case ASTNode::Type::Assignment:        return "Assignment";
-            case ASTNode::Type::Expression:        return "Expression";
-
-            // pratt / expression system
-            case ASTNode::Type::Value:             return "Value";
-            case ASTNode::Type::Prefix:            return "Prefix";
-            case ASTNode::Type::Infix:             return "Infix";
-            case ASTNode::Type::Postfix:           return "Postfix";
-            case ASTNode::Type::Ternary:           return "Ternary";
-            case ASTNode::Type::OpeningWrapper:    return "OpeningWrapper";
-            case ASTNode::Type::ClosingWrapper:    return "ClosingWrapper";
-            case ASTNode::Type::ExprEnd:           return "ExprEnd";
-            case ASTNode::Type::TernarySeparator:  return "TernarySeparator";
-        }
-
-        return "Unknown";
-    }
-
     static void print_node(const ASTNode* node, int depth, bool is_last) {
         using namespace ansiColors;
 
@@ -162,7 +164,6 @@ private:
 
         // node header
         std::cout
-            << bright_magenta << "[" << type_name(node->type) << "] " << reset
             << bright_yellow  << node->token.id << reset << " "
             << bright_green   << node->token.label << reset << " "
             << bright_white   << node->token.data << reset

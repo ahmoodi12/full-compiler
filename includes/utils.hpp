@@ -9,6 +9,7 @@ namespace utils {
 void error(
     std::string prompt,
     CompilerCxt& cxt,
+    std::string note_info = "",
     bool is_warning = false,
     bool fatal = true
 );

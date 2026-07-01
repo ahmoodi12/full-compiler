@@ -73,6 +73,7 @@ std::vector<Token> Lexer::run(const std::string& input) {
                 "wasn't able to lex at position " + std::to_string(pos) +
                 ", invalid or unrecognized token.",
                 cxt,
+                "",
                 false,
                 false
             );

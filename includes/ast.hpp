@@ -6,46 +6,21 @@
 #include <vector>
 
 struct ASTNode {
-    enum class Type {
-        None,
-
-        Call,
-        While,
-        For,
-        If,
-        Else,
-        Return,
-        Continue,
-        Break,
-        Block,
-        Declaration,
-        Assignment,
-        Expression,
-
-        // pratt types
-        Value,
-        Prefix,
-        Infix,
-        Postfix,
-        Ternary,
-        OpeningWrapper,
-        ClosingWrapper,
-        ExprEnd,
-        TernarySeparator
-
-
-    };
-
     Token token;
-    Type type;
 
     std::vector<std::unique_ptr<ASTNode>> children;
 
     ASTNode() = default;
-    explicit ASTNode(Token tok, Type t)
-        : type(t), token(std::move(tok)) {}
+    explicit ASTNode(Token tok)
+        : token(std::move(tok)) {}
 };
 
+inline void add_child(ASTNode& node, ASTNode& child) {
+    node.children.push_back(std::make_unique<ASTNode>(std::move(child)));
+}
+inline void add_child(ASTNode& node, ASTNode&& child) {
+    node.children.push_back(std::make_unique<ASTNode>(std::move(child)));
+}
 
 template<typename T>
 bool eof(T* parser) {

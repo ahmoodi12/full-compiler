@@ -12,6 +12,7 @@ namespace utils {
 void error(
     std::string prompt,
     CompilerCxt& cxt,
+    std::string note_info,
     bool is_warning,
     bool fatal
 ) {
@@ -49,6 +50,10 @@ void error(
          << prompt
          << " <<\n\n"
          << ansiColors::reset;
+
+    if (!note_info.empty()) {
+        std::cout << note_info << std::endl;
+    }
 
     if (!is_warning && fatal) {
         std::exit(1);

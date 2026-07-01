@@ -123,14 +123,6 @@ ASTNode PrattParser::parse_atom() {
     return {};
 }
 
-void add_child(ASTNode& node, ASTNode& child) {
-    node.children.push_back(std::make_unique<ASTNode>(std::move(child)));
-}
-void add_child(ASTNode& node, ASTNode&& child) {
-    node.children.push_back(std::make_unique<ASTNode>(std::move(child)));
-}
-
-
 ASTNode PrattParser::parse_expr(uint16_t rbp) {
     if (eof(this)) return {};
     ASTNode left = parse_atom();
@@ -205,7 +197,8 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
             Token stmt_sep = consume(this);
 
             if (!has(find_rule(stmt_sep)->type_mask, TernarySeperator)) {
-                utils::error("ternary seperarator is invalid.", cxt);}
+                utils::error("ternary seperarator is invalid.", cxt);
+            }
             
             ASTNode false_stmt = parse_expr(0);
 

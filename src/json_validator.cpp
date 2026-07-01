@@ -146,6 +146,7 @@ bool JsonValidator::validate_children(
             if (report_error) utils::error(
                 "Missing field (pattern): " + child.name,
                 cxt,
+                "",
                 false,
                 false
             );
@@ -189,7 +190,7 @@ bool JsonValidator::validate(const json& j) {
         const auto root_matches = find_patterns_in_json(schema.name, j);
 
         if (root_matches.empty()) {
-            utils::error("Missing root key: " + schema.name, cxt, false, false);
+            utils::error("Missing root key: " + schema.name, cxt, "", false, false);
             return false;
         }
 
@@ -288,6 +289,7 @@ bool JsonValidator::validate_node(
                         "Array element does not match schema: " +
                         format_json_path(path) + "[" + std::to_string(i) + "]",
                         cxt,
+                        "",
                         false,
                         false
                     );
@@ -318,6 +320,7 @@ type_error:
         " at: " +
         format_json_path(path),
         cxt,
+        "",
         false,
         false
     );
