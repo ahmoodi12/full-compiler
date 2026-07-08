@@ -69,7 +69,7 @@ public:
         size_t size = 0;
         std::vector<ASTNode> exprs; 
         std::vector<ASTNode> sub_stmts;
-        std::vector<Token> tokens; 
+        std::vector<Token&> tokens; 
         
         PrattParser::ParseError error;
 
@@ -104,7 +104,7 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    void parse_statements(std::vector<ASTNode> &output, bool emit_errors = 0);
+    Parser::StmtMatch parse_statements(std::vector<ASTNode> &output, bool emit_errors = 0);
 
     Parser::StmtMatch match_stmt(Rule &rule);
 

@@ -140,6 +140,7 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
             return longest_match;  // if no valid statement left then exit
         }
     }
+    return {};
 }
 
 
@@ -174,7 +175,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             result.exprs.push_back(std::move(expr.node));
 
         } else if (exp_token.label == "__statements__") {
-            parse_statements(result.sub_stmts);
+            StmtMatch status = parse_statements(result.sub_stmts);
 
         } else if (exp_token.id != -1) {
             if (token.id != exp_token.id) {
@@ -184,7 +185,8 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
     
             }
             
-            result.tokens = consume(this);
+            consume(this);
+            result.tokens.push_back(token);
 
         } else {
             result.error.message = "unknown token '" + exp_token.label + "'"; 
