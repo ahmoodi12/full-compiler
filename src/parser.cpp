@@ -137,7 +137,7 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
         } else if (emit_errors) {
             utils::error(longest_match.error.message, cxt, longest_match.error.context);
         } else {
-            return longest_match;  // if no valid statement left then exit
+            return std::move(longest_match);  
         }
     }
     return {};
@@ -186,7 +186,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             }
             
             consume(this);
-            result.tokens.push_back(token);
+            result.tokens.push_back(&token);
 
         } else {
             result.error.message = "unknown token '" + exp_token.label + "'"; 
@@ -203,8 +203,11 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
     return result;
 
     failed:
-    pos = start_pos;
     result.valid = false;
+    result.size = pos - start_pos;
+    pos = start_pos;
+    result.rule = &rule;
+
     return result; 
 }
 

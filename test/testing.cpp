@@ -11,15 +11,15 @@ ninja
 
 CompilerCxt cxt;
 
-std::string lex_data_file = "C:/projects/full compiler/data/C/lex_data.json";
-std::string parse_data_file = "C:/projects/full compiler/data/C/parser_data.json";
+std::string lex_data_file = "data/C/lex_data.json";
+std::string parse_data_file = "data/C/parser_data.json";
 
 int main() {
 
     Lexer lexer(cxt, lex_data_file);
     Parser parser(cxt, parse_data_file, lexer);
 
-    std::vector<Token> lex_output = lexer.run(utils::read_file(utils::get_file_path("C:/projects/full compiler/test/test_file.c", cxt), cxt));
+    std::vector<Token> lex_output = lexer.run(utils::read_file(utils::get_file_path("test/test_file.c", cxt), cxt));
 
     lexer.print_output(lex_output);
 

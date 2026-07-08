@@ -5,8 +5,10 @@
       "name": "Debug main (LLDB)",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/build/main/compiler_main.exe",
-      "args": ["C:/projects/full compiler/test/test_file.c"],
+      "program": "${workspaceFolder}/build/main/compiler_main",
+      "args": [
+        "${workspaceFolder}/test/test_file.c"
+      ],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "build main",
       "terminal": "integrated"
@@ -15,7 +17,7 @@
       "name": "Debug Tests (LLDB)",
       "type": "lldb",
       "request": "launch",
-      "program": "${workspaceFolder}/build/test/compiler_tests.exe",
+      "program": "${workspaceFolder}/build/test/compiler_tests",
       "args": [],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "build tests",
