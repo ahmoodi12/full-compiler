@@ -46,6 +46,16 @@
         "infix"
       ]
     },
+
+    "!=": {
+      "lbp": 20,
+      "rbp": 21,
+
+      "types": [
+        "infix"
+      ]
+    },
+
     "?": {
       "types": [
         "ternary"
@@ -67,7 +77,7 @@
       "types": ["expr terminator"]
     },
     ",": {
-      "types": ["expr terminator"]
+      "types": ["argument seperator"]
     }
   },
 
@@ -78,7 +88,7 @@
       }
     },
 
-  "statement_rules": {
+  "statement rules": {
     "if_stmt": { "pattern": [["if", "(", "__expr__", ")", "#block"], { "optional": ["else", "#block"] }] },
     
     "while_stmt": { "pattern": [["while", "(", "__expr__", ")", "#block"]] },

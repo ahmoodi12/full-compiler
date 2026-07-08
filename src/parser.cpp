@@ -15,27 +15,49 @@ RuleBase make_token_base(Lexer& lexer, std::string token) {
     return token_base;
 }
 
-void Parser::add_seq_tokens(json sequence, Sequence& item) {
+void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
     for (auto& token : sequence) {
-        item.sequence.push_back(make_token_base(lexer, token));
+        std::cout << token.type_name() << '\n';
+        rule.pattern.push_back(make_token_base(lexer, token));
     }
 }
 
 void Parser::parse_grammar_rule(
-    json &pattern,
-    Parser::Rule& rule,
-    std::string& statement_str) {
+    json& pattern,
+    const std::string& statement_str,
+    std::vector<Parser::Rule>& rules,
+    bool allow_optionals, 
+    int seq_i = 0) {
+    int rule_i = rules.size() - 1;
 
-    for (auto& sequence : pattern) {
-        Sequence pattern_item;
+    for (; seq_i < pattern.size(); seq_i++) {
+        json& sequence = pattern[seq_i];
+        Rule& rule = rules[rule_i];
+
         if (sequence.is_array()) {
-            add_seq_tokens(sequence, pattern_item);
+            add_seq_tokens(sequence, rule);
         } else {
-            // optional tagged object
-            pattern_item.optional = true;
-            add_seq_tokens(sequence.at("optional"), pattern_item);
-        }
+            // optional path
+            if (!allow_optionals) {
+                utils::error("optionals not allowed in variables.", cxt);
+            }
 
+            Rule optional_path;
+
+            optional_path.statement = statement_str;
+
+            for (auto& token : rule.pattern) {
+                optional_path.pattern.push_back(token);
+            }
+            
+            add_seq_tokens(pattern[seq_i].at("optional"), optional_path);
+            
+            optional_path.parent_i = rule_i;
+            
+            rules.push_back(std::move(optional_path));
+
+            parse_grammar_rule(pattern, statement_str, rules, allow_optionals, seq_i + 1);
+        }
     }
 }
 
@@ -43,17 +65,13 @@ void Parser::parse_grammar_rule(
 void Parser::parse_grammar_rules(
     json& grammar,
     std::vector<Parser::Rule>& rules,
-    bool add_to_by_statement) {
+    bool is_grammar_rules) {
 
     for (auto& [statement_str, value] : grammar.items()) {
-        Rule rule;
+        Rule rule{statement_str};
         
-        rule.pattern.push_back(Sequence{false});
-
-        rule.statement = statement_str;
-
         auto& pattern = value.at("pattern");
-        if (value.at("pattern").empty()) {
+        if (pattern.empty()) {
             utils::error("the statement rule '" + rule.statement + "' can't have a empty pattern.", cxt);
         }
 
@@ -61,40 +79,12 @@ void Parser::parse_grammar_rules(
             utils::error("the statement rule '" + rule.statement + " patterns first token can't be optional (assumed to be the keyword).", cxt);
         }
 
-        parse_grammar_rule(pattern, rule, rule.statement);
+        rules.push_back(std::move(rule));
 
-        rules.push_back(rule);
+        parse_grammar_rule(pattern, statement_str, rules, is_grammar_rules);
 
-        if (add_to_by_statement) by_statement[statement_str] = &grammar_rules.back();
+        if (is_grammar_rules) by_statement[statement_str] = &grammar_rules.back();
     }
-}
-
-bool Parser::token_is_unique(Rule stmt, TokenRule token, int tok_i) {
-    return std::none_of(grammar_rules.begin(), grammar_rules.end(), 
-        [stmt, token, tok_i](const Parser::Rule rule){
-            if (&rule == &stmt) return false;
-            int i = 0;
-            for (auto& seq : rule.pattern) {
-                for (auto& other_token : seq.sequence) {
-                    if (i++ == tok_i) {
-                        return (token.label == other_token.label);
-                    }
-                }
-            }
-            return false;
-    }
-    );
-}
-
-int Parser::parse_commit_points(Rule stmt, int tok_i, Sequence seq){
-    for (auto& token : seq.sequence) {
-        if (token_is_unique(stmt, token, tok_i)) {
-            token.commit_point = true;
-            return tok_i;
-        }
-        tok_i++;
-    }
-    return tok_i;
 }
 
 Parser::Parser(
@@ -111,21 +101,9 @@ Parser::Parser(
 
         json grammar = data.at("grammar");
 
-        parse_grammar_rules(grammar.at("statement rules"), grammar_rules, true);
+        parse_grammar_rules(utils::json_get(grammar, "statement rules", cxt), grammar_rules, true);
 
-        parse_grammar_rules(grammar.at("variables"), variable_sub_statements, false);
-
-        for (auto& stmt : grammar_rules) {
-            int tok_i = 0;
-
-            for (auto& seq : stmt.pattern) {
-                if (seq.optional) {
-                    parse_commit_points(stmt, tok_i, seq);
-                } else {
-                    tok_i = parse_commit_points(stmt, tok_i, seq);
-                }
-            }
-        }
+        parse_grammar_rules(utils::json_get(grammar, "variables", cxt), variable_sub_statements, false);
 
         pratt_parser.load_json(data, lexer);
 
@@ -134,90 +112,84 @@ Parser::Parser(
 }
 
 
-void Parser::parse_statements(std::vector<ASTNode>& output) {
+Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool emit_errors) {
     while (pos < tokens->size()) {
-        StmtMatch longest_match;
+        int longest_match_i = -1;
+        int longest_valid_match_i = -1;
+        std::vector<StmtMatch> matches;
         for (auto& rule : grammar_rules) {
-            StmtMatch match = match_stmt(rule);
-            if (match.valid && (match.size > longest_match.size)) {
-                longest_match = std::move(match);
+            matches.push_back(match_stmt(rule));
+            StmtMatch& match = matches.back();
+
+            if (longest_match_i == -1 || match.size > matches[longest_match_i].size) {
+                longest_match_i = matches.size() - 1;
+            }
+
+            if ((longest_valid_match_i == -1 || match.size > matches[longest_valid_match_i].size) && match.valid) {
+                longest_valid_match_i = matches.size() - 1; 
             }
         }
 
-        if (longest_match.valid) {
-            output.push_back(parse_stmt(longest_match.rule, &longest_match));
+        StmtMatch& longest_match = matches[longest_match_i];
+
+        if (longest_valid_match_i != -1 && matches[longest_valid_match_i].valid) {
+            output.push_back(parse_stmt(&matches[longest_valid_match_i]));
+        } else if (emit_errors) {
+            utils::error(longest_match.error.message, cxt, longest_match.error.context);
         } else {
-            return;  // if no valid statement left then exit
+            return longest_match;  // if no valid statement left then exit
         }
     }
 }
 
 
-Parser::StmtMatch Parser::match_stmt(Rule rule, bool committed) {
+Parser::StmtMatch Parser::match_stmt(Rule& rule) {
     size_t start_pos = pos;
     StmtMatch result;
 
-    for (auto& pattern_item : rule.pattern) {
-        size_t item_start_pos = pos;
+    for (auto& exp_token : rule.pattern) {
+        auto& token = peek(this);
+        
+        for (auto& var_rule : variable_sub_statements) {
+            if (var_rule.statement == exp_token.label) {
+                StmtMatch match = match_stmt(var_rule); 
+                
+                if (!match.valid) {
+                    result.error.message = "Expected variable segment '" + var_rule.statement + "'";
+                    result.error.pos = pos;
+                    goto failed;
+                }
 
-        for (auto& exp_token : pattern_item.sequence) {
-            auto token = peek(this);
+                result.sub_stmts.push_back(parse_stmt(&match));
+            }
+        }
+
+        if (exp_token.label == "__expr__") {
+            PrattParser::ExprResult expr = pratt_parser.parse_expr(0);
+            if (!PrattParser::valid_expr(expr)) {
+                result.error = expr.error;
+                goto failed;
+            }
             
-            // commit to a path in the rule
-            if (exp_token.commit_point) {
-                committed = 1;
+            result.exprs.push_back(std::move(expr.node));
+
+        } else if (exp_token.label == "__statements__") {
+            parse_statements(result.sub_stmts);
+
+        } else if (exp_token.id != -1) {
+            if (token.id != exp_token.id) {
+                result.error.message = "expected a '" + exp_token.label + "', got a '" + token.label + "'";
+                result.error.pos = pos;
+                goto failed;
+    
             }
+            
+            result.tokens = consume(this);
 
-            for (auto& var_rule : variable_sub_statements) {
-                if (var_rule.statement == exp_token.label) {
-                    StmtMatch match = match_stmt(var_rule, committed); 
-                    
-                    if (!match.valid) {
-                        if (committed) {
-                            utils::error("Expected variable segment '" + var_rule.statement + "'", cxt);
-                        }
-                        pos = start_pos;
-                        result.valid = false;
-                        return result;  
-                    }
-
-                    // Success path: bypass the variable container, collect its statements
-                    result.sub_stmts.insert(result.sub_stmts.end(), 
-                        std::make_move_iterator(match.sub_stmts.begin()), 
-                        std::make_move_iterator(match.sub_stmts.end()));
-                    
-                    // Explicitly continue to the next part of your sequence loop
-                    continue; 
-                }
-            }
-
-            if (exp_token.label == "_expr") {
-                ASTNode expr = pratt_parser.parse_expr(0);
-                result.exprs.push_back(std::move(expr));
-
-            } else if (exp_token.label == "_statements") {
-                parse_statements(result.sub_stmts);
-
-            } else if (exp_token.id != -1) {
-                if (token.id != exp_token.id && !pattern_item.optional) {
-                    if (committed) {
-                        utils::error("expected a '" + exp_token.label + "', got a '" + token.label + "'", cxt);
-
-                    } else if (pattern_item.optional) {
-                        pos = item_start_pos;
-                        break;
-                        
-                    } else {
-                        // reset pos
-                        pos = start_pos;
-                        result.valid = false;
-                        return result;
-                    }
-                }
-                consume(this);
-            } else {
-                utils::error("unknown token '" + exp_token.label + "'" , cxt, "--- PATTERN ---" + rule.stringify_pattern());
-            }
+        } else {
+            result.error.message = "unknown token '" + exp_token.label + "'"; 
+            result.error.context = "--- PATTERN ---" + rule.stringify_pattern();
+            result.error.pos = pos;
         }
     }
 
@@ -227,12 +199,30 @@ Parser::StmtMatch Parser::match_stmt(Rule rule, bool committed) {
     result.rule = &rule;
 
     return result;
+
+    failed:
+    pos = start_pos;
+    result.valid = false;
+    return result; 
 }
 
-ASTNode Parser::parse_stmt(Rule* rule, StmtMatch* match) {
+ASTNode Parser::parse_stmt(StmtMatch* match) {
+    /* node structure: 
+    token label - statement
+    children - exprs, sub stmts
+    */
+
     ASTNode node;
     
+    node.token.label = match->rule->statement;
     
+    for (auto& expr : match->exprs) {
+        add_child(node, expr);
+    }
+
+    for (auto& stmt : match->sub_stmts) {
+        add_child(node, stmt);
+    }
 
     return node;
 }
@@ -244,7 +234,7 @@ std::vector<ASTNode> Parser::run(std::vector<Token>* input) {
     
     std::vector<ASTNode> output;
 
-    parse_statements(output);
+    parse_statements(output, 1);
 
     if (pos < tokens->size()) {
         utils::error("unknown grammar formation", cxt);

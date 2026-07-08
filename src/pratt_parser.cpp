@@ -9,16 +9,17 @@ bool PrattParser::has(uint32_t mask, TypeMask t) {
     return mask & (uint32_t)t;
 }
 
-
-PrattParser::Rule* PrattParser::find_rule(const Token& t) {
+std::pair<PrattParser::Rule*, PrattParser::ParseError> PrattParser::find_rule(const Token& t) {
     auto it = by_id.find(t.id);
     if (it == by_id.end()) {
-        utils::error("unknown token rule: " + t.label, cxt);
-        return nullptr;
+        return {nullptr, {"unknown token rule: " + t.label, pos}};
     }
-    return it->second;
+    return {it->second, {}};
 }
 
+bool PrattParser::valid_expr(PrattParser::ExprResult& expr) {
+    return expr.error.pos == -1 || expr.error.message.empty();
+}
 
 PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, size_t& pos)
     : cxt(cxt), rules(std::move(rules)), pos(pos) {
@@ -89,73 +90,97 @@ void PrattParser::load_json(json& data, Lexer& lexer) {
     }
 }
 
-ASTNode PrattParser::parse_atom() {
+PrattParser::ExprResult PrattParser::parse_atom() {
     Token tok = consume(this);
-    Rule* rule = find_rule(tok);
+    auto rule_pair = find_rule(tok);
+    Rule* rule = rule_pair.first;
 
-    if (!rule) utils::error("null rule in atom", cxt);
+    if (!rule) {
+        return {.error = rule_pair.second};
+    }
+
 
     if (has(rule->type_mask, Value)) {
-        return ASTNode(tok, ASTNode::Type::Value);
+        return {ASTNode(tok)};
     }
 
     if (has(rule->type_mask, Prefix)) {
-        ASTNode node(tok, ASTNode::Type::Prefix);
+        ASTNode node(tok);
+
+        ExprResult right = parse_expr(prefix_bp);
+
+        if (!valid_expr(right)) {
+            return right;
+        }
+        
 
         node.children.push_back(
-            std::make_unique<ASTNode>(parse_expr(prefix_bp))
+            std::make_unique<ASTNode>()
         );
 
-        return node;
+        return {std::move(node)};
     }
 
     if (has(rule->type_mask, OpeningWrapper)) {
-        ASTNode expr = parse_expr(0);
+        ExprResult expr = parse_expr(0);
+        
+        if (!valid_expr(expr)) return expr;
 
-        if (eof(this) || !has(find_rule(consume(this))->type_mask, ClosingWrapper)) {
-            utils::error("expected closing wrapper", cxt);
+        auto rule_pair = find_rule(consume(this));
+
+        if (eof(this) || !rule_pair.first || !has(rule_pair.first->type_mask, ClosingWrapper)) {
+            return {.error = {"expected closing wrapper", pos}};
         }
 
         return expr;
     }
 
-    utils::error("invalid atom: " + tok.label, cxt);
-    return {};
+    
+    return {.error = {"invalid atom: " + tok.label, pos}};
 }
 
-ASTNode PrattParser::parse_expr(uint16_t rbp) {
+PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
     if (eof(this)) return {};
-    ASTNode left = parse_atom();
+    ExprResult left_expr = parse_atom();
+
+    if (!valid_expr(left_expr)) return left_expr;
+    ASTNode& left = left_expr.node;
 
     while (!eof(this)) {
         Token& tok = peek(this);
-        Rule* rule = find_rule(tok);
+        auto rule_pair = find_rule(tok);
+        Rule* rule = rule_pair.first;
 
-        if (!rule) break;
+        if (!rule) return {.error = rule_pair.second};
 
-        // ----------------------------
-        // FUNCTION CALL: f(...)
-        // ----------------------------
         if (has(rule->type_mask, OpeningWrapper)) {
 
             consume(this); // '('
 
             ASTNode call;
-            call.type = ASTNode::Type::Call;
 
             add_child(call, left);
 
-            // empty call
-            if (!eof(this) && !has(find_rule(peek(this))->type_mask, ClosingWrapper)) {
+            auto rule_pair = find_rule(peek(this));
+            if (!rule_pair.first) return {.error = rule_pair.second};
+
+            if (!has(rule_pair.first->type_mask, ClosingWrapper)) {
 
                 while (true) {
-                    add_child(call, parse_expr(0));
-
                     if (eof(this)) {
-                        utils::error("unclosed function call", cxt);
+                        return {.error = {"unclosed function call", pos}};
                     }
 
-                    Rule* next = find_rule(peek(this));
+                    ExprResult arg_expr = parse_expr(0);
+
+                    if (!valid_expr(arg_expr)) return arg_expr;
+                    ASTNode& arg = arg_expr.node;
+
+                    add_child(call, arg);
+
+                    auto next_pair = find_rule(peek(this));
+                    Rule* next = next_pair.first;
+                    if (!next) return {.error = next_pair.second};
 
                     // end call
                     if (has(next->type_mask, ClosingWrapper)) {
@@ -164,15 +189,15 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
                     }
 
                     // comma / separator
-                    if (has(next->type_mask, ExprEnd)) {
+                    if (has(next->type_mask, ArgSep)) {
                         consume(this);
                         continue;
                     }
 
-                    utils::error("invalid function argument separator", cxt);
+                    return {.error = {"invalid function argument separator", pos}};
                 }
             } else {
-                // consume ')'
+                // empty call, consume ')'
                 consume(this);
             }
 
@@ -186,21 +211,29 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
             ASTNode node;
 
             node.token = tok;
-            node.type = ASTNode::Type::Ternary;
 
             add_child(node, left);  
 
-            ASTNode true_stmt = parse_expr(0);
+            ExprResult true_stmt_expr = parse_expr(0);
+
+            if (!valid_expr(true_stmt_expr)) return true_stmt_expr;
+            ASTNode& true_stmt = true_stmt_expr.node;
 
             add_child(node, true_stmt);
 
             Token stmt_sep = consume(this);
 
-            if (!has(find_rule(stmt_sep)->type_mask, TernarySeperator)) {
-                utils::error("ternary seperarator is invalid.", cxt);
+            auto seperator_pair = find_rule(stmt_sep);
+            if (!seperator_pair.first) return {.error = seperator_pair.second};
+
+            if (!has(seperator_pair.first->type_mask, TernarySeperator)) {
+                return {.error = {"ternary seperarator is invalid.", pos}};
             }
             
-            ASTNode false_stmt = parse_expr(0);
+            ExprResult false_stmt_expr = parse_expr(0);
+
+            if (!valid_expr(false_stmt_expr)) return false_stmt_expr;
+            ASTNode& false_stmt = false_stmt_expr.node;
 
             add_child(node, false_stmt);
 
@@ -221,15 +254,16 @@ ASTNode PrattParser::parse_expr(uint16_t rbp) {
         left = std::move(node);
 
         if (has(rule->type_mask, Postfix)) {
-            left.type = ASTNode::Type::Postfix;
             continue;
         }
 
-        left.type = ASTNode::Type::Infix;
-        ASTNode right = parse_expr(rule->rbp);
+        ExprResult right_expr = parse_expr(rule->rbp);
+
+        if (!valid_expr(right_expr)) return right_expr;
+        ASTNode& right = right_expr.node;
 
         add_child(left, right);
     }
 
-    return left;
+    return {std::move(left)};
 }

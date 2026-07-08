@@ -62,3 +62,7 @@
 #include <mutex>
 #include <atomic>
 #include <span>
+
+#include "json.hpp"
+
+using json = nlohmann::json;

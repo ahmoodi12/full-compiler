@@ -21,7 +21,7 @@ public:
         Ternary = 1 << 4,
         OpeningWrapper = 1 << 5,
         ClosingWrapper = 1 << 6,
-        ExprEnd = 1 << 7,
+        ArgSep = 1 << 7,
         TernarySeperator = 1 << 8
     };
 
@@ -29,6 +29,17 @@ public:
         uint32_t type_mask = 0;
         uint16_t lbp = 0;
         uint16_t rbp = 0;
+    };
+
+    struct ParseError {
+        std::string message;
+        size_t pos = -1;
+        std::string context;
+    };
+
+    struct ExprResult {
+        ASTNode node;
+        ParseError error;
     };
 
     const std::unordered_map<std::string, TypeMask> type_map = {
@@ -39,7 +50,7 @@ public:
         {"ternary", Ternary},
         {"opening wrapper", OpeningWrapper},
         {"closing wrapper", ClosingWrapper},
-        {"expr terminator", ExprEnd},
+        {"argument seperator", ArgSep},
         {"ternary seperator", TernarySeperator},
     };
 
@@ -59,12 +70,15 @@ public:
 
     void load_json(json& data, Lexer& lexer);
 
-    ASTNode parse_expr(uint16_t rbp);
-    ASTNode parse_atom();
+    PrattParser::ExprResult parse_atom();
+
+    PrattParser::ExprResult parse_expr(uint16_t rbp);
+
+    static bool valid_expr(PrattParser::ExprResult& expr);
 
 private:
-
-    Rule* find_rule(const Token& t);
-
     static bool has(uint32_t mask, TypeMask t);
+
+    std::pair<PrattParser::Rule*,PrattParser::ParseError> find_rule(const Token & t);
+
 };

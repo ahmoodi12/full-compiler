@@ -2,10 +2,7 @@
 #include "ansi_colors.hpp"
 #include "compiler_cxt.hpp"
 
-#include <iostream>
-#include <fstream>
-#include <filesystem>
-#include <iterator>
+#include "combined_include.hpp"
 
 namespace utils {
 
@@ -85,6 +82,11 @@ std::string read_file(const std::filesystem::path& path, CompilerCxt& cxt) {
         std::istreambuf_iterator<char>(file),
         std::istreambuf_iterator<char>()
     );
+}
+
+json& json_get(json& parent, const char* item, CompilerCxt& cxt) {
+    if (!parent.contains(item)) utils::error("json missing the key: " + std::string(item), cxt, "--- JSON ---\n" + parent.dump(4));
+    return parent.at(item);
 }
 
 std::string visualize_whitespaces(const std::string& s) {

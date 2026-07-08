@@ -48,29 +48,16 @@ class Parser {
     };
 
 public:
-    struct TokenRule : RuleBase {
-        bool commit_point = false;
-    };
-
-    struct Sequence {
-        bool optional = false;
-        std::vector<TokenRule> sequence;
-    };
-
     struct Rule {
         std::string statement;
-        std::vector<Sequence> pattern;
+        std::vector<RuleBase> pattern;
+        int parent_i = -1;   // index in grammar rules
 
         std::string stringify_pattern() {
-            std::string out = "[";
-            for (auto& item : pattern) {
-                out += item.optional ? "{\"optional\": [" : "[";
-
-                for (auto& token : item.sequence) {
-                    out += token.label + ", ";
-                }
-                
-                out += item.optional ? "]}, " : "], ";
+            std::string out;
+            out += "[";
+            for (auto& token : pattern) {
+                out += token.label + ", ";
             }
             out += "]";
             return out;
@@ -79,9 +66,13 @@ public:
 
     struct StmtMatch {
         bool valid = false;
-        int size = 0;
-        std::vector<ASTNode> exprs; // ONLY expr results
+        size_t size = 0;
+        std::vector<ASTNode> exprs; 
         std::vector<ASTNode> sub_stmts;
+        std::vector<Token> tokens; 
+        
+        PrattParser::ParseError error;
+
         Rule* rule;
     };
         
@@ -101,15 +92,11 @@ public:
 
     CompilerCxt& cxt;
 
-    void add_seq_tokens(json sequence, Sequence &item);
+    void add_seq_tokens(json &sequence, Parser::Rule &rule);
 
-    void parse_grammar_rule(json &pattern, Parser::Rule &rule, std::string &statement_str);
+    void parse_grammar_rule(json &pattern, const std::string &statement_str, std::vector<Parser::Rule> &rules, bool allow_optionals, int seq_i);
 
-    void parse_grammar_rules(json &grammar, std::vector<Parser::Rule> &rules, bool add_to_by_statement);
-
-    bool token_is_unique(Rule stmt, TokenRule token, int tok_i);
-
-    int parse_commit_points(Rule stmt, int tok_i, Sequence seq);
+    void parse_grammar_rules(json &grammar, std::vector<Parser::Rule> &rules, bool is_grammar_rules);
 
     Parser(
         CompilerCxt &cxt,
@@ -117,11 +104,11 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    void parse_statements(std::vector<ASTNode> &output);
+    void parse_statements(std::vector<ASTNode> &output, bool emit_errors = 0);
 
-    StmtMatch match_stmt(Rule rule, bool committed = 0);
+    Parser::StmtMatch match_stmt(Rule &rule);
 
-    ASTNode parse_stmt(Rule *rule, StmtMatch *match);
+    ASTNode parse_stmt(StmtMatch *match);
 
     std::vector<ASTNode> run(std::vector<Token> *input);
 };

@@ -11,8 +11,8 @@ ninja
 
 CompilerCxt cxt;
 
-std::string lex_data_file = "C:/projects/full compiler/data/c frontend data/lex_data.json";
-std::string parse_data_file = "C:/projects/full compiler/data/c frontend data/parser_data.json";
+std::string lex_data_file = "C:/projects/full compiler/data/C/lex_data.json";
+std::string parse_data_file = "C:/projects/full compiler/data/C/parser_data.json";
 
 int main() {
 

@@ -6,7 +6,11 @@
 #include <vector>
 
 struct ASTNode {
+    // main token, acts as a label
     Token token;
+
+    // secondary tokens
+    std::vector<Token> tokens;
 
     std::vector<std::unique_ptr<ASTNode>> children;
 
@@ -14,6 +18,10 @@ struct ASTNode {
     explicit ASTNode(Token tok)
         : token(std::move(tok)) {}
 };
+
+inline bool valid_ast(const ASTNode& node) {
+    return node.token.id != -1 && node.token.label.empty();
+}
 
 inline void add_child(ASTNode& node, ASTNode& child) {
     node.children.push_back(std::make_unique<ASTNode>(std::move(child)));

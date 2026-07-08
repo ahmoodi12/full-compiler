@@ -22836,3 +22836,1575 @@ events:
         - "C:/Program Files/CMake"
         - "C:/Program Files (x86)/Project"
 ...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:210 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/rc.com"
+      - "C:/Program Files/LLVM/bin/rc.exe"
+      - "C:/Program Files/LLVM/bin/rc"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.com"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.exe"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc"
+      - "C:/Windows/rc.com"
+      - "C:/Windows/rc.exe"
+      - "C:/Windows/rc"
+      - "C:/Windows/System32/wbem/rc.com"
+      - "C:/Windows/System32/wbem/rc.exe"
+      - "C:/Windows/System32/wbem/rc"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc"
+      - "C:/Windows/System32/OpenSSH/rc.com"
+      - "C:/Windows/System32/OpenSSH/rc.exe"
+      - "C:/Windows/System32/OpenSSH/rc"
+      - "C:/Program Files/Graphviz/bin/rc.com"
+      - "C:/Program Files/Graphviz/bin/rc.exe"
+      - "C:/Program Files/Graphviz/bin/rc"
+      - "C:/Program Files/nodejs/rc.com"
+      - "C:/Program Files/nodejs/rc.exe"
+      - "C:/Program Files/nodejs/rc"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.com"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.exe"
+      - "C:/Program Files/wabt-1.0.39/bin/rc"
+      - "C:/Program Files/ninja/rc.com"
+      - "C:/Program Files/ninja/rc.exe"
+      - "C:/Program Files/ninja/rc"
+      - "C:/Windows/System32/rc.com"
+      - "C:/Windows/System32/rc.exe"
+      - "C:/Windows/System32/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc"
+      - "C:/LLVM/bin/rc.com"
+      - "C:/LLVM/bin/rc.exe"
+      - "C:/LLVM/bin/rc"
+      - "C:/Program Files/dotnet/rc.com"
+      - "C:/Program Files/dotnet/rc.exe"
+      - "C:/Program Files/dotnet/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc"
+      - "C:/Program Files/cproc/cproc/rc.com"
+      - "C:/Program Files/cproc/cproc/rc.exe"
+      - "C:/Program Files/cproc/cproc/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.com"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc"
+      - "C:/Program Files/bin/rc.com"
+      - "C:/Program Files/bin/rc.exe"
+      - "C:/Program Files/bin/rc"
+      - "C:/Program Files/sbin/rc.com"
+      - "C:/Program Files/sbin/rc.exe"
+      - "C:/Program Files/sbin/rc"
+      - "C:/Program Files/rc.com"
+      - "C:/Program Files/rc.exe"
+      - "C:/Program Files/rc"
+      - "C:/Program Files (x86)/bin/rc.com"
+      - "C:/Program Files (x86)/bin/rc.exe"
+      - "C:/Program Files (x86)/bin/rc"
+      - "C:/Program Files (x86)/sbin/rc.com"
+      - "C:/Program Files (x86)/sbin/rc.exe"
+      - "C:/Program Files (x86)/sbin/rc"
+      - "C:/Program Files (x86)/rc.com"
+      - "C:/Program Files (x86)/rc.exe"
+      - "C:/Program Files (x86)/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files/CMake/sbin/rc.com"
+      - "C:/Program Files/CMake/sbin/rc.exe"
+      - "C:/Program Files/CMake/sbin/rc"
+      - "C:/Program Files/CMake/rc.com"
+      - "C:/Program Files/CMake/rc.exe"
+      - "C:/Program Files/CMake/rc"
+      - "C:/Program Files (x86)/Project/bin/rc.com"
+      - "C:/Program Files (x86)/Project/bin/rc.exe"
+      - "C:/Program Files (x86)/Project/bin/rc"
+      - "C:/Program Files (x86)/Project/sbin/rc.com"
+      - "C:/Program Files (x86)/Project/sbin/rc.exe"
+      - "C:/Program Files (x86)/Project/sbin/rc"
+      - "C:/Program Files (x86)/Project/rc.com"
+      - "C:/Program Files (x86)/Project/rc.exe"
+      - "C:/Program Files (x86)/Project/rc"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:216 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/llvm-rc.com"
+    found: "C:/Program Files/LLVM/bin/llvm-rc.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+...
+
+---
+events:
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineSystem.cmake:212 (message)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      The system is: Windows - 10.0.26200 - AMD64
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCCompilerId.c.in"
+    candidate_directories:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/"
+    found: "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCCompilerId.c.in"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+      Compiler: C:/Program Files/LLVM/bin/clang.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "a.exe"
+      
+      The C compiler identification is Clang, found in:
+        C:/projects/full compiler/build/CMakeFiles/4.3.4/CompilerIdC/a.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:1347 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Detecting C compiler /showIncludes prefix:
+        
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:1347 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCCompiler.cmake:122 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Detecting C compiler /showIncludes prefix:
+        
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:468 (find_file)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:506 (CMAKE_DETERMINE_COMPILER_ID_WRITE)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:8 (CMAKE_DETERMINE_COMPILER_ID_BUILD)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "file"
+    variable: "src_in"
+    description: "Path to a file."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "CMakeCXXCompilerId.cpp.in"
+    candidate_directories:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/"
+    found: "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCXXCompilerId.cpp.in"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:17 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:64 (__determine_compiler_id_test)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+      Compiler: C:/Program Files/LLVM/bin/clang++.exe 
+      Build flags: 
+      Id flags:  
+      
+      The output was:
+      0
+      
+      
+      Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "a.exe"
+      
+      The CXX compiler identification is Clang, found in:
+        C:/projects/full compiler/build/CMakeFiles/4.3.4/CompilerIdCXX/a.exe
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:1347 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Detecting CXX compiler /showIncludes prefix:
+        
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:1347 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerId.cmake:250 (CMAKE_DETERMINE_MSVC_SHOWINCLUDES_PREFIX)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCXXCompiler.cmake:125 (CMAKE_DETERMINE_COMPILER_ID)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Detecting CXX compiler /showIncludes prefix:
+        
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:210 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/rc.com"
+      - "C:/Program Files/LLVM/bin/rc.exe"
+      - "C:/Program Files/LLVM/bin/rc"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.com"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.exe"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc"
+      - "C:/Windows/rc.com"
+      - "C:/Windows/rc.exe"
+      - "C:/Windows/rc"
+      - "C:/Windows/System32/wbem/rc.com"
+      - "C:/Windows/System32/wbem/rc.exe"
+      - "C:/Windows/System32/wbem/rc"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc"
+      - "C:/Windows/System32/OpenSSH/rc.com"
+      - "C:/Windows/System32/OpenSSH/rc.exe"
+      - "C:/Windows/System32/OpenSSH/rc"
+      - "C:/Program Files/Graphviz/bin/rc.com"
+      - "C:/Program Files/Graphviz/bin/rc.exe"
+      - "C:/Program Files/Graphviz/bin/rc"
+      - "C:/Program Files/nodejs/rc.com"
+      - "C:/Program Files/nodejs/rc.exe"
+      - "C:/Program Files/nodejs/rc"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.com"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.exe"
+      - "C:/Program Files/wabt-1.0.39/bin/rc"
+      - "C:/Program Files/ninja/rc.com"
+      - "C:/Program Files/ninja/rc.exe"
+      - "C:/Program Files/ninja/rc"
+      - "C:/Windows/System32/rc.com"
+      - "C:/Windows/System32/rc.exe"
+      - "C:/Windows/System32/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc"
+      - "C:/LLVM/bin/rc.com"
+      - "C:/LLVM/bin/rc.exe"
+      - "C:/LLVM/bin/rc"
+      - "C:/Program Files/dotnet/rc.com"
+      - "C:/Program Files/dotnet/rc.exe"
+      - "C:/Program Files/dotnet/rc"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc"
+      - "C:/Program Files/cproc/cproc/rc.com"
+      - "C:/Program Files/cproc/cproc/rc.exe"
+      - "C:/Program Files/cproc/cproc/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.com"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc"
+      - "C:/Program Files/bin/rc.com"
+      - "C:/Program Files/bin/rc.exe"
+      - "C:/Program Files/bin/rc"
+      - "C:/Program Files/sbin/rc.com"
+      - "C:/Program Files/sbin/rc.exe"
+      - "C:/Program Files/sbin/rc"
+      - "C:/Program Files/rc.com"
+      - "C:/Program Files/rc.exe"
+      - "C:/Program Files/rc"
+      - "C:/Program Files (x86)/bin/rc.com"
+      - "C:/Program Files (x86)/bin/rc.exe"
+      - "C:/Program Files (x86)/bin/rc"
+      - "C:/Program Files (x86)/sbin/rc.com"
+      - "C:/Program Files (x86)/sbin/rc.exe"
+      - "C:/Program Files (x86)/sbin/rc"
+      - "C:/Program Files (x86)/rc.com"
+      - "C:/Program Files (x86)/rc.exe"
+      - "C:/Program Files (x86)/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files/CMake/sbin/rc.com"
+      - "C:/Program Files/CMake/sbin/rc.exe"
+      - "C:/Program Files/CMake/sbin/rc"
+      - "C:/Program Files/CMake/rc.com"
+      - "C:/Program Files/CMake/rc.exe"
+      - "C:/Program Files/CMake/rc"
+      - "C:/Program Files (x86)/Project/bin/rc.com"
+      - "C:/Program Files (x86)/Project/bin/rc.exe"
+      - "C:/Program Files (x86)/Project/bin/rc"
+      - "C:/Program Files (x86)/Project/sbin/rc.com"
+      - "C:/Program Files (x86)/Project/sbin/rc.exe"
+      - "C:/Program Files (x86)/Project/sbin/rc"
+      - "C:/Program Files (x86)/Project/rc.com"
+      - "C:/Program Files (x86)/Project/rc.exe"
+      - "C:/Program Files (x86)/Project/rc"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:216 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/llvm-rc.com"
+    found: "C:/Program Files/LLVM/bin/llvm-rc.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting C compiler ABI info"
+    directories:
+      source: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-j73464"
+      binary: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-j73464"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/LLVM/bin/clang-scan-deps.exe"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_C_FLAGS: ""
+      CMAKE_C_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd"
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_C_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-j73464'
+        
+        Run Build Command(s): C:/PROGRA~1/ninja/ninja.exe -v cmTC_e9a00
+        [1/2] C:\\PROGRA~1\\LLVM\\bin\\clang.exe -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_e9a00.dir/CMakeCCompilerABI.c.obj -MF CMakeFiles\\cmTC_e9a00.dir\\CMakeCCompilerABI.c.obj.d -o CMakeFiles/cmTC_e9a00.dir/CMakeCCompilerABI.c.obj -c "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCCompilerABI.c"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\PROGRA~1\\LLVM\\bin\\clang.exe -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -v -Xlinker /subsystem:console -fuse-ld=lld-link CMakeFiles/cmTC_e9a00.dir/CMakeCCompilerABI.c.obj -o cmTC_e9a00.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_e9a00.lib -Xlinker /pdb:cmTC_e9a00.pdb -Xlinker /version:0.0     && cd ."
+        clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+        Target: x86_64-pc-windows-msvc
+        Thread model: posix
+        InstalledDir: C:\\Program Files\\LLVM\\bin
+         "C:\\\\Program Files\\\\LLVM\\\\bin\\\\lld-link" -out:cmTC_e9a00.exe "-libpath:C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Insiders\\\\VC\\\\Tools\\\\MSVC\\\\14.51.36231\\\\lib\\\\x64" "-libpath:C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Insiders\\\\VC\\\\Tools\\\\MSVC\\\\14.51.36231\\\\atlmfc\\\\lib\\\\x64" "-libpath:C:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.26100.0\\\\ucrt\\\\x64" "-libpath:C:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.26100.0\\\\um\\\\x64" "-libpath:C:\\\\Program Files\\\\LLVM\\\\lib\\\\clang\\\\22\\\\lib\\\\x86_64-pc-windows-msvc" "-libpath:C:\\\\Program Files\\\\LLVM\\\\lib\\\\clang\\\\22\\\\lib\\\\windows" -nologo -debug /subsystem:console CMakeFiles/cmTC_e9a00.dir/CMakeCCompilerABI.c.obj /MANIFEST:EMBED /implib:cmTC_e9a00.lib /pdb:cmTC_e9a00.pdb /version:0.0
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed C implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'C': C:/Program Files/LLVM/bin/lld-link
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the C compiler's linker: "C:/Program Files/LLVM/bin/lld-link" "-v"
+      lld-link: warning: ignoring unknown argument '-v'
+      lld-link: error: no input files
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the C compiler's linker: "C:/Program Files/LLVM/bin/lld-link" "-V"
+      lld-link: warning: ignoring unknown argument '-V'
+      lld-link: error: no input files
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the C compiler's linker: "C:/Program Files/LLVM/bin/lld-link" "--version"
+      LLD 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:83 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compiler ABI info"
+    directories:
+      source: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-mh8hik"
+      binary: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-mh8hik"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/LLVM/bin/clang-scan-deps.exe"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd"
+      CMAKE_CXX_SCAN_FOR_MODULES: "OFF"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_ABI_COMPILED"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-mh8hik'
+        
+        Run Build Command(s): C:/PROGRA~1/ninja/ninja.exe -v cmTC_cba49
+        [1/2] C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -MD -MT CMakeFiles/cmTC_cba49.dir/CMakeCXXCompilerABI.cpp.obj -MF CMakeFiles\\cmTC_cba49.dir\\CMakeCXXCompilerABI.cpp.obj.d -o CMakeFiles/cmTC_cba49.dir/CMakeCXXCompilerABI.cpp.obj -c "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCXXCompilerABI.cpp"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -v -Xlinker /subsystem:console -fuse-ld=lld-link CMakeFiles/cmTC_cba49.dir/CMakeCXXCompilerABI.cpp.obj -o cmTC_cba49.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_cba49.lib -Xlinker /pdb:cmTC_cba49.pdb -Xlinker /version:0.0     && cd ."
+        clang version 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+        Target: x86_64-pc-windows-msvc
+        Thread model: posix
+        InstalledDir: C:\\Program Files\\LLVM\\bin
+         "C:\\\\Program Files\\\\LLVM\\\\bin\\\\lld-link" -out:cmTC_cba49.exe "-libpath:C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Insiders\\\\VC\\\\Tools\\\\MSVC\\\\14.51.36231\\\\lib\\\\x64" "-libpath:C:\\\\Program Files\\\\Microsoft Visual Studio\\\\18\\\\Insiders\\\\VC\\\\Tools\\\\MSVC\\\\14.51.36231\\\\atlmfc\\\\lib\\\\x64" "-libpath:C:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.26100.0\\\\ucrt\\\\x64" "-libpath:C:\\\\Program Files (x86)\\\\Windows Kits\\\\10\\\\Lib\\\\10.0.26100.0\\\\um\\\\x64" "-libpath:C:\\\\Program Files\\\\LLVM\\\\lib\\\\clang\\\\22\\\\lib\\\\x86_64-pc-windows-msvc" "-libpath:C:\\\\Program Files\\\\LLVM\\\\lib\\\\clang\\\\22\\\\lib\\\\windows" -nologo -debug /subsystem:console CMakeFiles/cmTC_cba49.dir/CMakeCXXCompilerABI.cpp.obj /MANIFEST:EMBED /implib:cmTC_cba49.lib /pdb:cmTC_cba49.pdb /version:0.0
+        
+      exitCode: 0
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:253 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Parsed CXX implicit link information:
+        link line regex: [^( *|.*[/\\])(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?|CMAKE_LINK_STARTFILE-NOTFOUND|([^/\\]+-)?ld|collect2)[^/\\]*( |$)]
+        linker tool regex: [^[ 	]*(->|"|[0-9]+>[ 	-]*Build:[ 	0-9]+ ms[ 	]*)?[ 	]*(([^"]*[/\\])?(ld[0-9]*(|\\.[a-rt-z][a-z]*|\\.s[a-np-z][a-z]*|\\.so[a-z]+)|link\\.exe|lld-link(\\.exe)?))("|,| |$)]
+        linker tool for 'CXX': C:/Program Files/LLVM/bin/lld-link
+        implicit libs: []
+        implicit objs: []
+        implicit dirs: []
+        implicit fwks: []
+      
+      
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/Program Files/LLVM/bin/lld-link" "-v"
+      lld-link: warning: ignoring unknown argument '-v'
+      lld-link: error: no input files
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/Program Files/LLVM/bin/lld-link" "-V"
+      lld-link: warning: ignoring unknown argument '-V'
+      lld-link: error: no input files
+  -
+    kind: "message-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/CMakeDetermineLinkerId.cmake:38 (message)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerABI.cmake:299 (cmake_determine_linker_id)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:26 (CMAKE_DETERMINE_COMPILER_ABI)"
+      - "CMakeLists.txt:2 (project)"
+    message: |
+      Running the CXX compiler's linker: "C:/Program Files/LLVM/bin/lld-link" "--version"
+      LLD 22.1.8 (https://github.com/llvm/llvm-project ca7933e47d3a3451d81e72ac174dcb5aa28b59d1)
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/FeatureTesting.cmake:34 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/FeatureTesting.cmake:87 (_record_compiler_features)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/CMakeCommonCompilerMacros.cmake:124 (_record_compiler_features_cxx)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerSupport.cmake:70 (cmake_record_cxx_compile_features)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:83 (CMAKE_DETERMINE_COMPILER_SUPPORT)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compile features"
+    directories:
+      source: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-alu2xz"
+      binary: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-alu2xz"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/LLVM/bin/clang-scan-deps.exe"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_FEATURE_TEST"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-alu2xz'
+        
+        Run Build Command(s): C:/PROGRA~1/ninja/ninja.exe -v cmTC_5d26f
+        [1/2] C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd   -std=c++14 -MD -MT CMakeFiles/cmTC_5d26f.dir/feature_tests.cxx.obj -MF CMakeFiles\\cmTC_5d26f.dir\\feature_tests.cxx.obj.d -o CMakeFiles/cmTC_5d26f.dir/feature_tests.cxx.obj -c "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-alu2xz/feature_tests.cxx"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld-link CMakeFiles/cmTC_5d26f.dir/feature_tests.cxx.obj -o cmTC_5d26f.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_5d26f.lib -Xlinker /pdb:cmTC_5d26f.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+        
+      exitCode: 0
+  -
+    kind: "try_compile-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/FeatureTesting.cmake:34 (try_compile)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Internal/FeatureTesting.cmake:87 (_record_compiler_features)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Compiler/CMakeCommonCompilerMacros.cmake:132 (_record_compiler_features_cxx)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeDetermineCompilerSupport.cmake:70 (cmake_record_cxx_compile_features)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeTestCXXCompiler.cmake:83 (CMAKE_DETERMINE_COMPILER_SUPPORT)"
+      - "CMakeLists.txt:2 (project)"
+    checks:
+      - "Detecting CXX compile features"
+    directories:
+      source: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-07od3p"
+      binary: "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-07od3p"
+    cmakeVariables:
+      CMAKE_CXX_COMPILER_CLANG_SCAN_DEPS: "C:/Program Files/LLVM/bin/clang-scan-deps.exe"
+      CMAKE_CXX_FLAGS: ""
+      CMAKE_CXX_FLAGS_DEBUG: "-O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd"
+      CMAKE_CXX_STDLIB_MODULES_JSON: ""
+      CMAKE_EXE_LINKER_FLAGS: ""
+    buildResult:
+      variable: "CMAKE_CXX_FEATURE_TEST"
+      cached: true
+      stdout: |
+        Change Dir: 'C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-07od3p'
+        
+        Run Build Command(s): C:/PROGRA~1/ninja/ninja.exe -v cmTC_7abc8
+        [1/2] C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -D_MBCS  -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd   -std=c++14 -MD -MT CMakeFiles/cmTC_7abc8.dir/feature_tests.cxx.obj -MF CMakeFiles\\cmTC_7abc8.dir\\feature_tests.cxx.obj.d -o CMakeFiles/cmTC_7abc8.dir/feature_tests.cxx.obj -c "C:/projects/full compiler/build/CMakeFiles/CMakeScratch/TryCompile-07od3p/feature_tests.cxx"
+        [2/2] C:\\WINDOWS\\system32\\cmd.exe /C "cd . && C:\\PROGRA~1\\LLVM\\bin\\CLANG_~1.EXE -nostartfiles -nostdlib -O0 -g -Xclang -gcodeview -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -D_DEBUG -D_DLL -D_MT -Xclang --dependent-lib=msvcrtd -Xlinker /subsystem:console -fuse-ld=lld-link CMakeFiles/cmTC_7abc8.dir/feature_tests.cxx.obj -o cmTC_7abc8.exe -Xlinker /MANIFEST:EMBED -Xlinker /implib:cmTC_7abc8.lib -Xlinker /pdb:cmTC_7abc8.pdb -Xlinker /version:0.0   -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32 -loldnames  && cd ."
+        
+      exitCode: 0
+...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:210 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/rc.com"
+      - "C:/Program Files/LLVM/bin/rc.exe"
+      - "C:/Program Files/LLVM/bin/rc"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.com"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.exe"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc"
+      - "C:/Windows/rc.com"
+      - "C:/Windows/rc.exe"
+      - "C:/Windows/rc"
+      - "C:/Windows/System32/wbem/rc.com"
+      - "C:/Windows/System32/wbem/rc.exe"
+      - "C:/Windows/System32/wbem/rc"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc"
+      - "C:/Windows/System32/OpenSSH/rc.com"
+      - "C:/Windows/System32/OpenSSH/rc.exe"
+      - "C:/Windows/System32/OpenSSH/rc"
+      - "C:/Program Files/Graphviz/bin/rc.com"
+      - "C:/Program Files/Graphviz/bin/rc.exe"
+      - "C:/Program Files/Graphviz/bin/rc"
+      - "C:/Program Files/nodejs/rc.com"
+      - "C:/Program Files/nodejs/rc.exe"
+      - "C:/Program Files/nodejs/rc"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.com"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.exe"
+      - "C:/Program Files/wabt-1.0.39/bin/rc"
+      - "C:/Program Files/ninja/rc.com"
+      - "C:/Program Files/ninja/rc.exe"
+      - "C:/Program Files/ninja/rc"
+      - "C:/Windows/System32/rc.com"
+      - "C:/Windows/System32/rc.exe"
+      - "C:/Windows/System32/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc"
+      - "C:/LLVM/bin/rc.com"
+      - "C:/LLVM/bin/rc.exe"
+      - "C:/LLVM/bin/rc"
+      - "C:/Program Files/dotnet/rc.com"
+      - "C:/Program Files/dotnet/rc.exe"
+      - "C:/Program Files/dotnet/rc"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc"
+      - "C:/Program Files/cproc/cproc/rc.com"
+      - "C:/Program Files/cproc/cproc/rc.exe"
+      - "C:/Program Files/cproc/cproc/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.com"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc"
+      - "C:/Program Files/bin/rc.com"
+      - "C:/Program Files/bin/rc.exe"
+      - "C:/Program Files/bin/rc"
+      - "C:/Program Files/sbin/rc.com"
+      - "C:/Program Files/sbin/rc.exe"
+      - "C:/Program Files/sbin/rc"
+      - "C:/Program Files/rc.com"
+      - "C:/Program Files/rc.exe"
+      - "C:/Program Files/rc"
+      - "C:/Program Files (x86)/bin/rc.com"
+      - "C:/Program Files (x86)/bin/rc.exe"
+      - "C:/Program Files (x86)/bin/rc"
+      - "C:/Program Files (x86)/sbin/rc.com"
+      - "C:/Program Files (x86)/sbin/rc.exe"
+      - "C:/Program Files (x86)/sbin/rc"
+      - "C:/Program Files (x86)/rc.com"
+      - "C:/Program Files (x86)/rc.exe"
+      - "C:/Program Files (x86)/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files/CMake/sbin/rc.com"
+      - "C:/Program Files/CMake/sbin/rc.exe"
+      - "C:/Program Files/CMake/sbin/rc"
+      - "C:/Program Files/CMake/rc.com"
+      - "C:/Program Files/CMake/rc.exe"
+      - "C:/Program Files/CMake/rc"
+      - "C:/Program Files (x86)/Project/bin/rc.com"
+      - "C:/Program Files (x86)/Project/bin/rc.exe"
+      - "C:/Program Files (x86)/Project/bin/rc"
+      - "C:/Program Files (x86)/Project/sbin/rc.com"
+      - "C:/Program Files (x86)/Project/sbin/rc.exe"
+      - "C:/Program Files (x86)/Project/sbin/rc"
+      - "C:/Program Files (x86)/Project/rc.com"
+      - "C:/Program Files (x86)/Project/rc.exe"
+      - "C:/Program Files (x86)/Project/rc"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:216 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/llvm-rc.com"
+    found: "C:/Program Files/LLVM/bin/llvm-rc.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+...
+
+---
+events:
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:210 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/rc.com"
+      - "C:/Program Files/LLVM/bin/rc.exe"
+      - "C:/Program Files/LLVM/bin/rc"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.com"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc.exe"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/rc"
+      - "C:/Windows/rc.com"
+      - "C:/Windows/rc.exe"
+      - "C:/Windows/rc"
+      - "C:/Windows/System32/wbem/rc.com"
+      - "C:/Windows/System32/wbem/rc.exe"
+      - "C:/Windows/System32/wbem/rc"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.com"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc.exe"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/rc"
+      - "C:/Windows/System32/OpenSSH/rc.com"
+      - "C:/Windows/System32/OpenSSH/rc.exe"
+      - "C:/Windows/System32/OpenSSH/rc"
+      - "C:/Program Files/Graphviz/bin/rc.com"
+      - "C:/Program Files/Graphviz/bin/rc.exe"
+      - "C:/Program Files/Graphviz/bin/rc"
+      - "C:/Program Files/nodejs/rc.com"
+      - "C:/Program Files/nodejs/rc.exe"
+      - "C:/Program Files/nodejs/rc"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.com"
+      - "C:/Program Files/wabt-1.0.39/bin/rc.exe"
+      - "C:/Program Files/wabt-1.0.39/bin/rc"
+      - "C:/Program Files/ninja/rc.com"
+      - "C:/Program Files/ninja/rc.exe"
+      - "C:/Program Files/ninja/rc"
+      - "C:/Windows/System32/rc.com"
+      - "C:/Windows/System32/rc.exe"
+      - "C:/Windows/System32/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/rc"
+      - "C:/LLVM/bin/rc.com"
+      - "C:/LLVM/bin/rc.exe"
+      - "C:/LLVM/bin/rc"
+      - "C:/Program Files/dotnet/rc.com"
+      - "C:/Program Files/dotnet/rc.exe"
+      - "C:/Program Files/dotnet/rc"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.com"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc.exe"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/rc"
+      - "C:/Program Files/cproc/cproc/rc.com"
+      - "C:/Program Files/cproc/cproc/rc.exe"
+      - "C:/Program Files/cproc/cproc/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/rc"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.com"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/rc"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/rc"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.com"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc.exe"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/rc"
+      - "C:/Program Files/bin/rc.com"
+      - "C:/Program Files/bin/rc.exe"
+      - "C:/Program Files/bin/rc"
+      - "C:/Program Files/sbin/rc.com"
+      - "C:/Program Files/sbin/rc.exe"
+      - "C:/Program Files/sbin/rc"
+      - "C:/Program Files/rc.com"
+      - "C:/Program Files/rc.exe"
+      - "C:/Program Files/rc"
+      - "C:/Program Files (x86)/bin/rc.com"
+      - "C:/Program Files (x86)/bin/rc.exe"
+      - "C:/Program Files (x86)/bin/rc"
+      - "C:/Program Files (x86)/sbin/rc.com"
+      - "C:/Program Files (x86)/sbin/rc.exe"
+      - "C:/Program Files (x86)/sbin/rc"
+      - "C:/Program Files (x86)/rc.com"
+      - "C:/Program Files (x86)/rc.exe"
+      - "C:/Program Files (x86)/rc"
+      - "C:/Program Files/CMake/bin/rc.com"
+      - "C:/Program Files/CMake/bin/rc.exe"
+      - "C:/Program Files/CMake/bin/rc"
+      - "C:/Program Files/CMake/sbin/rc.com"
+      - "C:/Program Files/CMake/sbin/rc.exe"
+      - "C:/Program Files/CMake/sbin/rc"
+      - "C:/Program Files/CMake/rc.com"
+      - "C:/Program Files/CMake/rc.exe"
+      - "C:/Program Files/CMake/rc"
+      - "C:/Program Files (x86)/Project/bin/rc.com"
+      - "C:/Program Files (x86)/Project/bin/rc.exe"
+      - "C:/Program Files (x86)/Project/bin/rc"
+      - "C:/Program Files (x86)/Project/sbin/rc.com"
+      - "C:/Program Files (x86)/Project/sbin/rc.exe"
+      - "C:/Program Files (x86)/Project/sbin/rc"
+      - "C:/Program Files (x86)/Project/rc.com"
+      - "C:/Program Files (x86)/Project/rc.exe"
+      - "C:/Program Files (x86)/Project/rc"
+    found: false
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+  -
+    kind: "find-v1"
+    backtrace:
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang.cmake:216 (find_program)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/Platform/Windows-Clang-C.cmake:1 (include)"
+      - "C:/Program Files/CMake/share/cmake-4.3/Modules/CMakeCInformation.cmake:48 (include)"
+      - "CMakeLists.txt:2 (project)"
+    mode: "program"
+    variable: "__RC_COMPILER_PATH"
+    description: "Path to a program."
+    settings:
+      SearchFramework: "NEVER"
+      SearchAppBundle: "NEVER"
+      CMAKE_FIND_USE_CMAKE_PATH: true
+      CMAKE_FIND_USE_CMAKE_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_SYSTEM_ENVIRONMENT_PATH: true
+      CMAKE_FIND_USE_CMAKE_SYSTEM_PATH: true
+      CMAKE_FIND_USE_INSTALL_PREFIX: true
+    names:
+      - "llvm-rc"
+    candidate_directories:
+      - "C:/Program Files/LLVM/bin/"
+      - "C:/Program Files/Microsoft/jdk-21.0.0.35-hotspot/bin/"
+      - "C:/Windows/"
+      - "C:/Windows/System32/wbem/"
+      - "C:/Windows/System32/WindowsPowerShell/v1.0/"
+      - "C:/Windows/System32/OpenSSH/"
+      - "C:/Program Files/Graphviz/bin/"
+      - "C:/Program Files/nodejs/"
+      - "C:/Program Files/wabt-1.0.39/bin/"
+      - "C:/Program Files/ninja/"
+      - "C:/Windows/System32/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/pythoncore-3.14-64/Scripts/"
+      - "C:/LLVM/bin/"
+      - "C:/Program Files/dotnet/"
+      - "C:/Program Files (x86)/Windows Kits/10/Windows Performance Toolkit/"
+      - "C:/Program Files/cproc/cproc/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Microsoft/WindowsApps/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Microsoft VS Code/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/Programs/Git/cmd/"
+      - "C:/Users/ahmayd18/AppData/Roaming/npm/"
+      - "C:/Users/ahmayd18/AppData/Local/Python/bin/"
+      - "C:/Users/ahmayd18/AppData/Local/GitHubDesktop/bin/"
+      - "C:/Program Files/bin/"
+      - "C:/Program Files/sbin/"
+      - "C:/Program Files/"
+      - "C:/Program Files (x86)/bin/"
+      - "C:/Program Files (x86)/sbin/"
+      - "C:/Program Files (x86)/"
+      - "C:/Program Files/CMake/bin/"
+      - "C:/Program Files/CMake/sbin/"
+      - "C:/Program Files/CMake/"
+      - "C:/Program Files (x86)/Project/bin/"
+      - "C:/Program Files (x86)/Project/sbin/"
+      - "C:/Program Files (x86)/Project/"
+    searched_directories:
+      - "C:/Program Files/LLVM/bin/llvm-rc.com"
+    found: "C:/Program Files/LLVM/bin/llvm-rc.exe"
+    search_context:
+      ENV{PATH}:
+        - "C:\\Program Files\\LLVM\\bin"
+        - "C:\\Program Files\\Microsoft\\jdk-21.0.0.35-hotspot\\bin"
+        - "C:\\WINDOWS"
+        - "C:\\WINDOWS\\System32\\Wbem"
+        - "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\"
+        - "C:\\WINDOWS\\System32\\OpenSSH\\"
+        - "C:\\Program Files\\Graphviz\\bin"
+        - "C:\\Program Files\\nodejs\\"
+        - "C:\\Program Files\\wabt-1.0.39\\bin"
+        - "C:\\Program Files\\ninja"
+        - "C:\\WINDOWS\\System32"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\PythonCore-3.14-64\\Scripts\\"
+        - "C:\\LLVM\\bin"
+        - "C:\\Program Files\\dotnet\\"
+        - "C:\\Program Files (x86)\\Windows Kits\\10\\Windows Performance Toolkit\\"
+        - "C:\\Program Files\\cproc\\cproc"
+        - "C:\\Program Files\\CMake\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Microsoft\\WindowsApps"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Microsoft VS Code\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Programs\\Git\\cmd"
+        - "C:\\Users\\ahmayd18\\AppData\\Roaming\\npm"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\Python\\bin"
+        - "C:\\Users\\ahmayd18\\AppData\\Local\\GitHubDesktop\\bin"
+      CMAKE_INSTALL_PREFIX: "C:/Program Files (x86)/Project"
+      CMAKE_SYSTEM_PREFIX_PATH:
+        - "C:/Program Files"
+        - "C:/Program Files (x86)"
+        - "C:/Program Files/CMake"
+        - "C:/Program Files (x86)/Project"
+...

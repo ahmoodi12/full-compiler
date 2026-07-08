@@ -1,10 +1,9 @@
 #pragma once
 
 #include "combined_include.hpp"
-#include "json.hpp"
 
 class CompilerCxt;
-using json = nlohmann::json;
+
 
 class JsonValidator {
 public:
