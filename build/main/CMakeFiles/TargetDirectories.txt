@@ -1,4 +1,0 @@
-C:/projects/full compiler/build/main/CMakeFiles/compiler_main.dir
-C:/projects/full compiler/build/main/CMakeFiles/compiler_tests.dir
-C:/projects/full compiler/build/main/CMakeFiles/edit_cache.dir
-C:/projects/full compiler/build/main/CMakeFiles/rebuild_cache.dir
