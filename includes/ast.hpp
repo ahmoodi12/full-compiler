@@ -9,8 +9,7 @@ struct ASTNode {
     // main token, acts as a label
     Token token;
 
-    // secondary tokens
-    std::vector<Token> tokens;
+    std::unordered_map<std::string, Token> captures;
 
     std::vector<std::unique_ptr<ASTNode>> children;
 

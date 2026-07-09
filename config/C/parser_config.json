@@ -1,0 +1,142 @@
+{
+  "prefix binding power": 100,
+
+  "expr definition": {
+    "(": {
+      "types": ["opening wrapper"]
+    },
+
+    ")": {
+      "types": ["closing wrapper"]
+    },
+
+    "identifier": {
+      "types": ["value"]
+    },
+
+    "int_literal": {
+      "types": ["value"]
+    },
+
+    "float_literal": {
+      "types": ["value"]
+    },
+
+    "string_literal": {
+      "types": ["value"]
+    },
+
+    "char_literal": {
+      "types": ["value"]
+    },
+
+    "+": {
+      "lbp": 50,
+      "rbp": 51,
+      "types": ["prefix", "infix"]
+    },
+
+    "-": {
+      "lbp": 50,
+      "rbp": 51,
+      "types": ["prefix", "infix"]
+    },
+
+    "*": {
+      "lbp": 60,
+      "rbp": 61,
+      "types": ["infix"]
+    },
+
+    "/": {
+      "lbp": 60,
+      "rbp": 61,
+      "types": ["infix"]
+    },
+
+    "%": {
+      "lbp": 60,
+      "rbp": 61,
+      "types": ["infix"]
+    },
+
+    "<": {
+      "lbp": 40,
+      "rbp": 41,
+      "types": ["infix"]
+    },
+
+    "<=": {
+      "lbp": 40,
+      "rbp": 41,
+      "types": ["infix"]
+    },
+
+    ">": {
+      "lbp": 40,
+      "rbp": 41,
+      "types": ["infix"]
+    },
+
+    ">=": {
+      "lbp": 40,
+      "rbp": 41,
+      "types": ["infix"]
+    },
+
+    "==": {
+      "lbp": 30,
+      "rbp": 31,
+      "types": ["infix"]
+    },
+
+    "!=": {
+      "lbp": 30,
+      "rbp": 31,
+      "types": ["infix"]
+    },
+
+    "?": {
+      "lbp": 20,
+      "rbp": 19,
+      "types": ["ternary"]
+    },
+
+    ":": {
+      "types": ["ternary separator"]
+    },
+
+    ",": {
+      "types": ["argument seperator"]
+    },
+
+    ";": {
+      "types": ["expr terminator"]
+    }
+  },
+
+  "grammar": {
+    "variables": {
+      "#block": {
+        "pattern": [["{", "__statements__", "}"]]
+      }
+    },
+
+    "statement rules": {
+      "if_stmt": { "pattern": [["if", "(", "__expr__", ")", "#block"], { "optional": ["else", "#block"] }] },
+      
+      "while_stmt": { "pattern": [["while", "(", "__expr__", ")", "#block"]] },
+      
+      "return_stmt": { "pattern": [["return"], { "optional": {"return val": "__expr__"} }, [";"]] },
+      
+      "assignment": { "pattern": [{"lhs": "identifier"}, ["="], {"rhs": "__expr__"}, [";"]] },
+      
+      "declaration": { "pattern": [["identifier", "identifier"], { "optional": ["=", "__expr__"] }, [";"]] },
+      
+      "function": { "pattern": [["identifier", "identifier", "(", "_exprs", ")", "#block"]] },
+      
+      "expression": { "pattern": [["__expr__", ";"]] }
+    }
+  }
+}
+

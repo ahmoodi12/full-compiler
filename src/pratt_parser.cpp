@@ -12,7 +12,7 @@ bool PrattParser::has(uint32_t mask, TypeMask t) {
 std::pair<PrattParser::Rule*, PrattParser::ParseError> PrattParser::find_rule(const Token& t) {
     auto it = by_id.find(t.id);
     if (it == by_id.end()) {
-        return {nullptr, {"unknown token rule: " + t.label, pos}};
+        return {nullptr, {"unknown token rule: '" + t.label + "'", pos}};
     }
     return {it->second, {}};
 }
@@ -161,22 +161,25 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
 
             add_child(call, left);
 
+            if (eof(this)) {
+                return {.error = {"unclosed function call", pos}};
+            }
+
             auto rule_pair = find_rule(peek(this));
             if (!rule_pair.first) return {.error = rule_pair.second};
 
             if (!has(rule_pair.first->type_mask, ClosingWrapper)) {
-
                 while (true) {
-                    if (eof(this)) {
-                        return {.error = {"unclosed function call", pos}};
-                    }
-
                     ExprResult arg_expr = parse_expr(0);
 
                     if (!valid_expr(arg_expr)) return arg_expr;
                     ASTNode& arg = arg_expr.node;
 
                     add_child(call, arg);
+
+                    if (eof(this)) {
+                        return {.error = {"unclosed function call", pos}};
+                    }
 
                     auto next_pair = find_rule(peek(this));
                     Rule* next = next_pair.first;

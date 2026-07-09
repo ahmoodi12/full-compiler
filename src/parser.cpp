@@ -138,14 +138,12 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
 
         StmtMatch& longest_match = matches[longest_match_i];
 
-        if (stop(peek(this))) {
-            return {.valid = true};
-        }
-
         if (longest_valid_match_i != -1 && matches[longest_valid_match_i].valid) {
             output.push_back(parse_stmt(&matches[longest_valid_match_i]));
         } else if (emit_errors) {
             utils::error(longest_match.error.message, cxt, longest_match.error.context);
+        } else if (!eof(this) && stop(peek(this))) {
+            return {.valid = true};
         } else {
             return std::move(longest_match);  
         }
@@ -161,6 +159,11 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
 
     int exp_tok_i = 0;
     for (auto& exp_token : rule.pattern) {
+        if (eof(this)) {
+            result.error.message = "expected '" + exp_token.label + "' got the file ended.";
+            result.error.pos = pos;
+            goto failed;
+        }
         auto& token = peek(this);
         
         for (auto& var_rule : variable_sub_statements) {
@@ -168,8 +171,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
                 StmtMatch match = match_stmt(var_rule); 
                 
                 if (!match.valid) {
-                    result.error.message = "Expected variable segment '" + var_rule.statement + "'";
-                    result.error.pos = pos;
+                    result = std::move(match);
                     goto failed;
                 }
 
