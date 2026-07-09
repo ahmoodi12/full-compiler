@@ -16,9 +16,15 @@ RuleBase make_token_base(Lexer& lexer, std::string token) {
 }
 
 void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
+    bool parsed_stmts = 0;
     for (auto& token : sequence) {
-        std::cout << token.type_name() << '\n';
         rule.pattern.push_back(make_token_base(lexer, token));
+        if (parsed_stmts && (rule.pattern.back().id == -1)) utils::error("__statements__ must be followed by a real token.", cxt, "--- STATEMENT PATTERN ---" + sequence.dump(4));
+        parsed_stmts = (token == "__statements__");
+    }
+    if (parsed_stmts) {
+        // grammar error, statements ended without a ending expected token
+        utils::error("the grammar rule __statements__ needs to have a terminating token after it.", cxt);
     }
 }
 
@@ -112,7 +118,7 @@ Parser::Parser(
 }
 
 
-Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool emit_errors) {
+Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool emit_errors, std::function<bool(const Token&)> stop) {
     while (pos < tokens->size()) {
         int longest_match_i = -1;
         int longest_valid_match_i = -1;
@@ -132,6 +138,10 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
 
         StmtMatch& longest_match = matches[longest_match_i];
 
+        if (stop(peek(this))) {
+            return {.valid = true};
+        }
+
         if (longest_valid_match_i != -1 && matches[longest_valid_match_i].valid) {
             output.push_back(parse_stmt(&matches[longest_valid_match_i]));
         } else if (emit_errors) {
@@ -147,7 +157,9 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
 Parser::StmtMatch Parser::match_stmt(Rule& rule) {
     size_t start_pos = pos;
     StmtMatch result;
+    StmtMatch stmts_result;
 
+    int exp_tok_i = 0;
     for (auto& exp_token : rule.pattern) {
         auto& token = peek(this);
         
@@ -175,14 +187,18 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             result.exprs.push_back(std::move(expr.node));
 
         } else if (exp_token.label == "__statements__") {
-            StmtMatch status = parse_statements(result.sub_stmts);
+            RuleBase& terminator = rule.pattern[exp_tok_i + 1]; 
+            stmts_result = parse_statements(result.sub_stmts, 0, [terminator](const Token& token){return token.id == terminator.id;});
+            if (!stmts_result.valid) {
+                result.error = stmts_result.error;
+                goto failed;
+            }
 
         } else if (exp_token.id != -1) {
             if (token.id != exp_token.id) {
                 result.error.message = "expected a '" + exp_token.label + "', got a '" + token.label + "'";
                 result.error.pos = pos;
                 goto failed;
-    
             }
             
             consume(this);
@@ -193,6 +209,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             result.error.context = "--- PATTERN ---" + rule.stringify_pattern();
             result.error.pos = pos;
         }
+        exp_tok_i++;
     }
 
     // if successful then don't reset the pos
@@ -239,7 +256,7 @@ std::vector<ASTNode> Parser::run(std::vector<Token>* input) {
     
     std::vector<ASTNode> output;
 
-    parse_statements(output, 1);
+    parse_statements(output);
 
     if (pos < tokens->size()) {
         utils::error("unknown grammar formation", cxt);

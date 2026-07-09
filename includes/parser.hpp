@@ -104,7 +104,7 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    Parser::StmtMatch parse_statements(std::vector<ASTNode> &output, bool emit_errors = 0);
+    Parser::StmtMatch parse_statements(std::vector<ASTNode> &output, bool emit_errors = 1, std::function<bool(const Token&)> stop = [](const Token& t){return false;});
 
     Parser::StmtMatch match_stmt(Rule &rule);
 
