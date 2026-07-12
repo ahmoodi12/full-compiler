@@ -122,14 +122,16 @@
       }
     },
 
+    
+
     "statement rules": {
       "if_stmt": { "pattern": [["if", "(", {"cond": "__expr__"}, ")", "#block"], { "optional": ["else", "#block"] }] },
       
       "while_stmt": { "pattern": [["while", "(", {"cond": "__expr__"}, ")", "#block"]] },
       
-      "return_stmt": { "pattern": [["return"], { "optional": [{"return_val": "__expr__"}] }, [";"]] },
+      "return_stmt": { "pattern": [["return"], { "optional": ["__expr__"] }, [";"]] },
       
-      "assignment": { "pattern": [[{"lhs": "identifier"}], ["="], [{"rhs": "__expr__"}], [";"]] },
+      "assignment": { "pattern": [[{"lhs": "identifier"}, "=", {"rhs": "__expr__"}, ";"]] },
       
       "declaration": { "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }, [";"]] },
       

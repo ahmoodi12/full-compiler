@@ -56,9 +56,13 @@ class Parser {
     };
 
 public:
+    struct TokenRule : RuleBase {
+        std::string capture_name;
+    };
+
     struct Rule {
         std::string statement;
-        std::vector<RuleBase> pattern;
+        std::vector<TokenRule> pattern;
         int parent_i = -1;   // index in grammar rules
 
         std::string stringify_pattern() {
@@ -90,8 +94,6 @@ public:
     Lexer& lexer;
 
     std::vector<Rule> grammar_rules;
-
-    std::unordered_map<std::string, std::string> capture_tokens; // label: capture
 
     std::unordered_map<std::string, Rule*> by_statement;
     

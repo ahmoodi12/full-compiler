@@ -68,7 +68,7 @@ private:
 
         // node header
         std::cout
-            << bright_yellow  << node->token.id << reset << " "
+            << orange  << node->token.id << reset << " "
             << bright_green   << node->token.label << reset << " "
             << bright_white   << node->token.data << reset
             << "\n";
@@ -94,7 +94,7 @@ private:
 
             if (tok) {
                 std::cout
-                    << bright_yellow << tok->id << reset << " "
+                    << orange << tok->id << reset << " "
                     << bright_green  << tok->label << reset << " "
                     << bright_white  << tok->data << reset;
             } else {

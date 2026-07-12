@@ -3,8 +3,8 @@
 #include "lexer.hpp"
 #include "utils.hpp"
 
-RuleBase make_token_base(Lexer& lexer, std::string token) {
-    RuleBase token_base;
+Parser::TokenRule make_token_base(Lexer& lexer, std::string token) {
+    Parser::TokenRule token_base;
     Lexer::Rule* lex_rule = lexer.find_lex_rule(token);
     if (lex_rule) {
         token_base.id = lex_rule->id;
@@ -20,8 +20,8 @@ void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
     for (auto& token : sequence) {
         if (token.is_object()) {
             for (auto& [capture_label, capture_token] : token.items()) {
-                RuleBase token_rule = make_token_base(lexer, capture_token);
-                capture_tokens[token_rule.label] = capture_label;
+                TokenRule token_rule = make_token_base(lexer, capture_token);
+                token_rule.capture_name = capture_label;
                 
                 rule.pattern.push_back(token_rule);
                 
@@ -136,6 +136,7 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
         int longest_match_i = -1;
         int longest_valid_match_i = -1;
         std::vector<StmtMatch> matches;
+        matches.reserve(grammar_rules.size());
         for (auto& rule : grammar_rules) {
             matches.push_back(match_stmt(rule));
             StmtMatch& match = matches.back();
@@ -171,18 +172,20 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
     StmtMatch result;
     StmtMatch stmts_result;
 
-    int exp_tok_i = 0;
-    for (auto& exp_token : rule.pattern) {
+    for (int exp_tok_i = 0; exp_tok_i < rule.pattern.size(); exp_tok_i++) {
+        auto& exp_token = rule.pattern[exp_tok_i];
         if (eof(this)) {
             result.error.message = "expected '" + exp_token.label + "' got the file ended.";
             result.error.pos = pos;
             goto failed;
         }
         auto& token = peek(this);
-        
+
+        bool is_var = 0;
         for (auto& var_rule : variable_sub_statements) {
             if (var_rule.statement == exp_token.label) {
                 StmtMatch match = match_stmt(var_rule); 
+                pos += match.size;
                 
                 if (!match.valid) {
                     result = std::move(match);
@@ -190,9 +193,11 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
                 }
 
                 result.sub_stmts.push_back(parse_stmt(&match));
-                // TODO add continue
+                is_var = 1;
+                break;
             }
         }
+        if (is_var) continue;
 
         if (exp_token.label == "__expr__") {
             PrattParser::ExprResult expr = pratt_parser.parse_expr(0);
@@ -202,7 +207,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             }
             
             result.exprs.push_back(std::move(expr.node));
-
+            
         } else if (exp_token.label == "__statements__") {
             RuleBase& terminator = rule.pattern[exp_tok_i + 1]; 
             stmts_result = parse_statements(result.sub_stmts, 0, [terminator](const Token& token){return token.id == terminator.id;});
@@ -220,16 +225,16 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             
             consume(this);
             
-            if (capture_tokens.count(token.label)) {
-                result.captures[capture_tokens[token.label]] = &token;
+            if (!exp_token.capture_name.empty()) {
+                result.captures[exp_token.capture_name] = &token;
             }
 
         } else {
             result.error.message = "unknown token '" + exp_token.label + "'"; 
-            result.error.context = "--- PATTERN ---" + rule.stringify_pattern();
+            result.error.context = "--- PATTERN ---\n" + rule.stringify_pattern();
             result.error.pos = pos;
+            goto failed;
         }
-        exp_tok_i++;
     }
 
     // if successful then don't reset the pos
