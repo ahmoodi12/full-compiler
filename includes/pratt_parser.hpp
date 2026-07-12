@@ -33,7 +33,7 @@ public:
 
     struct ParseError {
         std::string message;
-        size_t pos = -1;
+        int64_t pos = -1;
         std::string context;
     };
 
@@ -62,11 +62,11 @@ public:
     std::unordered_map<std::string, Rule*> by_label;
 
     std::vector<Token>* tokens = nullptr;
-    size_t& pos;
+    int64_t& pos;
 
     uint16_t prefix_bp = 100;
 
-    PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, size_t& pos);
+    PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos);
 
     void load_json(json& data, Lexer& lexer);
 

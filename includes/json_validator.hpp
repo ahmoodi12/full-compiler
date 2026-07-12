@@ -16,6 +16,32 @@ public:
         Object
     };
 
+    struct PathPart {
+        enum class Type {
+            Key,
+            Index
+        };
+
+        Type type = Type::Key;
+
+        std::string key;
+        size_t index = 0;
+
+        static PathPart key_part(std::string k) {
+            PathPart p;
+            p.type = Type::Key;
+            p.key = std::move(k);
+            return p;
+        }
+
+        static PathPart index_part(size_t i) {
+            PathPart p;
+            p.type = Type::Index;
+            p.index = i;
+            return p;
+        }
+    };
+
     struct Schema {
         std::string name;
         Type type = Type::Object;
@@ -49,7 +75,7 @@ public:
     JsonValidator(CompilerCxt& cxt, const Schema schema)
         : schema(schema), cxt(cxt) {}
 
-    bool validate(const json& j);
+    bool validate(const json &j);
 
 private:
     std::vector<std::string> find_patterns_in_json(
@@ -60,18 +86,16 @@ private:
     bool validate_node(
         const json& node,
         const Schema& schema,
-        const std::string& path,
-        int depth,
-        std::vector<std::string>& error_path,
+        const std::vector<PathPart>& path,
+        std::vector<PathPart>& error_path,
         bool report_error = 1
     );
 
     bool validate_children(
         const json& node,
         const Schema& schema,
-        const std::string& path,
-        int depth,
-        std::vector<std::string>& error_path,
+        const std::vector<PathPart>& path,
+        std::vector<PathPart>& error_path,
         bool report_error
     );
 };

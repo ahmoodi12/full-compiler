@@ -42,20 +42,16 @@ Schemas are defined using a simple recursive structure:
 ```cpp
 CompilerCxt cxt;
 
-cxt.current_file = utils::get_file_path(
-    "C:/projects/full compiler/data/c frontend data/lex_data.json"
-);
-
 JsonValidator validator(cxt, {
     "",
     JsonValidator::Type::Object,
     {
         {
-            "regexes",
+            "numbers",
             JsonValidator::Type::Object,
             {
                 {
-                    "\\d+",
+                    "[a-z]+",
                     JsonValidator::Type::Int
                 }
             }
@@ -65,12 +61,11 @@ JsonValidator validator(cxt, {
 
 ```
 
-## Example JSON
+## Equivalent JSON
 ```cpp
 {
-    "regexes": {
-        "10": "for",
-        "hello": "293"
+    "numbers": {
+        "hello": 90,
     }
 }
 ```
@@ -80,13 +75,13 @@ JsonValidator validator(cxt, {
 
 The schema above says:
 
-regexes must be an object
-inside regexes, all values of keys that match "\d+" must be Int.
+`numbers` must be an object. inside it, all values that match `"[a-z]+"` must be a int.
 
 So:
 
-"10" matches \\d+
-but its value is "for" → ❌ invalid (not an int)
+`"hello"` matches `[a-z]+`
+
+and its value `90` is a int therefore also valid ✅
 
 ---
 
@@ -94,18 +89,18 @@ but its value is "for" → ❌ invalid (not an int)
 
 When validation fails, you get a clear error message:
 
-```powershell
-Error in file 'C:/projects/full compiler/data/c frontend data/lex_data.json':
->> Type mismatch (expected int): regexes.10 <<
-
---- FAILED SUBTREE ---
-{
-    "regexes": {
-        "10": "for"
-    }
-}
-
-```
+> <span style="color:orange">Error</span> in file '<span style="color:cyan">C:/projects/full compiler/data/c frontend data/lex_data.json</span>':
+>
+> <span style="color:blue">Type mismatch (expected int): "regexes" -> "10" <<</span>
+> ```
+> --- FAILED SUBTREE ---
+> {
+>     "regexes": {
+>         "10": "for"
+>     }
+> }
+> ```
+(it looks better in a terminal in my opinion)
 
 - where: `"10": "for"`
 - why `Type mismatch (expected int)`

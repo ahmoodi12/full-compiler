@@ -1,92 +1,118 @@
-# PrattParser
+# Pratt Parser
 
-A lightweight **Pratt parser implementation** for building Abstract Syntax Trees (ASTs) from tokens using configurable operator precedence rules loaded from JSON.
+This parser uses **Pratt parsing (Top-Down Operator Precedence)** to parse expressions into an AST. Operator behavior is driven by a configuration file instead of being hardcoded, making it easy to add or modify operators.
 
-It supports:
-- Prefix / infix / postfix operators
-- Function calls (`f(x, y)`)
-- Parentheses / wrappers (`(...)`)
-- Dynamic grammar defined via JSON
-- Lexer-rule integration
+## Configuration
 
----
-
-## Overview
-
-This parser is based on the **Pratt parsing technique**, where each token type defines its own parsing behavior through:
-- **Null denotation (nud)** → handled in `parse_atom()`
-- **Left denotation (led)** → handled in `parse_expr()`
-
-Instead of hardcoding grammar rules, this implementation loads them from JSON, making the parser extensible without recompiling.
-
----
-
-## Features
-
-### Expression Support
-- Infix operators with precedence
-- Prefix operators (e.g. `-a`, `!a`)
-- Function calls: `foo(a, b, c)`
-- Parentheses grouping: `(expr)`
-- Expression terminators (e.g. `,` or `;` depending on grammar)
-
-### Rule System
-Each token is mapped to a rule:
-- `Value` → literal values (numbers, identifiers)
-- `Prefix` → unary prefix operators
-- `Infix` → binary operators
-- `Postfix` → trailing operators
-- `Ternary` → conditional operators
-- `OpeningWrapper` / `ClosingWrapper` → grouping / calls
-- `ExprEnd` → argument separators
-
----
-
-## Architecture
-
-### Core Components
-
-- **Token stream**
-  - Managed via `tokens`, `pos`, `peek()`, `consume()`
-
-- **Rule system**
-  - `Rule` defines how each token behaves
-  - Stored in:
-    - `by_id`
-    - `by_label`
-
-- **AST output**
-  - Built using `ASTNode`
-  - Uses `std::unique_ptr` for children
-
----
-
-## JSON Grammar Format
+The parser reads operator information from a JSON configuration.
 
 Example:
 
 ```json
 {
   "prefix binding power": 100,
-  "expr data": {
-    "+": {
-      "types": ["infix"],
-      "precedence": 10,
-      "associativity": "left"
-    },
-    "-": {
-      "types": ["prefix", "infix"],
-      "precedence": 10,
-      "associativity": "left"
-    },
+
+  "expr definition": {
     "(": {
       "types": ["opening wrapper"]
     },
+
     ")": {
       "types": ["closing wrapper"]
     },
+
+    "identifier": {
+      "types": ["value"]
+    },
+
+    "int_literal": {
+      "types": ["value"]
+    },
+
+    "+": {
+      "lbp": 50,
+      "rbp": 51,
+      "types": ["prefix", "infix"]
+    },
+
+    "*": {
+      "lbp": 60,
+      "rbp": 61,
+      "types": ["infix"]
+    },
+
+    "<": {
+      "lbp": 40,
+      "rbp": 41,
+      "types": ["infix"]
+    },
+
+    "==": {
+      "lbp": 30,
+      "rbp": 31,
+      "types": ["infix"]
+    },
+
+    "?": {
+      "lbp": 20,
+      "rbp": 19,
+      "types": ["ternary"]
+    },
+
+    ":": {
+      "types": ["ternary separator"]
+    },
+
     ",": {
+      "types": ["argument separator"]
+    },
+
+    ";": {
       "types": ["expr terminator"]
     }
   }
 }
+```
+
+## Binding Power
+
+Operators can be described using **left/right binding power**:
+
+```json
+"+": {
+  "lbp": 50,
+  "rbp": 51,
+  "types": ["infix"]
+}
+```
+
+or equivalently using **precedence** and **associativity**:
+
+```json
+"?": {
+  "precedence": 20,
+  "associativity": "left",
+  "types": ["ternary"]
+}
+```
+
+Internally these represent the same information. If `precedence` and `associativity` are provided, they are converted into `lbp` and `rbp` before parsing.
+
+## Token Types
+
+The parser recognizes several token roles:
+
+* `value` – literals and identifiers
+* `prefix` – unary operators
+* `infix` – binary operators
+* `ternary` – ternary operator (`?`)
+* `opening wrapper` / `closing wrapper` – grouping tokens like `(` and `)`
+* `ternary separator` – `:`
+* `argument seperator` – `,`
+* `expr terminator` – `;`
+
+A token may have multiple roles (for example, `+` is both a prefix and infix operator).
+
+## Extending
+
+To add a new operator, simply add an entry to the configuration with its type and binding power (or precedence/associativity). No parser logic needs to be changed unless the operator requires special parsing behavior.

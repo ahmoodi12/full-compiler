@@ -18,9 +18,22 @@ RuleBase make_token_base(Lexer& lexer, std::string token) {
 void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
     bool parsed_stmts = 0;
     for (auto& token : sequence) {
-        rule.pattern.push_back(make_token_base(lexer, token));
-        if (parsed_stmts && (rule.pattern.back().id == -1)) utils::error("__statements__ must be followed by a real token.", cxt, "--- STATEMENT PATTERN ---" + sequence.dump(4));
-        parsed_stmts = (token == "__statements__");
+        if (token.is_object()) {
+            for (auto& [capture_label, capture_token] : token.items()) {
+                RuleBase token_rule = make_token_base(lexer, capture_token);
+                capture_tokens[token_rule.label] = capture_label;
+                
+                rule.pattern.push_back(token_rule);
+                
+                if (parsed_stmts && (rule.pattern.back().id == -1)) utils::error("__statements__ must be followed by a real token.", cxt, "--- STATEMENT PATTERN ---" + sequence.dump(4));
+                parsed_stmts = (capture_token == "__statements__");
+            }
+        } else {
+            rule.pattern.push_back(make_token_base(lexer, token));
+
+            if (parsed_stmts && (rule.pattern.back().id == -1)) utils::error("__statements__ must be followed by a real token.", cxt, "--- STATEMENT PATTERN ---" + sequence.dump(4));
+            parsed_stmts = (token == "__statements__");
+        }
     }
     if (parsed_stmts) {
         // grammar error, statements ended without a ending expected token
@@ -139,6 +152,7 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
         StmtMatch& longest_match = matches[longest_match_i];
 
         if (longest_valid_match_i != -1 && matches[longest_valid_match_i].valid) {
+            pos += matches[longest_valid_match_i].size;
             output.push_back(parse_stmt(&matches[longest_valid_match_i]));
         } else if (emit_errors) {
             utils::error(longest_match.error.message, cxt, longest_match.error.context);
@@ -176,6 +190,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
                 }
 
                 result.sub_stmts.push_back(parse_stmt(&match));
+                // TODO add continue
             }
         }
 
@@ -204,7 +219,10 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             }
             
             consume(this);
-            result.tokens.push_back(&token);
+            
+            if (capture_tokens.count(token.label)) {
+                result.captures[capture_tokens[token.label]] = &token;
+            }
 
         } else {
             result.error.message = "unknown token '" + exp_token.label + "'"; 
@@ -216,13 +234,12 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
 
     // if successful then don't reset the pos
     result.valid = true;
-    result.size = pos - start_pos;
-    result.rule = &rule;
-
-    return result;
+    goto ret;
 
     failed:
     result.valid = false;
+
+    ret:
     result.size = pos - start_pos;
     pos = start_pos;
     result.rule = &rule;
@@ -239,6 +256,7 @@ ASTNode Parser::parse_stmt(StmtMatch* match) {
     ASTNode node;
     
     node.token.label = match->rule->statement;
+    node.captures = std::move(match->captures);
     
     for (auto& expr : match->exprs) {
         add_child(node, expr);

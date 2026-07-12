@@ -33,12 +33,20 @@ class Parser {
                         {"pattern", T::Array, {
                             {".+", T::Object, {
                                 {"optional", T::Array, {
-                                    {".+", T::String, {}, true}
+                                    // token OR capture name: token
+                                    {".+", T::String, {}, true},
+                                    {".+", T::Object, {
+                                        {".+", T::String, {}, true},
+                                    }, true}
                                 }}
                             }, true},
                             
                             {".+", T::Array, {
-                                {".+", T::String, {}, true}
+                                // token OR capture name: token
+                                {".+", T::String, {}, true},
+                                {".+", T::Object, {
+                                    {".+", T::String, {}, true},
+                                }, true}
                             }, true}
                         }}
                     }}
@@ -69,7 +77,7 @@ public:
         size_t size = 0;
         std::vector<ASTNode> exprs; 
         std::vector<ASTNode> sub_stmts;
-        std::vector<Token*> tokens; 
+        std::unordered_map<std::string, Token*> captures;
         
         PrattParser::ParseError error;
 
@@ -83,11 +91,13 @@ public:
 
     std::vector<Rule> grammar_rules;
 
+    std::unordered_map<std::string, std::string> capture_tokens; // label: capture
+
     std::unordered_map<std::string, Rule*> by_statement;
     
     std::vector<Rule> variable_sub_statements;
 
-    size_t pos = 0;
+    int64_t pos = 0;
     std::vector<Token>* tokens = nullptr;
 
     CompilerCxt& cxt;
@@ -113,53 +123,3 @@ public:
     std::vector<ASTNode> run(std::vector<Token> *input);
 };
 
-class ASTPrinter {
-public:
-    static void print(const ASTNode* root) {
-        using namespace ansiColors;
-
-        std::cout << bold << cyan
-                  << "\n===== AST =====\n"
-                  << reset;
-
-        if (!root) {
-            std::cout << red << "empty AST\n" << reset;
-            return;
-        }
-
-        print_node(root, 0, true);
-
-        std::cout << bold << cyan
-                  << "===============\n"
-                  << reset;
-    }
-
-private:
-    static void print_node(const ASTNode* node, int depth, bool is_last) {
-        using namespace ansiColors;
-
-        if (!node) return;
-
-        // indentation
-        for (int i = 0; i < depth - 1; i++) {
-            std::cout << "|   ";
-        }
-
-        if (depth > 0) {
-            std::cout << (is_last ? "'- " : "|-- ");
-        }
-
-        // node header
-        std::cout
-            << bright_yellow  << node->token.id << reset << " "
-            << bright_green   << node->token.label << reset << " "
-            << bright_white   << node->token.data << reset
-            << "\n";
-
-        // children
-        const auto& kids = node->children;
-        for (size_t i = 0; i < kids.size(); i++) {
-            print_node(kids[i].get(), depth + 1, i + 1 == kids.size());
-        }
-    }
-};

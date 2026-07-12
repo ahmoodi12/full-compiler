@@ -123,17 +123,17 @@
     },
 
     "statement rules": {
-      "if_stmt": { "pattern": [["if", "(", "__expr__", ")", "#block"], { "optional": ["else", "#block"] }] },
+      "if_stmt": { "pattern": [["if", "(", {"cond": "__expr__"}, ")", "#block"], { "optional": ["else", "#block"] }] },
       
-      "while_stmt": { "pattern": [["while", "(", "__expr__", ")", "#block"]] },
+      "while_stmt": { "pattern": [["while", "(", {"cond": "__expr__"}, ")", "#block"]] },
       
-      "return_stmt": { "pattern": [["return"], { "optional": {"return val": "__expr__"} }, [";"]] },
+      "return_stmt": { "pattern": [["return"], { "optional": [{"return_val": "__expr__"}] }, [";"]] },
       
-      "assignment": { "pattern": [{"lhs": "identifier"}, ["="], {"rhs": "__expr__"}, [";"]] },
+      "assignment": { "pattern": [[{"lhs": "identifier"}], ["="], [{"rhs": "__expr__"}], [";"]] },
       
-      "declaration": { "pattern": [["identifier", "identifier"], { "optional": ["=", "__expr__"] }, [";"]] },
+      "declaration": { "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }, [";"]] },
       
-      "function": { "pattern": [["identifier", "identifier", "(", "_exprs", ")", "#block"]] },
+      "function": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "(", {"args": "__exprs__"}, ")", "#block"]] },
       
       "expression": { "pattern": [["__expr__", ";"]] }
     }

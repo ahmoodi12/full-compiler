@@ -7,6 +7,8 @@ comment;
 */
 
 if (3 + 5) {
+    GigaChad mr_chad;
+
     if ((2 - 6) == 10) {
 
     }

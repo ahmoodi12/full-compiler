@@ -21,7 +21,7 @@ bool PrattParser::valid_expr(PrattParser::ExprResult& expr) {
     return expr.error.pos == -1 || expr.error.message.empty();
 }
 
-PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, size_t& pos)
+PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos)
     : cxt(cxt), rules(std::move(rules)), pos(pos) {
 
     // build lookup tables
