@@ -31,17 +31,19 @@ class Parser {
                 {"(statement rules|variables)", T::Object, {
                     {".+", T::Object, {
                         {"pattern", T::Array, {
-                            {".+", T::Object, {
+                            {"", T::Object, {
                                 {"optional", T::Array, {
                                     // token OR capture name: token
                                     {".+", T::String, {}, true},
                                     {".+", T::Object, {
                                         {".+", T::String, {}, true},
                                     }, true}
-                                }}
-                            }, true},
+                                }, true},
+
+                                {"(repeat|seperator)", T::String, {}, true}
+                            }},
                             
-                            {".+", T::Array, {
+                            {"", T::Array, {
                                 // token OR capture name: token
                                 {".+", T::String, {}, true},
                                 {".+", T::Object, {
@@ -56,8 +58,13 @@ class Parser {
     };
 
 public:
+    struct Rule;
+
     struct TokenRule : RuleBase {
         std::string capture_name;
+        bool repeat = 0;
+        std::unique_ptr<TokenRule> seperator = nullptr;
+        std::vector<Rule*> stmts;
     };
 
     struct Rule {
@@ -116,7 +123,9 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    Parser::StmtMatch parse_statements(std::vector<ASTNode> &output, bool emit_errors = 1, std::function<bool(const Token&)> stop = [](const Token& t){return false;});
+    Parser::StmtMatch repeat(std::function<StmtMatch()> match_func, std::function<bool(const Token &)> stop, bool use_seperator, std::function<bool(const Token &)> separator);
+
+    Parser::StmtMatch parse_statement();
 
     Parser::StmtMatch match_stmt(Rule &rule);
 

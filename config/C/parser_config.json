@@ -118,11 +118,11 @@
   "grammar": {
     "variables": {
       "#block": {
-        "pattern": [["{", "__statements__", "}"]]
+        "pattern": [["{"], {"repeat": "__stmt__"}, ["}"]]
       }
     },
 
-    
+
 
     "statement rules": {
       "if_stmt": { "pattern": [["if", "(", {"cond": "__expr__"}, ")", "#block"], { "optional": ["else", "#block"] }] },
@@ -135,7 +135,7 @@
       
       "declaration": { "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }, [";"]] },
       
-      "function": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "(", {"args": "__exprs__"}, ")", "#block"]] },
+      "function": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "("], {"repeat": "declaration", "seperator": ","}, [")", "#block"]] },
       
       "expression": { "pattern": [["__expr__", ";"]] }
     }

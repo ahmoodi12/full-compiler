@@ -16,28 +16,17 @@ Parser::TokenRule make_token_base(Lexer& lexer, std::string token) {
 }
 
 void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
-    bool parsed_stmts = 0;
     for (auto& token : sequence) {
         if (token.is_object()) {
             for (auto& [capture_label, capture_token] : token.items()) {
                 TokenRule token_rule = make_token_base(lexer, capture_token);
                 token_rule.capture_name = capture_label;
                 
-                rule.pattern.push_back(token_rule);
-                
-                if (parsed_stmts && (rule.pattern.back().id == -1)) utils::error("__statements__ must be followed by a real token.", cxt, "--- STATEMENT PATTERN ---" + sequence.dump(4));
-                parsed_stmts = (capture_token == "__statements__");
+                rule.pattern.push_back(std::move(token_rule));
             }
         } else {
-            rule.pattern.push_back(make_token_base(lexer, token));
-
-            if (parsed_stmts && (rule.pattern.back().id == -1)) utils::error("__statements__ must be followed by a real token.", cxt, "--- STATEMENT PATTERN ---" + sequence.dump(4));
-            parsed_stmts = (token == "__statements__");
+            rule.pattern.push_back(std::move(make_token_base(lexer, token)));
         }
-    }
-    if (parsed_stmts) {
-        // grammar error, statements ended without a ending expected token
-        utils::error("the grammar rule __statements__ needs to have a terminating token after it.", cxt);
     }
 }
 
@@ -48,13 +37,22 @@ void Parser::parse_grammar_rule(
     bool allow_optionals, 
     int seq_i = 0) {
     int rule_i = rules.size() - 1;
-
+        
     for (; seq_i < pattern.size(); seq_i++) {
         json& sequence = pattern[seq_i];
         Rule& rule = rules[rule_i];
 
         if (sequence.is_array()) {
             add_seq_tokens(sequence, rule);
+        } else if (sequence.contains("repeat")) {
+            TokenRule token_rule = make_token_base(lexer, sequence.at("repeat"));
+            token_rule.repeat = 1;
+            if (sequence.contains("seperator")) {
+                token_rule.seperator = std::make_unique<TokenRule>(make_token_base(lexer, sequence.at("seperator")));
+            }
+
+            rule.pattern.push_back(std::move(token_rule));
+
         } else {
             // optional path
             if (!allow_optionals) {
@@ -66,7 +64,7 @@ void Parser::parse_grammar_rule(
             optional_path.statement = statement_str;
 
             for (auto& token : rule.pattern) {
-                optional_path.pattern.push_back(token);
+                optional_path.pattern.push_back(std::move(token));
             }
             
             add_seq_tokens(pattern[seq_i].at("optional"), optional_path);
@@ -104,6 +102,16 @@ void Parser::parse_grammar_rules(
 
         if (is_grammar_rules) by_statement[statement_str] = &grammar_rules.back();
     }
+
+    for (auto& rule : rules) {
+        for (auto& token : rule.pattern) {
+            for (auto& other_rule : rules) {
+                if (other_rule.statement == token.label) {
+                    token.stmts.push_back(&other_rule);
+                }
+            }
+        }
+    }
 }
 
 Parser::Parser(
@@ -123,15 +131,38 @@ Parser::Parser(
         parse_grammar_rules(utils::json_get(grammar, "statement rules", cxt), grammar_rules, true);
 
         parse_grammar_rules(utils::json_get(grammar, "variables", cxt), variable_sub_statements, false);
-
+        
         pratt_parser.load_json(data, lexer);
 
         cxt.current_file = old;
     }
 }
 
+Parser::StmtMatch Parser::repeat(std::function<StmtMatch()> match_func, std::function<bool(const Token&)> stop, bool use_seperator, std::function<bool(const Token&)> separator) {
+    while (pos < tokens->size()) {    
+        StmtMatch match = match_func();
 
-Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool emit_errors, std::function<bool(const Token&)> stop) {
+        bool Eof = eof(this);
+        if (!Eof && stop(peek(this))) {
+            return {.valid = true};
+
+        } else if (Eof) {
+            return {};
+        } 
+        
+        if (!match.valid){
+            return std::move(match);  
+        }
+
+        if (use_seperator) {
+            if (!separator(peek(this)))
+                return {.error = {.message = "invalid seperator whilst parsing statements.", .pos = pos}};
+            consume(this);
+        }
+    }
+}
+
+Parser::StmtMatch Parser::parse_statement() {
     while (pos < tokens->size()) {
         int longest_match_i = -1;
         int longest_valid_match_i = -1;
@@ -152,16 +183,9 @@ Parser::StmtMatch Parser::parse_statements(std::vector<ASTNode>& output, bool em
 
         StmtMatch& longest_match = matches[longest_match_i];
 
-        if (longest_valid_match_i != -1 && matches[longest_valid_match_i].valid) {
-            pos += matches[longest_valid_match_i].size;
-            output.push_back(parse_stmt(&matches[longest_valid_match_i]));
-        } else if (emit_errors) {
-            utils::error(longest_match.error.message, cxt, longest_match.error.context);
-        } else if (!eof(this) && stop(peek(this))) {
-            return {.valid = true};
-        } else {
-            return std::move(longest_match);  
-        }
+
+        
+
     }
     return {};
 }
