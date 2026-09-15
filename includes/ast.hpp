@@ -10,7 +10,7 @@ struct ASTNode {
     // main token, acts as a label
     Token token;
 
-    std::unordered_map<std::string, Token*> captures;
+    std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
 
     std::vector<std::unique_ptr<ASTNode>> children;
 
@@ -77,8 +77,15 @@ private:
         size_t capture_count = node->captures.size();
         size_t child_count = node->children.size();
 
+        // blank line between token and captures
+        if (!node->captures.empty() && !node->children.empty()) {
+            for (int j = 0; j < depth; ++j)
+                std::cout << "|   ";
+            std::cout << '\n';
+        }
+
         size_t i = 0;
-        for (const auto& [name, tok] : node->captures) {
+        for (const auto& [name, node] : node->captures) {
             // indentation
             for (int j = 0; j < depth; ++j)
                 std::cout << "|   ";
@@ -92,14 +99,7 @@ private:
                 << bright_blue << name << reset
                 << " = ";
 
-            if (tok) {
-                std::cout
-                    << orange << tok->id << reset << " "
-                    << bright_green  << tok->label << reset << " "
-                    << bright_white  << tok->data << reset;
-            } else {
-                std::cout << "<null>";
-            }
+            print_node(node.get(), depth+1, is_last);
 
             std::cout << '\n';
         }

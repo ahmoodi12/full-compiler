@@ -22,7 +22,7 @@ class Parser {
                     {"([rl]bp|precedence)", T::Int, {}, true},
                     {"associativity", T::String, {}, true},
                     {"types", T::Array, {
-                        {"(value|prefix|infix|expr terminator|opening wrapper|closing wrapper|ternary seperator)", T::String}
+                        {"(value|prefix|infix|expr terminator|opening wrapper|closing wrapper|ternary seperator|ternary)", T::String}
                     }}
                 }}
             }},
@@ -86,9 +86,9 @@ public:
     struct StmtMatch {
         bool valid = false;
         size_t size = 0;
-        std::vector<ASTNode> exprs; 
-        std::vector<ASTNode> sub_stmts;
-        std::unordered_map<std::string, Token*> captures;
+        std::vector<std::unique_ptr<ASTNode>> exprs; 
+        std::vector<std::unique_ptr<ASTNode>> sub_stmts;
+        std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
         
         PrattParser::ParseError error;
 
@@ -123,14 +123,17 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    Parser::StmtMatch repeat(std::function<StmtMatch()> match_func, std::function<bool(const Token &)> stop, bool use_seperator, std::function<bool(const Token &)> separator);
+    Parser::StmtMatch repeat(TokenRule &repeat_token, bool use_seperator, std::function<bool(const Token &)> separator_func);
 
-    Parser::StmtMatch parse_statement();
+    Parser::StmtMatch try_all_statements();
+
+    void match_token(StmtMatch &result, TokenRule &exp_token, Token &token);
 
     Parser::StmtMatch match_stmt(Rule &rule);
 
-    ASTNode parse_stmt(StmtMatch *match);
+    ASTNode convert_match(StmtMatch *match);
+
+    ASTNode convert_token(Token *token);
 
     std::vector<ASTNode> run(std::vector<Token> *input);
 };
-

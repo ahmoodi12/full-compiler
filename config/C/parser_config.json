@@ -119,6 +119,9 @@
     "variables": {
       "#block": {
         "pattern": [["{"], {"repeat": "__stmt__"}, ["}"]]
+      },
+      "#func_arg": {
+        "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }]
       }
     },
 
@@ -133,9 +136,9 @@
       
       "assignment": { "pattern": [[{"lhs": "identifier"}, "=", {"rhs": "__expr__"}, ";"]] },
       
-      "declaration": { "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }, [";"]] },
+      "decl_stmt": { "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }, [";"]] },
       
-      "function": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "("], {"repeat": "declaration", "seperator": ","}, [")", "#block"]] },
+      "func_stmt": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "("], {"repeat": "#func_arg", "seperator": ","}, [")", "#block"]] },
       
       "expression": { "pattern": [["__expr__", ";"]] }
     }
