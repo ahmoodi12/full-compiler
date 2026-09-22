@@ -88,11 +88,20 @@ public:
         size_t size = 0;
         std::vector<std::unique_ptr<ASTNode>> exprs; 
         std::vector<std::unique_ptr<ASTNode>> sub_stmts;
-        std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
+        std::unordered_map<std::string, ASTNode*> captures;
+        std::vector<std::unique_ptr<ASTNode>> owned_captures;
         
         PrattParser::ParseError error;
 
         Rule* rule;
+
+        StmtMatch() = default;
+
+        StmtMatch(const StmtMatch&) = delete;
+        StmtMatch& operator=(const StmtMatch&) = delete;
+
+        StmtMatch(StmtMatch&&) noexcept = default;
+        StmtMatch& operator=(StmtMatch&&) noexcept = default;
     };
         
     PrattParser pratt_parser;

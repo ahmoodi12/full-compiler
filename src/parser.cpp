@@ -153,8 +153,11 @@ Parser::StmtMatch Parser::repeat(TokenRule& repeat_token, bool use_seperator, st
         result.sub_stmts.push_back(std::make_unique<ASTNode>(convert_match(&match)));
 
         if (use_seperator) {
-            if (!separator_func(peek(this)))
-                return {.error = {.message = "invalid seperator whilst parsing statements.", .pos = pos}};
+            if (!separator_func(peek(this))) {
+                result.error.message = "invalid seperator whilst parsing statements.";
+                result.error.pos = pos;
+                return result;
+            }            
             consume(this);
         }
     }
@@ -193,6 +196,7 @@ Parser::StmtMatch Parser::try_all_statements() {
         StmtMatch& longest_match = matches[longest_match_i];
         utils::error(longest_match.error.message, cxt, longest_match.error.context);
     }
+    return {};
 }
 
 void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) {
@@ -203,7 +207,8 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
             goto failed;
         }
         
-        result.exprs.push_back(std::make_unique<ASTNode>(std::move(expr.node)));
+        std::unique_ptr<ASTNode> node = std::make_unique<ASTNode>(std::move(expr.node));
+        result.exprs.push_back(std::move(node));
         
     } else if (exp_token.label == "__stmt__") {
         StmtMatch stmt = try_all_statements();
@@ -212,11 +217,11 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
             goto failed;
         }
 
-        ASTNode node = convert_match(&stmt);
-        result.sub_stmts.push_back(std::make_unique<ASTNode>(node));
+        std::unique_ptr<ASTNode> node = std::make_unique<ASTNode>(convert_match(&stmt));
         if (!exp_token.capture_name.empty()) {
-            result.captures[exp_token.capture_name] = std::make_unique<ASTNode>(node);
+            result.captures[exp_token.capture_name] = node.get();
         }
+        result.sub_stmts.push_back(std::move(node));
 
     } else if (exp_token.id != -1) {
         if (token.id != exp_token.id) {
@@ -228,7 +233,9 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
         consume(this);
         
         if (!exp_token.capture_name.empty()) {
-            result.captures[exp_token.capture_name] = std::make_unique<ASTNode>(convert_token(&token));
+            std::unique_ptr<ASTNode> node = std::make_unique<ASTNode>(convert_token(&token));
+            result.captures[exp_token.capture_name] = node.get();
+            result.owned_captures.push_back(std::move(node));
         }
 
     } else {
@@ -243,12 +250,11 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
                     goto failed;
                 }
 
-                ASTNode node = convert_match(&match);
-
-                result.sub_stmts.push_back(std::make_unique<ASTNode>(node));
+               std::unique_ptr<ASTNode> node = std::make_unique<ASTNode>(convert_match(&match));
                 if (!exp_token.capture_name.empty()) {
-                    result.captures[exp_token.capture_name] = std::make_unique<ASTNode>(node);
+                    result.captures[exp_token.capture_name] = node.get();
                 }
+                result.sub_stmts.push_back(std::move(node));
 
                 is_var = 1;
                 break;
@@ -319,7 +325,7 @@ ASTNode Parser::convert_match(StmtMatch* match) {
     ASTNode node;
     
     node.token.label = match->rule->statement;
-    node.captures = std::move(match->captures);
+    node.captures = match->captures;
     
     for (auto& expr : match->exprs) {
         add_child(node, *expr);

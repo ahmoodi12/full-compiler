@@ -10,13 +10,20 @@ struct ASTNode {
     // main token, acts as a label
     Token token;
 
-    std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
+    std::unordered_map<std::string, ASTNode*> captures;
+    std::vector<std::unique_ptr<ASTNode>> owned_captures;
 
     std::vector<std::unique_ptr<ASTNode>> children;
 
     ASTNode() = default;
     explicit ASTNode(Token tok)
         : token(std::move(tok)) {}
+
+    ASTNode(const ASTNode&) = delete;
+    ASTNode& operator=(const ASTNode&) = delete;
+
+    ASTNode(ASTNode&&) noexcept = default;
+    ASTNode& operator=(ASTNode&&) noexcept = default;
 };
 
 inline bool valid_ast(const ASTNode& node) {
@@ -99,7 +106,7 @@ private:
                 << bright_blue << name << reset
                 << " = ";
 
-            print_node(node.get(), depth+1, is_last);
+            print_node(node, depth+1, is_last);
 
             std::cout << '\n';
         }
