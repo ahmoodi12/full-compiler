@@ -15,7 +15,6 @@ std::string lex_data_file =   "config/C/lex_config.json";
 std::string parse_data_file = "config/C/parser_config.json";
 
 int main() {
-
     Lexer lexer(cxt, lex_data_file);
     Parser parser(cxt, parse_data_file, lexer);
 

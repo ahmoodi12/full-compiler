@@ -138,7 +138,7 @@
       
       "decl_stmt": { "pattern": [[{"type": "identifier", "var_name": "identifier"}], { "optional": ["=", {"value": "__expr__"}] }, [";"]] },
       
-      "func_stmt": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "("], {"repeat": "#func_arg", "seperator": ","}, [")", "#block"]] },
+      "func_stmt": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "("], {"repeat": "#func_arg", "separator": ","}, [")", "#block"]] },
       
       "expression": { "pattern": [["__expr__", ";"]] }
     }

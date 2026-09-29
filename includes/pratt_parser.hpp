@@ -50,8 +50,8 @@ public:
         {"ternary", Ternary},
         {"opening wrapper", OpeningWrapper},
         {"closing wrapper", ClosingWrapper},
-        {"argument seperator", ArgSep},
-        {"ternary seperator", TernarySeperator},
+        {"argument separator", ArgSep},
+        {"ternary separator", TernarySeperator},
     };
 
 

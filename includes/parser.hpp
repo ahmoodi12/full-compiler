@@ -63,8 +63,11 @@ public:
     struct TokenRule : RuleBase {
         std::string capture_name;
         bool repeat = 0;
-        std::unique_ptr<TokenRule> seperator = nullptr;
-        std::vector<Rule*> stmts;
+        std::unique_ptr<TokenRule> separator = nullptr;
+
+        TokenRule copy() {
+            return TokenRule{RuleBase{id, label}, capture_name, repeat, separator ? std::make_unique<TokenRule>(separator->copy()) : nullptr};
+        }
     };
 
     struct Rule {
@@ -93,7 +96,7 @@ public:
         
         PrattParser::ParseError error;
 
-        Rule* rule;
+        std::string statement;
 
         StmtMatch() = default;
 
@@ -110,8 +113,6 @@ public:
     Lexer& lexer;
 
     std::vector<Rule> grammar_rules;
-
-    std::unordered_map<std::string, Rule*> by_statement;
     
     std::vector<Rule> variable_sub_statements;
 
@@ -122,9 +123,9 @@ public:
 
     void add_seq_tokens(json &sequence, Parser::Rule &rule);
 
-    void parse_grammar_rule(json &pattern, const std::string &statement_str, std::vector<Parser::Rule> &rules, bool allow_optionals, int seq_i);
+    void parse_grammar_rule(json &pattern, const std::string &statement_str, std::vector<Parser::Rule> &rules, int seq_i);
 
-    void parse_grammar_rules(json &grammar, std::vector<Parser::Rule> &rules, bool is_grammar_rules);
+    void parse_grammar_rules(json &grammar, std::vector<Parser::Rule> &rules);
 
     Parser(
         CompilerCxt &cxt,
@@ -134,7 +135,7 @@ public:
 
     Parser::StmtMatch repeat(TokenRule &repeat_token, bool use_seperator, std::function<bool(const Token &)> separator_func);
 
-    Parser::StmtMatch try_all_statements();
+    Parser::StmtMatch try_all_statements(std::vector<Parser::Rule> &rules, bool error_enabled = 1);
 
     void match_token(StmtMatch &result, TokenRule &exp_token, Token &token);
 
