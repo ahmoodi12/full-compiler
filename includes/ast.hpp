@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <vector>
 #include "ansi_colors.hpp"
+#include <algorithm>
 
 struct ASTNode {
     Token token;

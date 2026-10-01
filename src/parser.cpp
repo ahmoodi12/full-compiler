@@ -120,7 +120,7 @@ Parser::Parser(
     }
 }
 
-Parser::StmtMatch Parser::repeat(TokenRule& repeat_token, bool use_seperator, std::function<bool(const Token&)> separator_func) {
+Parser::StmtMatch Parser::repeat(TokenRule& repeat_token, bool use_separator, std::function<bool(const Token&)> separator_func) {
     StmtMatch result;
     result.statement = "repeat";
     while (!eof(this)) {          
@@ -128,7 +128,7 @@ Parser::StmtMatch Parser::repeat(TokenRule& repeat_token, bool use_seperator, st
         match.statement = repeat_token.label;
         match_token(match, repeat_token, peek(this));
 
-        // if the main repeated token stops matching that means we reached the end of the repetition.
+        // if the main repeated token stops matching that means we should've reached the end of the repetition.
         if (!match.valid){
             result.valid = true;
             return result;  
@@ -136,15 +136,16 @@ Parser::StmtMatch Parser::repeat(TokenRule& repeat_token, bool use_seperator, st
 
         result.sub_stmts.push_back(std::make_unique<ASTNode>(convert_match(&match)));
 
-        if (use_seperator) {
+        if (use_separator) {
             if (eof(this)) {
-                result.error.message = "expected a seperator but the file ended.";
+                result.error.message = "expected a separator but the file ended.";
                 result.error.pos = pos;
                 return result;
             }
-            if (!separator_func(peek(this))) {
-                result.error.message = "invalid separator whilst parsing statements.";
-                result.error.pos = pos;
+            
+            auto& token = peek(this);
+            if (!separator_func(token)) { // if the seperator stops matching that means we should've reached the end of the repetition.
+                result.valid = true;
                 return result;
             }            
             consume(this);
@@ -268,6 +269,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
         if (exp_token.repeat) {
             StmtMatch match = repeat(exp_token, exp_token.separator != nullptr, 
                 [&exp_token](const Token& token){
+                    // no seperator or valid seperator
                     return exp_token.separator == nullptr || exp_token.separator->label == token.label;
                 });
 

@@ -40,7 +40,7 @@ void PrattParser::load_json(json& data, Lexer& lexer) {
 
     rules.reserve(expr_data.size());
 
-    int highest_bp = 0;
+    prefix_bp = data.at("prefix binding power");
 
     for (auto& [key, value] : expr_data.items()) {
         Rule rule;
@@ -79,14 +79,10 @@ void PrattParser::load_json(json& data, Lexer& lexer) {
                 utils::error("infix missing precedence or associativity: " + key, cxt);
             }
 
-            // find highest bp
-            highest_bp = rule.lbp > highest_bp ? rule.lbp : rule.rbp > highest_bp ? rule.rbp : highest_bp;
         }
 
         rules.push_back(rule);
     }
-
-    prefix_bp = highest_bp + 10;
 
     // rebuild lookup tables
     for (auto& r : rules) {
@@ -168,7 +164,7 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
 
             ASTNode call;
 
-            call.token.label = "function call";
+            call.token.label = "func_call";
 
             add_child(call, left);
 
@@ -235,13 +231,17 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
 
             add_child(node, true_stmt);
 
+            if (eof(this)) {
+                return {.error = {"expected a ternary separator but the file ended.", pos}};
+            }
+
             Token stmt_sep = consume(this);
 
             auto seperator_pair = find_rule(stmt_sep);
-            if (!seperator_pair.first) return {.error = seperator_pair.second};
+            if (!seperator_pair.first) return {.error = {"ternary separator is invalid.", pos}};
 
             if (!has(seperator_pair.first->type_mask, TernarySeperator)) {
-                return {.error = {"ternary seperarator is invalid.", pos}};
+                return {.error = {"ternary separator is invalid.", pos}};
             }
             
             ExprResult false_stmt_expr = parse_expr(0);

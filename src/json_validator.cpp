@@ -253,7 +253,8 @@ bool JsonValidator::validate_node(
                             error_path))
                         return false;
                 }
-            }
+                return true;
+            } 
 
             for (size_t i = 0; i < n; i++) {
 

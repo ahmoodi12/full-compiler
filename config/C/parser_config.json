@@ -1,4 +1,6 @@
 {
+  "prefix binding power": 100,
+
   "expr definition": {
     "(": {
       "types": ["opening wrapper"]
@@ -105,7 +107,7 @@
     },
 
     ",": {
-      "types": ["argument seperator"]
+      "types": ["argument separator"]
     },
 
     ";": {
