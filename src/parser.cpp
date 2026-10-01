@@ -137,6 +137,11 @@ Parser::StmtMatch Parser::repeat(TokenRule& repeat_token, bool use_seperator, st
         result.sub_stmts.push_back(std::make_unique<ASTNode>(convert_match(&match)));
 
         if (use_seperator) {
+            if (eof(this)) {
+                result.error.message = "expected a seperator but the file ended.";
+                result.error.pos = pos;
+                return result;
+            }
             if (!separator_func(peek(this))) {
                 result.error.message = "invalid separator whilst parsing statements.";
                 result.error.pos = pos;
@@ -195,6 +200,9 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
         }
         
         std::unique_ptr<ASTNode> node = std::make_unique<ASTNode>(std::move(expr.node));
+        if (!exp_token.capture_name.empty()) {
+            result.captures[exp_token.capture_name] = node.get();
+        }
         result.exprs.push_back(std::move(node));
         
     } else if (exp_token.label == "__stmt__") {
@@ -262,6 +270,11 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
                 [&exp_token](const Token& token){
                     return exp_token.separator == nullptr || exp_token.separator->label == token.label;
                 });
+
+            if (!match.valid) {
+                result.error = match.error;
+                goto failed;
+            }
             
             result.sub_stmts.push_back(std::make_unique<ASTNode>(convert_match(&match)));
             continue;

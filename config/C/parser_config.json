@@ -1,6 +1,4 @@
 {
-  "prefix binding power": 100,
-
   "expr definition": {
     "(": {
       "types": ["opening wrapper"]

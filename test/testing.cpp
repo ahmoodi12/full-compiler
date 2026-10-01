@@ -24,9 +24,7 @@ int main() {
 
     auto parse_output = parser.run(&lex_output);
 
-    for (auto& out : parse_output){
-        ASTPrinter().print(&out);
-    }
+    ASTPrinter().print(&parse_output);
 
     return 0;
 }

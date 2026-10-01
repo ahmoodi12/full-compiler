@@ -29,7 +29,7 @@ struct ASTNode {
 };
 
 inline bool valid_ast(const ASTNode& node) {
-    return node.token.id != -1 && node.token.label.empty();
+    return node.token.id != -1 || !node.token.label.empty();
 }
 
 inline void add_child(ASTNode& node, std::unique_ptr<ASTNode>& child) {
@@ -47,7 +47,7 @@ inline void add_child(ASTNode& node, ASTNode&& child) {
 
 class ASTPrinter {
 public:
-    static void print(const ASTNode* root) {
+    static void print(const std::vector<ASTNode>* root) {
         using namespace ansiColors;
 
         std::cout << bold << cyan
@@ -59,7 +59,10 @@ public:
             return;
         }
 
-        print_node(root, "", true);
+        for (auto& node : *root){
+            print_node(&node, "", true);
+            std::cout << "\n";
+        }
 
         std::cout << bold << cyan
                   << "===============\n"

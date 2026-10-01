@@ -6,14 +6,27 @@ line;
 comment;
 */
 
-if (3 + 5) {
-    GigaChad mr_chad;
-
-    if ((2 - 6) == 10) {
-
-    }
+int read(int a) {
+    return 0;
 }
 
+int main() {
+    if (3 + 5) {
+        char BANANA;
+
+        if ((2 - 6) == 10) {
+            int hello = 7;  
+            hello = hello + 15;
+            while (hello < 5) {
+                hello = hello - 1;
+            }
+        }
+
+        if (read(15) == 1) {
+            return -1;
+        }
+    }
+}
 /*
 int main() {
     int a = 67;

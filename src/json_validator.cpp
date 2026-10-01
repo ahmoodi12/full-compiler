@@ -231,11 +231,10 @@ bool JsonValidator::validate_node(
             if (!node.is_boolean()) goto type_error;
             return true;
 
-        case Type::Array: {
+        case Type::Array: { // the brackets are so that the compiler knows that const size_t n = node.size(); is local to array
             if (!node.is_array()) goto type_error;
 
             const size_t n = node.size();
-
             if (schema.is_tuple) {
                 if (n != schema.fields.size()) {
                     goto type_error;
@@ -254,8 +253,6 @@ bool JsonValidator::validate_node(
                             error_path))
                         return false;
                 }
-
-                return true;
             }
 
             for (size_t i = 0; i < n; i++) {
@@ -291,45 +288,55 @@ bool JsonValidator::validate_node(
                         );
                     }
 
-                    if (report_error) utils::error(
+                    if (report_error) {
+                        utils::error(
                         "Array element does not match schema: " +
                         format_json_path(path) + " -> [" + std::to_string(i) + "]",
                         cxt,
                         "",
                         false,
                         false
-                    );
-
+                        );
+                    }
                     return false;
                 }
             }
-
             return true;
         }
-
+        
         case Type::Object:
             if (!node.is_object()) goto type_error;
             return validate_children(node, schema, path, error_path, report_error);
+    
+        default:
+            error_path = path;
+            if (report_error) {
+                utils::error("got an unknown type '" + std::string(schema.type_name()) + "'.", cxt, "", false, false);
+            }
+            return false;
     }
 
     return true;
 
 type_error:
-    if (error_path.empty())
+    if (error_path.empty()){
         error_path = path;
+    }
 
-    if (report_error) utils::error(
-        std::string("Type mismatch, expected a ") +
-        schema.type_name() +
-        " got a " +
-        node.type_name() +
-        " at: " +
-        format_json_path(path),
-        cxt,
-        "",
-        false,
-        false
-    );
+    if (report_error) {
+        utils::error(
+            std::string("Type mismatch, expected a ") +
+            schema.type_name() +
+            " got a " +
+            node.type_name() +
+            " at: " +
+            format_json_path(path),
+            cxt,
+            "",
+            false,
+            false
+            );
+    }
 
     return false;
 }

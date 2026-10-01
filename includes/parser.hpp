@@ -15,14 +15,12 @@ class Parser {
         "",
         T::Object,
         {
-            {"prefix binding power", T::Int},
-
             {"expr definition", T::Object, {
                 {".+", T::Object, {
                     {"([rl]bp|precedence)", T::Int, {}, true},
                     {"associativity", T::String, {}, true},
                     {"types", T::Array, {
-                        {"(value|prefix|infix|expr terminator|opening wrapper|closing wrapper|ternary seperator|ternary)", T::String}
+                        {"(value|prefix|infix|expr terminator|opening wrapper|closing wrapper|ternary separator|ternary)", T::String}
                     }}
                 }}
             }},
@@ -40,7 +38,7 @@ class Parser {
                                     }, true}
                                 }, true},
 
-                                {"(repeat|seperator)", T::String, {}, true}
+                                {"(repeat|separator)", T::String, {}, true}
                             }},
                             
                             {"", T::Array, {

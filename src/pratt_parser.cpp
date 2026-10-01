@@ -36,11 +36,11 @@ void PrattParser::load_json(json& data, Lexer& lexer) {
     by_id.clear();
     by_label.clear();
 
-    prefix_bp = data.at("prefix binding power");
-
     auto& expr_data = data.at("expr definition");
 
     rules.reserve(expr_data.size());
+
+    int highest_bp = 0;
 
     for (auto& [key, value] : expr_data.items()) {
         Rule rule;
@@ -78,10 +78,15 @@ void PrattParser::load_json(json& data, Lexer& lexer) {
             } else {
                 utils::error("infix missing precedence or associativity: " + key, cxt);
             }
+
+            // find highest bp
+            highest_bp = rule.lbp > highest_bp ? rule.lbp : rule.rbp > highest_bp ? rule.rbp : highest_bp;
         }
 
         rules.push_back(rule);
     }
+
+    prefix_bp = highest_bp + 10;
 
     // rebuild lookup tables
     for (auto& r : rules) {
@@ -112,10 +117,9 @@ PrattParser::ExprResult PrattParser::parse_atom() {
         if (!valid_expr(right)) {
             return right;
         }
-        
 
         node.children.push_back(
-            std::make_unique<ASTNode>()
+            std::make_unique<ASTNode>(std::move(right.node))
         );
 
         return {std::move(node)};
@@ -126,9 +130,14 @@ PrattParser::ExprResult PrattParser::parse_atom() {
         
         if (!valid_expr(expr)) return expr;
 
+        if (eof(this)) {
+            return {.error = {"expected closing wrapper", pos}};
+        }
+
+        // closing parenthesis
         auto rule_pair = find_rule(consume(this));
 
-        if (eof(this) || !rule_pair.first || !has(rule_pair.first->type_mask, ClosingWrapper)) {
+        if (!rule_pair.first || !has(rule_pair.first->type_mask, ClosingWrapper)) {
             return {.error = {"expected closing wrapper", pos}};
         }
 
@@ -158,6 +167,8 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
             consume(this); // '('
 
             ASTNode call;
+
+            call.token.label = "function call";
 
             add_child(call, left);
 
@@ -208,7 +219,7 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
             continue;
         }
 
-        if (has(rule->type_mask, Ternary)) {
+        if (has(rule->type_mask, Ternary)  && rule->lbp > rbp) {
             consume(this);  // "?", cond op
 
             ASTNode node;
