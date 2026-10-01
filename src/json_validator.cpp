@@ -120,43 +120,52 @@ bool JsonValidator::validate_children(
     std::vector<PathPart>& error_path,
     bool report_error
     ) {
-    for (const auto& child : schema.fields) {
+    std::unordered_set<std::string> matched_keys;
 
+    for (const auto& child : schema.fields) {
         const auto matches = find_patterns_in_json(child.name, node);
 
         if (matches.empty()) {
             if (child.optional) continue;
 
-            if (error_path.empty())
+            if (error_path.empty()) {
                 error_path = path;
+            }
 
-            if (report_error) utils::error(
-                "Missing field (pattern): " + child.name,
-                cxt,
-                "",
-                false,
-                false
-            );
+            if (report_error) {
+                utils::error("Missing field (pattern): " + child.name, cxt, "", false, false);
+            }
 
             return false;
         }
 
-    for (const auto& key : matches) {
+        for (const auto& key : matches) {
+            matched_keys.insert(key);
 
-        auto new_path = path;
-        new_path.push_back(
-            PathPart::key_part(key)
-        );
+            auto new_path = path;
+            new_path.push_back(PathPart::key_part(key));
 
-        if (!validate_node(
-                node.at(key),
-                child,
-                new_path,
-                error_path))
-            {
+            if (!validate_node(node.at(key), child, new_path, error_path)) {
                 return false;
             }
         }
+    }
+
+    for (const auto& [key, value] : node.items()) {
+        if (matched_keys.find(key) != matched_keys.end()) continue;
+
+        auto new_path = path;
+        new_path.push_back(PathPart::key_part(key));
+
+        if (error_path.empty()) {
+            error_path = new_path;
+        }
+
+        if (report_error) {
+            utils::error("Unknown field: " + format_json_path(new_path), cxt, "", false, false);
+        }
+
+        return false;
     }
 
     return true;
