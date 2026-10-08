@@ -31,7 +31,7 @@ PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos
     }
 }
 
-void PrattParser::load_json(json& data, Lexer& lexer) {
+void PrattParser::load_json(ordered_json& data, Lexer& lexer) {
     rules.clear();
     by_id.clear();
     by_label.clear();

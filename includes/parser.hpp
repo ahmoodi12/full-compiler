@@ -9,8 +9,8 @@
 class CompilerCxt;
 
 class Parser {
-    using S = JsonValidator::Schema;
-    using T = JsonValidator::Type;
+    using S = JsonValidator<ordered_json>::Schema;
+    using T = JsonType;
     S json_schema{
         "",
         T::Object,
@@ -108,7 +108,7 @@ public:
     };
         
     PrattParser pratt_parser;
-    JsonValidator json_validator;
+    JsonValidator<ordered_json> json_validator;
 
     Lexer& lexer;
 
@@ -121,11 +121,11 @@ public:
 
     CompilerCxt& cxt;
 
-    void add_seq_tokens(json &sequence, Parser::Rule &rule);
+    void add_seq_tokens(ordered_json &sequence, Parser::Rule &rule);
 
-    void parse_grammar_rule(json &pattern, const std::string &statement_str, std::vector<Parser::Rule> &rules, int seq_i);
+    void parse_grammar_rule(ordered_json &pattern, const std::string &statement_str, std::vector<Parser::Rule> &rules, int seq_i);
 
-    void parse_grammar_rules(json &grammar, std::vector<Parser::Rule> &rules);
+    void parse_grammar_rules(ordered_json &grammar, std::vector<Parser::Rule> &rules);
 
     Parser(
         CompilerCxt &cxt,

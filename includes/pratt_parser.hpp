@@ -68,7 +68,7 @@ public:
 
     PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos);
 
-    void load_json(json& data, Lexer& lexer);
+    void load_json(ordered_json &data, Lexer &lexer);
 
     PrattParser::ExprResult parse_atom();
 

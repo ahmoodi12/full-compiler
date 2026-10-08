@@ -15,7 +15,7 @@ Parser::TokenRule make_token_base(Lexer& lexer, std::string token) {
     return token_base;
 }
 
-void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
+void Parser::add_seq_tokens(ordered_json& sequence, Parser::Rule& rule) {
     for (auto& token : sequence) {
         if (token.is_object()) {
             for (auto& [capture_label, capture_token] : token.items()) {
@@ -31,14 +31,14 @@ void Parser::add_seq_tokens(json& sequence, Parser::Rule& rule) {
 }
 
 void Parser::parse_grammar_rule(
-    json& pattern,
+    ordered_json& pattern,
     const std::string& statement_str,
     std::vector<Parser::Rule>& rules, 
     int seq_i = 0) {
     int rule_i = rules.size() - 1;
         
     for (; seq_i < pattern.size(); seq_i++) {
-        json& sequence = pattern[seq_i];
+        ordered_json& sequence = pattern[seq_i];
         Rule& rule = rules[rule_i];
 
         if (sequence.is_array()) {
@@ -74,7 +74,7 @@ void Parser::parse_grammar_rule(
 
 
 void Parser::parse_grammar_rules(
-    json& grammar,
+    ordered_json& grammar,
     std::vector<Parser::Rule>& rules) {
 
     for (auto& [statement_str, value] : grammar.items()) {
@@ -96,6 +96,11 @@ void Parser::parse_grammar_rules(
     }
 }
 
+// TODO fix
+// -1 func_stmt
+//    |-- @func_name = 32 identifier int
+//    |-- @type = 32 identifier main
+
 Parser::Parser(
         CompilerCxt& cxt, 
         const std::string& filename,
@@ -103,16 +108,16 @@ Parser::Parser(
         std::vector<PrattParser::Rule> pratt_rules) 
         : cxt(cxt), pratt_parser(cxt, pratt_rules, pos), json_validator(cxt, json_schema), lexer(lexer) {
     if (!filename.empty()) {
-        json data = load_and_validate_json(cxt, filename, json_validator);
+        ordered_json data = load_and_validate_json<ordered_json>(cxt, filename, json_validator);
         
         auto old = cxt.current_file;
         cxt.current_file = filename;
 
-        json grammar = data.at("grammar");
+        ordered_json grammar = data.at("grammar");
 
-        parse_grammar_rules(utils::json_get(grammar, "statement rules", cxt), grammar_rules);
+        parse_grammar_rules(utils::json_get<ordered_json>(grammar, "statement rules", cxt), grammar_rules);
 
-        parse_grammar_rules(utils::json_get(grammar, "variables", cxt), variable_sub_statements);
+        parse_grammar_rules(utils::json_get<ordered_json>(grammar, "variables", cxt), variable_sub_statements);
         
         pratt_parser.load_json(data, lexer);
 

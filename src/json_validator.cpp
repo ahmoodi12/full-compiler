@@ -5,10 +5,10 @@
 #include <filesystem>
 #include <regex>
 
-
-json keep_only_path(
-    const json& node,
-    const std::vector<JsonValidator::PathPart>& path,
+template <typename Json>
+Json keep_only_path(
+    const Json& node,
+    const std::vector<JsonPathPart>& path,
     size_t idx = 0
 ) {
     if (idx >= path.size())
@@ -16,9 +16,9 @@ json keep_only_path(
 
     const auto& part = path[idx];
 
-    if (part.type == JsonValidator::PathPart::Type::Index) {
+    if (part.type == JsonPathPart::Type::Index) {
 
-        json arr = json::array();
+        Json arr = Json::array();
 
         if (node.is_array() && part.index < node.size()) {
             arr.push_back(
@@ -31,7 +31,7 @@ json keep_only_path(
 
     if (node.is_object()) {
 
-        json obj;
+        Json obj;
 
         auto it = node.find(part.key);
 
@@ -47,7 +47,7 @@ json keep_only_path(
 }
 
 std::string format_json_path(
-    const std::vector<JsonValidator::PathPart>& path
+    const std::vector<JsonPathPart>& path
 ) {
     std::string out;
 
@@ -57,7 +57,7 @@ std::string format_json_path(
 
         const auto& part = path[i];
 
-        if (part.type == JsonValidator::PathPart::Type::Key) {
+        if (part.type == JsonPathPart::Type::Key) {
             out += "\"";
             out += part.key;
             out += "\"";
@@ -72,22 +72,24 @@ std::string format_json_path(
     return out;
 }
 
-const char* JsonValidator::Schema::type_name() const {
+template <typename Json>
+const char* JsonValidator<Json>::Schema::type_name() const {
     switch (type)
     {
-    case Type::String:  return "string";
-    case Type::Int:     return "int";
-    case Type::Bool:    return "bool";
-    case Type::Array:   return "array";
-    case Type::Object:  return "object";
+    case JsonType::String:  return "string";
+    case JsonType::Int:     return "int";
+    case JsonType::Bool:    return "bool";
+    case JsonType::Array:   return "array";
+    case JsonType::Object:  return "object";
     }
 
     return "unknown";
 }
 
-std::vector<std::string> JsonValidator::find_patterns_in_json(
+template <typename Json>
+std::vector<std::string> JsonValidator<Json>::find_patterns_in_json(
     const std::string& pattern,
-    const json& j
+    const Json& j
 ) {
     static std::unordered_map<std::string, std::regex> cache;
 
@@ -112,12 +114,12 @@ std::vector<std::string> JsonValidator::find_patterns_in_json(
 }
 
 
-
-bool JsonValidator::validate_children(
-    const json& node,
+template <typename Json>
+bool JsonValidator<Json>::validate_children(
+    const Json& node,
     const Schema& schema,
-    const std::vector<PathPart>& path,
-    std::vector<PathPart>& error_path,
+    const std::vector<JsonPathPart>& path,
+    std::vector<JsonPathPart>& error_path,
     bool report_error
     ) {
     std::unordered_set<std::string> matched_keys;
@@ -143,7 +145,7 @@ bool JsonValidator::validate_children(
             matched_keys.insert(key);
 
             auto new_path = path;
-            new_path.push_back(PathPart::key_part(key));
+            new_path.push_back(JsonPathPart::key_part(key));
 
             if (!validate_node(node.at(key), child, new_path, error_path)) {
                 return false;
@@ -155,7 +157,7 @@ bool JsonValidator::validate_children(
         if (matched_keys.find(key) != matched_keys.end()) continue;
 
         auto new_path = path;
-        new_path.push_back(PathPart::key_part(key));
+        new_path.push_back(JsonPathPart::key_part(key));
 
         if (error_path.empty()) {
             error_path = new_path;
@@ -171,9 +173,9 @@ bool JsonValidator::validate_children(
     return true;
 }
 
-
-bool JsonValidator::validate(const json& j) {
-    std::vector<PathPart> error_path;
+template <typename Json>
+bool JsonValidator<Json>::validate(const Json& j) {
+    std::vector<JsonPathPart> error_path;
 
     if (!schema.name.empty()) {
 
@@ -185,8 +187,8 @@ bool JsonValidator::validate(const json& j) {
         }
 
         for (const auto& key : root_matches) {
-            std::vector<PathPart> path;
-            path.push_back(PathPart::key_part(key));
+            std::vector<JsonPathPart> path;
+            path.push_back(JsonPathPart::key_part(key));
 
             validate_node(
                 j.at(key),
@@ -197,7 +199,7 @@ bool JsonValidator::validate(const json& j) {
         }
     }
     else {
-        std::vector<PathPart> path;
+        std::vector<JsonPathPart> path;
 
         validate_node(
             j,
@@ -218,29 +220,29 @@ bool JsonValidator::validate(const json& j) {
     return true;
 }
 
-
-bool JsonValidator::validate_node(
-    const json& node,
+template <typename Json>
+bool JsonValidator<Json>::validate_node(
+    const Json& node,
     const Schema& schema,
-    const std::vector<PathPart>& path,
-    std::vector<PathPart>& error_path,
+    const std::vector<JsonPathPart>& path,
+    std::vector<JsonPathPart>& error_path,
     bool report_error
     ) {
     switch (schema.type) {
 
-        case Type::String:
+        case JsonType::String:
             if (!node.is_string()) goto type_error;
             return true;
 
-        case Type::Int:
+        case JsonType::Int:
             if (!node.is_number_integer()) goto type_error;
             return true;
 
-        case Type::Bool:
+        case JsonType::Bool:
             if (!node.is_boolean()) goto type_error;
             return true;
 
-        case Type::Array: { // the brackets are so that the compiler knows that const size_t n = node.size(); is local to array
+        case JsonType::Array: { // the brackets are so that the compiler knows that const size_t n = node.size(); is local to array
             if (!node.is_array()) goto type_error;
 
             const size_t n = node.size();
@@ -252,7 +254,7 @@ bool JsonValidator::validate_node(
                 for (size_t i = 0; i < n; i++) {
                     auto new_path = path;
                     new_path.push_back(
-                        PathPart::index_part(i)
+                        JsonPathPart::index_part(i)
                     );
 
                     if (!validate_node(
@@ -270,11 +272,11 @@ bool JsonValidator::validate_node(
                 bool matched = false;
 
                 for (const auto& field : schema.fields) {
-                    std::vector<PathPart> tmp;
+                    std::vector<JsonPathPart> tmp;
 
                     auto new_path = path;
                     new_path.push_back(
-                        PathPart::index_part(i)
+                        JsonPathPart::index_part(i)
                     );
 
                     if (validate_node(
@@ -294,7 +296,7 @@ bool JsonValidator::validate_node(
                     if (error_path.empty()) {
                         error_path = path;
                         error_path.push_back(
-                            PathPart::index_part(i)
+                            JsonPathPart::index_part(i)
                         );
                     }
 
@@ -314,7 +316,7 @@ bool JsonValidator::validate_node(
             return true;
         }
         
-        case Type::Object:
+        case JsonType::Object:
             if (!node.is_object()) goto type_error;
             return validate_children(node, schema, path, error_path, report_error);
     
@@ -351,23 +353,5 @@ type_error:
     return false;
 }
 
-
-json load_and_validate_json(
-    CompilerCxt& cxt,
-    const std::string& filename,
-    JsonValidator& validator
-) {
-    auto file_path = utils::get_file_path(filename, cxt);
-
-    auto old = cxt.current_file;
-    cxt.current_file = file_path;
-
-    json data = json::parse(utils::read_file(file_path, cxt));
-
-    if (!validator.validate(data))
-        std::exit(1);
-
-    cxt.current_file = old;
-
-    return data;
-}
+template class JsonValidator<nlohmann::json>;
+template class JsonValidator<nlohmann::ordered_json>;

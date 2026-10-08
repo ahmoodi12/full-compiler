@@ -84,11 +84,6 @@ std::string read_file(const std::filesystem::path& path, CompilerCxt& cxt) {
     );
 }
 
-json& json_get(json& parent, const char* item, CompilerCxt& cxt) {
-    if (!parent.contains(item)) utils::error("json missing the key: " + std::string(item), cxt, "--- JSON ---\n" + parent.dump(4));
-    return parent.at(item);
-}
-
 std::string visualize_whitespaces(const std::string& s) {
     std::string out;
     out.reserve(s.size());

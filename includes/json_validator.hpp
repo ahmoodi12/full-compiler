@@ -1,50 +1,52 @@
 #pragma once
 
 #include "combined_include.hpp"
+#include "utils.hpp"
+#include "compiler_cxt.hpp"
 
 class CompilerCxt;
 
+struct JsonPathPart {
+    enum class Type {
+        Key,
+        Index
+    };
 
+    Type type = Type::Key;
+
+    std::string key;
+    size_t index = 0;
+
+    static JsonPathPart key_part(std::string k) {
+        JsonPathPart p;
+        p.type = Type::Key;
+        p.key = std::move(k);
+        return p;
+    }
+
+    static JsonPathPart index_part(size_t i) {
+        JsonPathPart p;
+        p.type = Type::Index;
+        p.index = i;
+        return p;
+    }
+};
+
+// TODO: add float handling
+enum class JsonType {
+    String,
+    Int,
+    Bool,
+    Array,
+    Object
+};
+
+template <typename Json>
 class JsonValidator {
 public:
-    // TODO: add float handling
-    enum class Type {
-        String,
-        Int,
-        Bool,
-        Array,
-        Object
-    };
-
-    struct PathPart {
-        enum class Type {
-            Key,
-            Index
-        };
-
-        Type type = Type::Key;
-
-        std::string key;
-        size_t index = 0;
-
-        static PathPart key_part(std::string k) {
-            PathPart p;
-            p.type = Type::Key;
-            p.key = std::move(k);
-            return p;
-        }
-
-        static PathPart index_part(size_t i) {
-            PathPart p;
-            p.type = Type::Index;
-            p.index = i;
-            return p;
-        }
-    };
-
     struct Schema {
         std::string name;
-        Type type = Type::Object;
+        JsonType type = JsonType::Object;
         std::vector<Schema> fields;
         bool optional = false;
         bool is_tuple = false;
@@ -55,7 +57,7 @@ public:
 
         Schema(
             std::string name,
-            Type type,
+            JsonType type,
             std::vector<Schema> fields = {},
             bool optional = false,
             bool is_tuple = false
@@ -75,33 +77,49 @@ public:
     JsonValidator(CompilerCxt& cxt, const Schema schema)
         : schema(schema), cxt(cxt) {}
 
-    bool validate(const json &j);
+    bool validate(const Json &j);
 
 private:
     std::vector<std::string> find_patterns_in_json(
         const std::string& pattern,
-        const json& j
+        const Json& j
     );
 
     bool validate_node(
-        const json& node,
+        const Json& node,
         const Schema& schema,
-        const std::vector<PathPart>& path,
-        std::vector<PathPart>& error_path,
+        const std::vector<JsonPathPart>& path,
+        std::vector<JsonPathPart>& error_path,
         bool report_error = 1
     );
 
     bool validate_children(
-        const json& node,
+        const Json& node,
         const Schema& schema,
-        const std::vector<PathPart>& path,
-        std::vector<PathPart>& error_path,
+        const std::vector<JsonPathPart>& path,
+        std::vector<JsonPathPart>& error_path,
         bool report_error
-    );
+        );
 };
 
-json load_and_validate_json(
+
+template <typename Json>
+Json load_and_validate_json(
     CompilerCxt& cxt,
     const std::string& filename,
-    JsonValidator& validator
-);
+    JsonValidator<Json>& validator
+) {
+    auto file_path = utils::get_file_path(filename, cxt);
+
+    auto old = cxt.current_file;
+    cxt.current_file = file_path;
+
+    Json data = Json::parse(utils::read_file(file_path, cxt));
+
+    if (!validator.validate(data))
+        std::exit(1);
+
+    cxt.current_file = old;
+
+    return data;
+}

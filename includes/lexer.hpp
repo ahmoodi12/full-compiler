@@ -14,21 +14,23 @@ using json = nlohmann::json;
 
 class Lexer {
 public:
-    const JsonValidator::Schema json_schema {
+    using S = JsonValidator<json>::Schema;
+    using T = JsonType;
+    const S json_schema {
         "",
-        JsonValidator::Type::Object,
+        T::Object,
         {
-            JsonValidator::Schema {
+            S {
                 "rules",
-                JsonValidator::Type::Object,
+                T::Object,
                 {
-                    JsonValidator::Schema {
+                    S {
                         "\\d+",
-                        JsonValidator::Type::Array,
+                        T::Array,
                         {
-                            JsonValidator::Schema{"", JsonValidator::Type::String},
-                            JsonValidator::Schema{"", JsonValidator::Type::String},
-                            JsonValidator::Schema{"", JsonValidator::Type::Bool},
+                            S{"", T::String},
+                            S{"", T::String},
+                            S{"", T::Bool},
                         },
                         false,
                         true
@@ -56,7 +58,7 @@ public:
 
     CompilerCxt& cxt;
     std::vector<Rule> rules;
-    JsonValidator json_validator;
+    JsonValidator<json> json_validator;
 
     Lexer(
         CompilerCxt& cxt,
