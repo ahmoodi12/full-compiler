@@ -68,6 +68,15 @@ public:
         TokenRule copy() {
             return TokenRule{RuleBase{id, label}, capture_name, repeat, separator ? std::make_unique<TokenRule>(separator->copy()) : nullptr};
         }
+
+        bool is_var(Parser* parser) {
+            for (auto& var : parser->variable_sub_statements) {
+                if (var.statement == label) {
+                    return true;
+                }
+            }
+            return false;
+        }
     };
 
     struct Rule {
@@ -91,9 +100,8 @@ public:
         size_t size = 0;
         std::vector<std::unique_ptr<ASTNode>> exprs; 
         std::vector<std::unique_ptr<ASTNode>> sub_stmts;
-        std::unordered_map<std::string, ASTNode*> captures;
-        std::vector<std::unique_ptr<ASTNode>> owned_captures;
-        
+        std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
+
         PrattParser::ParseError error;
 
         std::string statement;
@@ -133,7 +141,7 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    Parser::StmtMatch repeat(TokenRule &repeat_token, bool use_seperator, std::function<bool(const Token &)> separator_func);
+    void repeat(StmtMatch &result, TokenRule& repeat_token, bool use_separator, std::function<bool(const Token &)> separator_func);
 
     Parser::StmtMatch try_all_statements(std::vector<Parser::Rule> &rules, bool error_enabled = 1);
 

@@ -12,9 +12,7 @@
 struct ASTNode {
     Token token;
 
-    std::unordered_map<std::string, ASTNode*> captures;
-    std::vector<std::unique_ptr<ASTNode>> owned_captures;
-
+    std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
     std::vector<std::unique_ptr<ASTNode>> children;
 
     ASTNode() = default;
@@ -138,7 +136,7 @@ private:
         captures.reserve(capture_count);
 
         for (const auto& [name, capture] : node->captures) {
-            captures.emplace_back(name, capture);
+            captures.emplace_back(name, capture.get());
         }
 
         std::sort(
@@ -229,7 +227,7 @@ private:
         captures.reserve(capture_count);
 
         for (const auto& [name, capture] : node->captures) {
-            captures.emplace_back(name, capture);
+            captures.emplace_back(name, capture.get());
         }
 
         std::sort(
