@@ -29,12 +29,12 @@ void error(
              << "Error";
     }
 
-    if (!cxt.current_file.empty()) {
+    if (!cxt.current_file->empty()) {
         std::cerr << ansiColors::reset
              << " in file '"
              << ansiColors::bright_cyan
              << ansiColors::underline
-             << cxt.current_file.string()
+             << cxt.current_file->string()
              << ansiColors::reset
              << "'";
     }
@@ -57,18 +57,25 @@ void error(
     }
 }
 
-std::filesystem::path get_file_path(std::string filename, CompilerCxt& cxt) {
-    std::filesystem::path file_path(filename);
+std::filesystem::path& validate_path(const std::filesystem::path& path, CompilerCxt& cxt) {
+    if (!std::filesystem::exists(path)) {
+        utils::error("path does not exist: " + path.string(), cxt);
+    }
+    return const_cast<std::filesystem::path&>(path);
+}
 
-    if (file_path.is_relative()) {
-        file_path = std::filesystem::current_path() / file_path;
+std::filesystem::path get_path(std::string filename, CompilerCxt& cxt) {
+    std::filesystem::path path(filename);
+
+    if (path.is_relative()) {
+        path = std::filesystem::current_path() / path;
     }
 
-    if (!std::filesystem::exists(file_path)) {
-        utils::error("File does not exist: " + filename, cxt);
+    if (!std::filesystem::exists(path)) {
+        utils::error("path does not exist: " + path.string(), cxt);
     }
 
-    return file_path;
+    return path;
 }
 
 std::string read_file(const std::filesystem::path& path, CompilerCxt& cxt) {

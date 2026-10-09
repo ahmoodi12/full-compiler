@@ -137,7 +137,7 @@ public:
 
     Parser(
         CompilerCxt &cxt,
-        const std::string &filename,
+        std::filesystem::path file,
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 

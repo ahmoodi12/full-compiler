@@ -1,5 +1,5 @@
 {
-  "rules": {
+  "tokens": {
     "17": ["whitespace", "[ \\t\\n\\r]+", true],
     "18": ["multi line comment", "\\/\\*([\\s\\S]*?)\\*\\/", true],
     "19": ["single line comment", "\\/\\/[^\\n]*", true],

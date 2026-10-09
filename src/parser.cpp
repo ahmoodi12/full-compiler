@@ -98,36 +98,40 @@ void Parser::parse_grammar_rules(
 
 Parser::Parser(
         CompilerCxt& cxt, 
-        const std::string& filename,
+        std::filesystem::path file,
         Lexer& lexer,
         std::vector<PrattParser::Rule> pratt_rules) 
         : cxt(cxt), pratt_parser(cxt, pratt_rules, pos), json_validator(cxt, json_schema), lexer(lexer) {
-    if (!filename.empty()) {
-        ordered_json data = load_and_validate_json<ordered_json>(cxt, filename, json_validator);
-        
-        auto old = cxt.current_file;
-        cxt.current_file = filename;
+    
+    ordered_json data = load_and_validate_json<ordered_json>(cxt, file, json_validator);
+    
+    auto old = cxt.current_file;
+    cxt.current_file = &file;
 
-        ordered_json grammar = data.at("grammar");
+    ordered_json grammar = data.at("grammar");
 
-        parse_grammar_rules(utils::json_get<ordered_json>(grammar, "statement rules", cxt), grammar_rules);
+    parse_grammar_rules(utils::json_get<ordered_json>(grammar, "statement rules", cxt), grammar_rules);
 
-        parse_grammar_rules(utils::json_get<ordered_json>(grammar, "variables", cxt), variable_sub_statements);
-        
-        pratt_parser.load_json(data, lexer);
+    parse_grammar_rules(utils::json_get<ordered_json>(grammar, "variables", cxt), variable_sub_statements);
+    
+    pratt_parser.load_json(data, lexer);
 
-        cxt.current_file = old;
-    }
+    cxt.current_file = old;
 }
 
 void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separator, std::function<bool(const Token&)> separator_func) {
     result.valid = false;
-
+    bool got_separator = false;
     while (!eof(this)) {          
         match_token(result, repeat_token, peek(this));
                 
         // if the main repeated token stops matching that means we should've reached the end of the repetition.
-        if (!result.valid){
+        if (!result.valid) {
+            if (got_separator) {
+                result.error.message = "expected a '" + repeat_token.label + "' after the separator but got a '" + peek(this).label + "'";
+                result.error.pos = pos;
+                return;
+            }
             result.valid = true;
             return;  
         }
@@ -145,6 +149,7 @@ void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separat
                 return;
             }            
             consume(this);
+            got_separator = true;
         }
     }
 }

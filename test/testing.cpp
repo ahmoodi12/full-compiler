@@ -18,7 +18,7 @@ int main() {
     Lexer lexer(cxt, lex_data_file);
     Parser parser(cxt, parse_data_file, lexer);
 
-    std::vector<Token> lex_output = lexer.run(utils::read_file(utils::get_file_path("test/test_file.c", cxt), cxt));
+    std::vector<Token> lex_output = lexer.run(utils::read_file(utils::get_path("test/test_file.c", cxt), cxt));
 
     lexer.print_output(lex_output);
 

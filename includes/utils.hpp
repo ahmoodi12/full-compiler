@@ -14,7 +14,8 @@ void error(
     bool fatal = true
 );
 
-std::filesystem::path get_file_path(std::string filename, CompilerCxt& cxt);
+std::filesystem::path& validate_path(const std::filesystem::path& path, CompilerCxt& cxt);
+std::filesystem::path get_path(std::string filename, CompilerCxt& cxt);
 std::string read_file(const std::filesystem::path& path, CompilerCxt& cxt);
 
 std::string visualize_whitespaces(const std::string& s);

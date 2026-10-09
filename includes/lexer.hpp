@@ -21,7 +21,7 @@ public:
         T::Object,
         {
             S {
-                "rules",
+                "tokens",
                 T::Object,
                 {
                     S {
@@ -62,7 +62,7 @@ public:
 
     Lexer(
         CompilerCxt& cxt,
-        std::string lex_data_file,
+        std::filesystem::path file,
         std::vector<Rule> rules = {}
     );
 

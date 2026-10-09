@@ -7,7 +7,8 @@
       "request": "launch",
       "program": "${workspaceFolder}/build/main/compiler_main",
       "args": [
-        "${workspaceFolder}/test/test_file.c"
+        "${workspaceFolder}/test/test_programs/test_file.c",
+        "${workspaceFolder}/config/C/"
       ],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "build main",

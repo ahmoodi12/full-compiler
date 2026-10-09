@@ -106,13 +106,11 @@ private:
 template <typename Json>
 Json load_and_validate_json(
     CompilerCxt& cxt,
-    const std::string& filename,
+    class std::filesystem::path file_path,
     JsonValidator<Json>& validator
 ) {
-    auto file_path = utils::get_file_path(filename, cxt);
-
     auto old = cxt.current_file;
-    cxt.current_file = file_path;
+    cxt.current_file = &file_path;
 
     Json data = Json::parse(utils::read_file(file_path, cxt));
 

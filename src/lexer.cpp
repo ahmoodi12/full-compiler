@@ -8,26 +8,24 @@
 
 Lexer::Lexer(
     CompilerCxt& cxt,
-    std::string filename,
+    std::filesystem::path file,
     std::vector<Rule> Rules
 ) : cxt(cxt),
     rules(std::move(Rules)),
     json_validator(cxt, json_schema)
 {
-    if (!filename.empty()) {
-        json lex_data = load_and_validate_json(cxt, filename, json_validator);
+    json lex_data = load_and_validate_json(cxt, file, json_validator);
 
-        auto& arr = lex_data.at("rules");
-        rules.reserve(rules.size() + arr.size());
+    auto& arr = lex_data.at("tokens");
+    rules.reserve(rules.size() + arr.size());
 
-        for (auto& [key, val] : arr.items()) {
-            rules.emplace_back(
-                std::stoi(key),
-                val[0].get<std::string>(),
-                val[1].get<std::string>(),
-                val[2].get<bool>()
-            );
-        }
+    for (auto& [key, val] : arr.items()) {
+        rules.emplace_back(
+            std::stoi(key),
+            val[0].get<std::string>(),
+            val[1].get<std::string>(),
+            val[2].get<bool>()
+        );
     }
 }
 

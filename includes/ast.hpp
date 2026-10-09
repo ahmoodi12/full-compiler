@@ -69,18 +69,6 @@ public:
     }
 
 private:
-    /*
-        Example output:
-
-        1 Program
-        |-- 2 Function
-        |   |-- @name = 3 Identifier foo
-        |   '-- 4 Body
-        |       |-- 5 ...
-        |       '-- 6 ...
-        |
-        '-- 7 Function
-    */
     static void print_node(
         const ASTNode* node,
         const std::string& prefix,
@@ -93,18 +81,17 @@ private:
 
         // Node itself
         if (!prefix.empty()) {
-            std::cout << prefix
-                      << (last ? "'- " : "|-- ");
+            std::cout << prefix << (last ? "'- " : "|-- ");
         }
 
-        std::cout
-            << orange << node->token.id << reset
-            << " "
-            << bright_green << node->token.label << reset;
+        if (node->token.id != -1) {
+            std::cout << orange << node->token.id << reset;
+        }
+
+        std::cout << " " << bright_green << node->token.label << reset;
 
         if (!node->token.data.empty()) {
-            std::cout << " "
-                      << bright_white << node->token.data << reset;
+            std::cout << " " << bright_white << node->token.data << reset;
         }
 
         std::cout << '\n';
@@ -125,13 +112,6 @@ private:
         if (total == 0)
             return;
 
-
-        /*
-            unordered_map has no stable ordering.
-
-            If deterministic output is desirable, copy the captures into
-            a vector and sort them by name.
-        */
         std::vector<std::pair<std::string, ASTNode*>> captures;
         captures.reserve(capture_count);
 
@@ -167,7 +147,6 @@ private:
                 print_capture(capture, child_prefix, is_last);
             }
             else {
-                // Normal child
                 const size_t child_index = i - capture_count;
 
                 print_node(
@@ -192,30 +171,18 @@ private:
             return;
         }
 
-        /*
-            A capture has already printed:
+        if (node->token.id != -1) {
+            std::cout << orange << node->token.id << reset;
+        }
 
-                |-- @name =
-
-            Therefore print only the captured node itself here,
-            without another tree connector.
-        */
-        std::cout
-            << orange << node->token.id << reset
-            << " "
-            << bright_green << node->token.label << reset;
+        std::cout << " " << bright_green << node->token.label << reset;
 
         if (!node->token.data.empty()) {
-            std::cout << " "
-                      << bright_white << node->token.data << reset;
+            std::cout << " " << bright_white << node->token.data << reset;
         }
 
         std::cout << '\n';
 
-        /*
-            If the captured node itself has children/captures, continue
-            printing them underneath it.
-        */
         const size_t capture_count = node->captures.size();
         const size_t child_count   = node->children.size();
         const size_t total         = capture_count + child_count;
