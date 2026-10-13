@@ -3,7 +3,7 @@
 #include "lexer.hpp"
 #include "utils.hpp"
 
-Parser::TokenRule make_token_base(Lexer& lexer, std::string token) {
+Parser::TokenRule Parser::make_token_base(Lexer& lexer, std::string token) {
     Parser::TokenRule token_base;
     Lexer::Rule* lex_rule = lexer.find_lex_rule(token);
     if (lex_rule) {
@@ -12,6 +12,7 @@ Parser::TokenRule make_token_base(Lexer& lexer, std::string token) {
     } else {
         token_base.label = token;
     }
+    token_base.is_variable_statement(this);
     return token_base;
 }
 
@@ -110,9 +111,9 @@ Parser::Parser(
 
     ordered_json grammar = data.at("grammar");
 
-    parse_grammar_rules(utils::json_get<ordered_json>(grammar, "statement rules", cxt), grammar_rules);
-
     parse_grammar_rules(utils::json_get<ordered_json>(grammar, "variables", cxt), variable_sub_statements);
+
+    parse_grammar_rules(utils::json_get<ordered_json>(grammar, "statement rules", cxt), grammar_rules);
     
     pratt_parser.load_json(data, lexer);
 
@@ -133,6 +134,7 @@ void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separat
                 return;
             }
             result.valid = true;
+            result.error = {};
             return;  
         }
 
@@ -164,12 +166,12 @@ Parser::StmtMatch Parser::try_all_statements(std::vector<Parser::Rule>& rules, b
     matches.reserve(rules.size());
     for (auto& rule : rules) {
         StmtMatch match = match_stmt(rule);
-        if (match.size > longest_match_size) {
+        if (match.size >= longest_match_size) {
             longest_match_i = matches.size();
             longest_match_size = match.size;
         }
 
-        if (match.size > longest_valid_match_size && match.valid) {
+        if (match.size >= longest_valid_match_size && match.valid) {
             longest_valid_match_i = matches.size(); 
             longest_valid_match_size = match.size;
         }
@@ -236,15 +238,25 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
         }
 
     } else {
-        StmtMatch match = try_all_statements(variable_sub_statements, 0);
-
-        if (!match.valid){
+        if (!exp_token.is_var) {
             result.error.message = "unknown token '" + exp_token.label + "' from expected pattern."; 
             result.error.pos = pos;
             goto failed;
         }
+        
+        StmtMatch match = try_all_statements(variable_sub_statements, 0);
 
-        result.sub_stmts.push_back(std::make_unique<ASTNode>(convert_match(&match)));
+        if (!match.valid) {
+            result.error = match.error;
+            result.error.pos = pos;
+            goto failed;
+        }
+
+        if (!exp_token.capture_name.empty()) {
+            result.captures[exp_token.capture_name] = std::make_unique<ASTNode>(convert_match(&match));
+        } else {
+            result.sub_stmts.push_back(std::make_unique<ASTNode>(convert_match(&match)));
+        }    
     }
 
     result.valid = true;

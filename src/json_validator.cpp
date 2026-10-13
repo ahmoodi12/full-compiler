@@ -292,24 +292,46 @@ bool JsonValidator<Json>::validate_node(
                     }
                 }
 
+
                 if (!matched) {
+                    auto element_path = path;
+                    element_path.push_back(JsonPathPart::index_part(i));
+
                     if (error_path.empty()) {
-                        error_path = path;
-                        error_path.push_back(
-                            JsonPathPart::index_part(i)
-                        );
+                        error_path = element_path;
                     }
 
                     if (report_error) {
+                        std::string expected;
+
+                        for (size_t j = 0; j < schema.fields.size(); ++j) {
+                            if (j > 0) {
+                                expected += (j + 1 == schema.fields.size())
+                                    ? " or "
+                                    : ", ";
+                            }
+
+                            expected += schema.fields[j].type_name();
+                        }
+
+                        std::string actual_type = node[i].type_name();
+
+                        std::string message =
+                            "Array element does not match any allowed schema.\n"
+                            "  Path: " + format_json_path(element_path) + "\n"
+                            "  Expected one of: " + expected + "\n"
+                            "  Actual type: " + actual_type + "\n"
+                            "  Actual value: " + node[i].dump(2);
+
                         utils::error(
-                        "Array element does not match schema: " +
-                        format_json_path(path) + " -> [" + std::to_string(i) + "]",
-                        cxt,
-                        "",
-                        false,
-                        false
+                            message,
+                            cxt,
+                            "Check the element against the allowed array element schemas.",
+                            false,
+                            false
                         );
                     }
+
                     return false;
                 }
             }

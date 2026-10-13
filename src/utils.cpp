@@ -29,7 +29,7 @@ void error(
              << "Error";
     }
 
-    if (!cxt.current_file->empty()) {
+    if (cxt.current_file && !cxt.current_file->empty()) {
         std::cerr << ansiColors::reset
              << " in file '"
              << ansiColors::bright_cyan

@@ -1,0 +1,9 @@
+-1;
++value;
+!ready;
+~mask;
+*pointer;
+++counter;
+counter++;
+--counter;
+counter--;

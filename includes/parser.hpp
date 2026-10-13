@@ -63,20 +63,33 @@ public:
     struct TokenRule : RuleBase {
         std::string capture_name;
         bool repeat = 0;
+        bool is_var = 0;
         std::unique_ptr<TokenRule> separator = nullptr;
 
         TokenRule copy() {
-            return TokenRule{RuleBase{id, label}, capture_name, repeat, separator ? std::make_unique<TokenRule>(separator->copy()) : nullptr};
+            TokenRule result;
+            result.id = id;
+            result.label = label;
+            result.capture_name = capture_name;
+            result.repeat = repeat;
+            result.is_var = is_var;
+            if (separator) {
+                result.separator = std::make_unique<TokenRule>(separator->copy());
+            }
+            return result;
         }
 
-        bool is_var(Parser* parser) {
+        bool is_variable_statement(Parser* parser) {
             for (auto& var : parser->variable_sub_statements) {
                 if (var.statement == label) {
+                    is_var = 1;
                     return true;
                 }
             }
             return false;
         }
+
+        TokenRule() = default;
     };
 
     struct Rule {
@@ -128,6 +141,8 @@ public:
     std::vector<Token>* tokens = nullptr;
 
     CompilerCxt& cxt;
+
+    Parser::TokenRule make_token_base(Lexer &lexer, std::string token);
 
     void add_seq_tokens(ordered_json &sequence, Parser::Rule &rule);
 
