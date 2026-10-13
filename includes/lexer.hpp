@@ -70,5 +70,5 @@ public:
 
     Rule* find_lex_rule(std::string key);
 
-    void print_output(std::vector<Token> output) const;
+    void print_output(const std::vector<Token>& output) const;
 };

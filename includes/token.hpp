@@ -4,9 +4,16 @@
 #include "utils.hpp"
 
 struct Token {
+    struct Location {
+        std::filesystem::path* file;
+        int line = 1;
+        int column = 0;
+    };
+
     int32_t id = -1;
     std::string label;
     std::string data;
+    Location loc;
     bool skip;
 };
 

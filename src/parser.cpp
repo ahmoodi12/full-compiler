@@ -212,6 +212,7 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
     } else if (exp_token.label == "__stmt__") {
         StmtMatch stmt = try_all_statements(grammar_rules, false);
         if (!stmt.valid) {
+            
             result.error = stmt.error;
             goto failed;
         }
