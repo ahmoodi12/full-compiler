@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include "compiler_cxt.hpp"
 #include "ansi_colors.hpp"
+#include "error_loc.hpp"
 
 Lexer::Lexer(
     CompilerCxt& cxt,
@@ -34,18 +35,18 @@ std::vector<Token> Lexer::run(const std::string& input) {
     output.reserve(input.size() / 2);
 
     size_t pos = 0;
-    const size_t n = input.size();
+    const size_t input_size = input.size();
 
-    Token::Location loc;
+    Location loc;
     loc.file = cxt.current_file;
 
     int total_lines = std::count(input.begin(), input.end(), '\n') + 1;
     int newlines_left = total_lines;
 
-    while (pos < n) {
+    while (pos < input_size) {
         int old_newlines_left = newlines_left;
 
-        std::string_view remaining(input.data() + pos, n - pos);
+        std::string_view remaining(input.data() + pos, input_size - pos);
 
         newlines_left = std::count(remaining.begin(), remaining.end(), '\n');
         loc.line = total_lines - newlines_left;
@@ -82,9 +83,9 @@ std::vector<Token> Lexer::run(const std::string& input) {
 
         if (!best_rule) {
             utils::error(
-                "wasn't able to lex at position " + std::to_string(pos) +
-                ", invalid or unrecognized token.",
+                "invalid or unrecognized token.",
                 cxt,
+                &loc,
                 "",
                 false,
                 false

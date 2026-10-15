@@ -12,13 +12,13 @@ bool PrattParser::has(uint32_t mask, TypeMask t) {
 std::pair<PrattParser::Rule*, PrattParser::ParseError> PrattParser::find_rule(const Token& t) {
     auto it = by_id.find(t.id);
     if (it == by_id.end()) {
-        return {nullptr, {"unknown token rule: '" + t.label + "'", pos}};
+        return {nullptr, {"unknown token rule: '" + t.label + "'", t.loc}};
     }
     return {it->second, {}};
 }
 
 bool PrattParser::valid_expr(PrattParser::ExprResult& expr) {
-    return expr.error.pos == -1 || expr.error.message.empty();
+    return expr.error.loc.line == -1 || expr.error.message.empty();
 }
 
 PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos)
@@ -127,21 +127,22 @@ PrattParser::ExprResult PrattParser::parse_atom() {
         if (!valid_expr(expr)) return expr;
 
         if (eof(this)) {
-            return {.error = {"expected closing wrapper", pos}};
+            return {.error = {"expected closing wrapper", tokens->back().loc}};
         }
 
         // closing parenthesis
         auto rule_pair = find_rule(consume(this));
+        if (!rule_pair.first) {return {.error = rule_pair.second};}
 
-        if (!rule_pair.first || !has(rule_pair.first->type_mask, ClosingWrapper)) {
-            return {.error = {"expected closing wrapper", pos}};
+        if (!has(rule_pair.first->type_mask, ClosingWrapper)) {
+            return {.error = {"expected closing wrapper", rule_pair.second.loc}};
         }
 
         return expr;
     }
 
     
-    return {.error = {"invalid atom: " + tok.label, pos}};
+    return {.error = {"invalid atom: " + tok.label, tok.loc}};
 }
 
 PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
@@ -169,7 +170,7 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
             add_child(call, left);
 
             if (eof(this)) {
-                return {.error = {"unclosed function call", pos}};
+                return {.error = {"unclosed function call", tokens->back().loc}};
             }
 
             auto rule_pair = find_rule(peek(this));
@@ -185,7 +186,7 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
                     add_child(call, arg);
 
                     if (eof(this)) {
-                        return {.error = {"unclosed function call", pos}};
+                        return {.error = {"unclosed function call", tokens->back().loc}};
                     }
 
                     auto next_pair = find_rule(peek(this));
@@ -204,7 +205,7 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
                         continue;
                     }
 
-                    return {.error = {"invalid function argument separator", pos}};
+                    return {.error = {"invalid function argument separator", next_pair.second.loc}};
                 }
             } else {
                 // empty call, consume ')'
@@ -232,16 +233,16 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
             add_child(node, true_stmt);
 
             if (eof(this)) {
-                return {.error = {"expected a ternary separator but the file ended.", pos}};
+                return {.error = {"expected a ternary separator but the file ended.", tokens->back().loc}};
             }
 
             Token stmt_sep = consume(this);
 
             auto seperator_pair = find_rule(stmt_sep);
-            if (!seperator_pair.first) return {.error = {"ternary separator is invalid.", pos}};
+            if (!seperator_pair.first) return {.error = {"ternary separator is invalid.", stmt_sep.loc}};
 
             if (!has(seperator_pair.first->type_mask, TernarySeperator)) {
-                return {.error = {"ternary separator is invalid.", pos}};
+                return {.error = {"ternary separator is invalid.", stmt_sep.loc}};
             }
             
             ExprResult false_stmt_expr = parse_expr(0);

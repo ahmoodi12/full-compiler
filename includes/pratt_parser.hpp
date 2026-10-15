@@ -6,6 +6,7 @@
 #include "token.hpp"
 #include "json.hpp"
 #include "lexer.hpp"
+#include "error_loc.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -33,7 +34,7 @@ public:
 
     struct ParseError {
         std::string message;
-        int64_t pos = -1;
+        Location loc = {nullptr, -1, -1};
         std::string context;
     };
 

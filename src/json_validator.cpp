@@ -135,7 +135,7 @@ bool JsonValidator<Json>::validate_children(
             }
 
             if (report_error) {
-                utils::error("Missing field (pattern): " + child.name, cxt, "", false, false);
+                utils::error("Missing field (pattern): " + child.name, cxt, {}, "", false, false);
             }
 
             return false;
@@ -164,7 +164,7 @@ bool JsonValidator<Json>::validate_children(
         }
 
         if (report_error) {
-            utils::error("Unknown field: " + format_json_path(new_path), cxt, "", false, false);
+            utils::error("Unknown field: " + format_json_path(new_path), cxt, {}, "", false, false);
         }
 
         return false;
@@ -182,7 +182,7 @@ bool JsonValidator<Json>::validate(const Json& j) {
         const auto root_matches = find_patterns_in_json(schema.name, j);
 
         if (root_matches.empty()) {
-            utils::error("Missing root key: " + schema.name, cxt, "", false, false);
+            utils::error("Missing root key: " + schema.name, cxt, {}, "", false, false);
             return false;
         }
 
@@ -326,6 +326,7 @@ bool JsonValidator<Json>::validate_node(
                         utils::error(
                             message,
                             cxt,
+                            {},
                             "Check the element against the allowed array element schemas.",
                             false,
                             false
@@ -345,7 +346,7 @@ bool JsonValidator<Json>::validate_node(
         default:
             error_path = path;
             if (report_error) {
-                utils::error("got an unknown type '" + std::string(schema.type_name()) + "'.", cxt, "", false, false);
+                utils::error("got an unknown type '" + std::string(schema.type_name()) + "'.", cxt, {}, "", false, false);
             }
             return false;
     }
@@ -366,6 +367,7 @@ type_error:
             " at: " +
             format_json_path(path),
             cxt,
+            {},
             "",
             false,
             false

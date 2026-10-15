@@ -6,13 +6,7 @@
 
 namespace utils {
 
-void error(
-    std::string prompt,
-    CompilerCxt& cxt,
-    std::string note_info,
-    bool is_warning,
-    bool fatal
-) {
+void error(std::string prompt, CompilerCxt& cxt, Location* loc, std::string note_info, bool is_warning, bool fatal) {
     if (!cxt.show_warnings && is_warning) return;
 
     if (is_warning) {
@@ -31,12 +25,19 @@ void error(
 
     if (cxt.current_file && !cxt.current_file->empty()) {
         std::cerr << ansiColors::reset
-             << " in file '"
-             << ansiColors::bright_cyan
-             << ansiColors::underline
-             << cxt.current_file->string()
-             << ansiColors::reset
-             << "'";
+            << " in file '"
+            << ansiColors::bright_cyan
+            << ansiColors::underline
+            << cxt.current_file->string();
+
+            if (loc) {
+                std::cerr << ":"
+                << loc->line
+                << ":"
+                << loc->column;
+            }        
+            
+        std::cerr << ansiColors::reset << "'";
     }
 
     std::cerr << ansiColors::reset
@@ -57,7 +58,9 @@ void error(
     }
 }
 
-std::filesystem::path& validate_path(const std::filesystem::path& path, CompilerCxt& cxt) {
+
+std::filesystem::path &validate_path(const std::filesystem::path &path, CompilerCxt &cxt)
+{
     if (!std::filesystem::exists(path)) {
         utils::error("path does not exist: " + path.string(), cxt);
     }

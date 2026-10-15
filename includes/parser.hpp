@@ -156,7 +156,7 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    void repeat(StmtMatch &result, TokenRule& repeat_token, bool use_separator, std::function<bool(const Token &)> separator_func);
+    void repeat(StmtMatch &result, TokenRule &repeat_token, bool use_separator, TokenRule *stop_token, std::function<bool(const Token &)> separator_func);
 
     Parser::StmtMatch try_all_statements(std::vector<Parser::Rule> &rules, bool error_enabled = 1);
 
