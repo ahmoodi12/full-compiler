@@ -37,7 +37,7 @@ std::vector<Token> Lexer::run(const std::string& input) {
     size_t pos = 0;
     const size_t input_size = input.size();
 
-    Location loc;
+    ErrorLocation loc;
     loc.file = cxt.current_file;
 
     int total_lines = std::count(input.begin(), input.end(), '\n') + 1;

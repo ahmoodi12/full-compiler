@@ -8,7 +8,7 @@ class CompilerCxt;
 
 namespace utils {
 
-void error(std::string prompt, CompilerCxt &cxt, Location *loc = nullptr, std::string note_info = "", bool is_warning = false, bool fatal = true);
+void error(std::string prompt, CompilerCxt &cxt, ErrorLocation *loc = nullptr, std::string note_info = "", bool is_warning = false, bool fatal = true);
 
 std::filesystem::path &validate_path(const std::filesystem::path &path, CompilerCxt &cxt);
 std::filesystem::path get_path(std::string filename, CompilerCxt& cxt);

@@ -6,7 +6,7 @@
 
 namespace utils {
 
-void error(std::string prompt, CompilerCxt& cxt, Location* loc, std::string note_info, bool is_warning, bool fatal) {
+void error(std::string prompt, CompilerCxt& cxt, ErrorLocation* loc, std::string note_info, bool is_warning, bool fatal) {
     if (!cxt.show_warnings && is_warning) return;
 
     if (is_warning) {
