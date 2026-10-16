@@ -5,7 +5,7 @@
 #include "utils.hpp"
 #include "compiler_cxt.hpp"
 #include "ansi_colors.hpp"
-#include "error_loc.hpp"
+#include "error_info.hpp"
 
 Lexer::Lexer(
     CompilerCxt& cxt,

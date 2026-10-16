@@ -9,7 +9,7 @@ bool PrattParser::has(uint32_t mask, TypeMask t) {
     return mask & (uint32_t)t;
 }
 
-std::pair<PrattParser::Rule*, PrattParser::ParseError> PrattParser::find_rule(const Token& t) {
+std::pair<PrattParser::Rule*, ErrorInfo> PrattParser::find_rule(const Token& t) {
     auto it = by_id.find(t.id);
     if (it == by_id.end()) {
         return {nullptr, {"unknown token rule: '" + t.label + "'", t.loc}};
@@ -145,6 +145,7 @@ PrattParser::ExprResult PrattParser::parse_atom() {
     return {.error = {"invalid atom: " + tok.label, tok.loc}};
 }
 
+// TODO: add support for postfix operators
 PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
     if (eof(this)) return {};
     ExprResult left_expr = parse_atom();

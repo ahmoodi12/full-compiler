@@ -2,7 +2,7 @@
 
 #include "combined_include.hpp"
 #include "compiler_cxt.hpp"
-#include "error_loc.hpp"
+#include "error_info.hpp"
 
 class CompilerCxt;
 

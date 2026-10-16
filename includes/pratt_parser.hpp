@@ -6,7 +6,7 @@
 #include "token.hpp"
 #include "json.hpp"
 #include "lexer.hpp"
-#include "error_loc.hpp"
+#include "error_info.hpp"
 
 #include <unordered_map>
 #include <vector>
@@ -32,15 +32,9 @@ public:
         uint16_t rbp = 0;
     };
 
-    struct ParseError {
-        std::string message;
-        Location loc = {nullptr, -1, -1};
-        std::string context;
-    };
-
     struct ExprResult {
         ASTNode node;
-        ParseError error;
+        ErrorInfo error;
     };
 
     const std::unordered_map<std::string, TypeMask> type_map = {
@@ -80,6 +74,6 @@ public:
 private:
     static bool has(uint32_t mask, TypeMask t);
 
-    std::pair<PrattParser::Rule*,PrattParser::ParseError> find_rule(const Token & t);
+    std::pair<PrattParser::Rule*, ErrorInfo> find_rule(const Token & t);
 
 };

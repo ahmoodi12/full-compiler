@@ -193,7 +193,7 @@ Parser::StmtMatch Parser::try_all_statements(std::vector<Parser::Rule>& rules, b
     } else if (longest_match_i > -1) {
         StmtMatch& longest_match = matches[longest_match_i];
         if (error_enabled){
-            utils::error(longest_match.error.message, cxt, &longest_match.error.loc, longest_match.error.context);
+            utils::error(longest_match.error.message, cxt, &longest_match.error.loc);
         }
         return std::move(longest_match);
     }

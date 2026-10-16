@@ -2,7 +2,7 @@
 
 #include "combined_include.hpp"
 #include "utils.hpp"
-#include "error_loc.hpp"
+#include "error_info.hpp"
 
 struct Token {
     int32_t id = -1;
