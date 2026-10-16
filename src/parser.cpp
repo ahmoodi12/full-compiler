@@ -120,28 +120,33 @@ Parser::Parser(
     cxt.current_file = old;
 }
 
-void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separator, std::function<bool(const Token&)> separator_func) {
+void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separator, TokenRule* stop_token, std::function<bool(const Token&)> separator_func) {
     result.valid = false;
     bool got_separator = false;
-    while (!eof(this)) {          
-        match_token(result, repeat_token, peek(this));
-                
+    while (!eof(this)) {       
         // if the main repeated token stops matching that means we should've reached the end of the repetition.
+        if (stop_token) {
+            match_token(result, *stop_token, peek(this));
+
+            if (result.valid) {
+                return;
+            }
+        }
+
+        match_token(result, repeat_token, peek(this));
+
         if (!result.valid) {
             if (got_separator) {
                 result.error.message = "expected a '" + repeat_token.label + "' after the separator but got a '" + peek(this).label + "'";
-                result.error.pos = pos;
-                return;
+                result.error.loc = tokens->at(pos).loc;
             }
-            result.valid = true;
-            result.error = {};
-            return;  
+            return;
         }
 
         if (use_separator) {
             if (eof(this)) {
                 result.error.message = "expected a separator but the file ended.";
-                result.error.pos = pos;
+                result.error.loc = tokens->back().loc;
                 return;
             }
             
@@ -154,6 +159,7 @@ void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separat
             got_separator = true;
         }
     }
+
 }
 
 Parser::StmtMatch Parser::try_all_statements(std::vector<Parser::Rule>& rules, bool error_enabled) {
@@ -187,7 +193,7 @@ Parser::StmtMatch Parser::try_all_statements(std::vector<Parser::Rule>& rules, b
     } else if (longest_match_i > -1) {
         StmtMatch& longest_match = matches[longest_match_i];
         if (error_enabled){
-            utils::error(longest_match.error.message, cxt, longest_match.error.context);
+            utils::error(longest_match.error.message, cxt, &longest_match.error.loc);
         }
         return std::move(longest_match);
     }
@@ -227,7 +233,7 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
     } else if (exp_token.id != -1) {
         if (token.id != exp_token.id) {
             result.error.message = "expected a '" + exp_token.label + "', got a '" + token.label + "'";
-            result.error.pos = pos;
+            result.error.loc = token.loc;
             goto failed; 
         }
         
@@ -240,7 +246,7 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
     } else {
         if (!exp_token.is_var) {
             result.error.message = "unknown token '" + exp_token.label + "' from expected pattern."; 
-            result.error.pos = pos;
+            result.error.loc = token.loc;
             goto failed;
         }
         
@@ -248,7 +254,6 @@ void Parser::match_token(StmtMatch& result, TokenRule& exp_token, Token& token) 
 
         if (!match.valid) {
             result.error = match.error;
-            result.error.pos = pos;
             goto failed;
         }
 
@@ -274,13 +279,18 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
         auto& exp_token = rule.pattern[exp_tok_i];
         if (eof(this)) {
             result.error.message = "expected '" + exp_token.label + "' got the file ended.";
-            result.error.pos = pos;
+            result.error.loc = tokens->back().loc;
             goto failed;
         }
         auto& token = peek(this);
 
         if (exp_token.repeat) {
-            repeat(result, exp_token, exp_token.separator != nullptr, 
+            TokenRule* stop_token = nullptr;
+            if (exp_tok_i + 1 < rule.pattern.size()) {
+                stop_token = &rule.pattern[++exp_tok_i];
+            }
+
+            repeat(result, exp_token, exp_token.separator != nullptr, stop_token,
                 [&exp_token](const Token& token){
                     // no seperator or valid seperator
                     return exp_token.separator == nullptr || exp_token.separator->label == token.label;
@@ -361,7 +371,7 @@ std::vector<ASTNode> Parser::run(std::vector<Token>* input) {
     }
 
     if (pos < tokens->size()) {
-        utils::error("unknown grammar formation", cxt);
+        utils::error("this is a place the parser shouldn't have got to, even i don't know what you did.", cxt);
     }
     return output;
 }

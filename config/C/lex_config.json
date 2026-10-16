@@ -1,6 +1,7 @@
 {
   "tokens": {
-    "17": ["whitespace", "[ \\t\\n\\r]+", true],
+    "16": ["newline", "\\n", true],
+    "17": ["whitespace", "[ \\t\\r]+", true],
     "18": ["multi line comment", "\\/\\*([\\s\\S]*?)\\*\\/", true],
     "19": ["single line comment", "\\/\\/[^\\n]*", true],
     "20": ["if", "if", false],

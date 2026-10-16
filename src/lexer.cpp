@@ -5,6 +5,7 @@
 #include "utils.hpp"
 #include "compiler_cxt.hpp"
 #include "ansi_colors.hpp"
+#include "error_info.hpp"
 
 Lexer::Lexer(
     CompilerCxt& cxt,
@@ -34,11 +35,25 @@ std::vector<Token> Lexer::run(const std::string& input) {
     output.reserve(input.size() / 2);
 
     size_t pos = 0;
-    const size_t n = input.size();
+    const size_t input_size = input.size();
 
-    while (pos < n) {
+    ErrorLocation loc;
+    loc.file = cxt.current_file;
 
-        std::string_view remaining(input.data() + pos, n - pos);
+    int total_lines = std::count(input.begin(), input.end(), '\n') + 1;
+    int newlines_left = total_lines;
+
+    while (pos < input_size) {
+        int old_newlines_left = newlines_left;
+
+        std::string_view remaining(input.data() + pos, input_size - pos);
+
+        newlines_left = std::count(remaining.begin(), remaining.end(), '\n');
+        loc.line = total_lines - newlines_left;
+
+        if (newlines_left != old_newlines_left) {
+            loc.column = 0;
+        }
 
         size_t best_len = 0;
         const Rule* best_rule = nullptr;
@@ -68,9 +83,9 @@ std::vector<Token> Lexer::run(const std::string& input) {
 
         if (!best_rule) {
             utils::error(
-                "wasn't able to lex at position " + std::to_string(pos) +
-                ", invalid or unrecognized token.",
+                "invalid or unrecognized token.",
                 cxt,
+                &loc,
                 "",
                 false,
                 false
@@ -83,11 +98,13 @@ std::vector<Token> Lexer::run(const std::string& input) {
                 best_rule->id,
                 best_rule->label,
                 best_match,
+                loc,
                 best_rule->skip
             });
         }
 
         pos += best_len;
+        loc.column += best_len;
     }
 
     return output;
@@ -101,22 +118,61 @@ Lexer::Rule* Lexer::find_lex_rule(std::string key) {
     return nullptr;
 }
 
-void Lexer::print_output(std::vector<Token> output) const {
+void Lexer::print_output(const std::vector<Token>& output) const {
     using namespace ansiColors;
 
-    std::cout << bold << cyan
-              << "\n===== LEXER OUTPUT =====\n"
-              << reset;
+    // Group tokens by file.
+    std::map<std::string, std::vector<const Token*>> grouped;
 
     for (const auto& t : output) {
-        std::cout
-            << bright_yellow << std::setw(4) << t.id << reset << "  "
-            << bright_green  << std::setw(12) << t.label << reset << "  "
-            << bright_white  << utils::visualize_whitespaces(t.data) << reset
-            << "\n";
+        std::string file = t.loc.file
+            ? t.loc.file->string()
+            : "<unknown>";
+
+        grouped[file].push_back(&t);
     }
 
     std::cout << bold << cyan
-              << "========================\n"
+              << "\n========== LEXER OUTPUT ==========\n"
+              << reset;
+
+    for (const auto& [file, tokens] : grouped) {
+        std::cout << "\n"
+                  << bold << bright_cyan
+                  << "File: " << file << "\n"
+                  << reset;
+
+        std::cout << bold
+                  << std::left
+                  << std::setw(6)  << "ID"
+                  << std::setw(14) << "LABEL"
+                  << std::setw(10) << "LINE"
+                  << std::setw(10) << "COLUMN"
+                  << "DATA\n"
+                  << reset;
+
+        std::cout << "-----------------------------------------------\n";
+
+        for (const Token* t : tokens) {
+            std::cout
+                << bright_yellow << std::left << std::setw(6)
+                << t->id << reset
+
+                << bright_green << std::left << std::setw(14)
+                << t->label << reset
+
+                << bright_blue << std::left << std::setw(10)
+                << t->loc.line << reset
+
+                << orange << std::left << std::setw(10)
+                << t->loc.column << reset
+
+                << magenta << utils::visualize_whitespaces(t->data)
+                << "\n";
+        }
+    }
+
+    std::cout << "\n" << bold << cyan
+              << "==================================\n"
               << reset;
 }

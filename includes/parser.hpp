@@ -5,6 +5,7 @@
 #include "ast.hpp"
 #include "json_validator.hpp"
 #include "lexer.hpp"
+#include "error_info.hpp"
 
 class CompilerCxt;
 
@@ -115,7 +116,7 @@ public:
         std::vector<std::unique_ptr<ASTNode>> sub_stmts;
         std::unordered_map<std::string, std::unique_ptr<ASTNode>> captures;
 
-        PrattParser::ParseError error;
+        ErrorInfo error;
 
         std::string statement;
 
@@ -156,7 +157,7 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    void repeat(StmtMatch &result, TokenRule& repeat_token, bool use_separator, std::function<bool(const Token &)> separator_func);
+    void repeat(StmtMatch &result, TokenRule &repeat_token, bool use_separator, TokenRule *stop_token, std::function<bool(const Token &)> separator_func);
 
     Parser::StmtMatch try_all_statements(std::vector<Parser::Rule> &rules, bool error_enabled = 1);
 

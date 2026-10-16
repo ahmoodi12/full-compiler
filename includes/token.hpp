@@ -2,11 +2,13 @@
 
 #include "combined_include.hpp"
 #include "utils.hpp"
+#include "error_info.hpp"
 
 struct Token {
     int32_t id = -1;
     std::string label;
     std::string data;
+    ErrorLocation loc;
     bool skip;
 };
 
