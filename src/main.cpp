@@ -54,6 +54,14 @@ void parse_args(CompilerCxt& cxt, int argc, char **argv) {
         exit(0);
     }
 
+    if (args.count("warn")){
+        cxt.show_warnings = args["warn"].as<bool>();
+    }
+
+    if (args.count("trace")){
+        cxt.debug_mode = args["trace"].as<bool>();
+    }
+
     cxt.program_files.push_back(utils::get_path(args["program"].as<std::string>(), cxt));
     cxt.program_file = &cxt.program_files.front();
 
@@ -82,10 +90,15 @@ int main(int argc, char **argv)
 
     std::vector<Token> lex_output = lexer.run(utils::read_file(cxt.program_files.front(), cxt));
 
-    lexer.print_output(lex_output);
+    if (cxt.debug_mode) {
+        lexer.print_output(lex_output);
+    }
 
     auto parse_output = parser.run(&lex_output);
 
-    ASTPrinter().print(&parse_output);
-        return 0;
+    if (cxt.debug_mode) {
+        ASTPrinter().print(&parse_output);
+    }
+
+    return 0;
 }

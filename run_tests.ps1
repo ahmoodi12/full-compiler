@@ -1,5 +1,5 @@
 
-$Compiler = ".\cm.exe"
+$Compiler = ".\build\main\compiler_main.exe"
 $TestDir = ".\tests"
 $Config = "config/C"
 

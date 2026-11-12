@@ -1,4 +1,4 @@
-int main() {
+int main(int a, int b, int c) {
     /*
     int x = 0;
     if (x < 10) {

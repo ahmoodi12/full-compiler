@@ -123,12 +123,37 @@ Parser::Parser(
 void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separator, TokenRule* stop_token, TokenRule* separator_token) {
     result.valid = false;
     bool got_separator = false;
-    while (!eof(this)) {       
+    goto start;
+    while (!eof(this)) {   
+        if (use_separator) {
+            if (eof(this)) {
+                result.error.message = "expected a '" + separator_token->label + "' or '" + stop_token->label + "' but the file ended.";
+                result.error.loc = tokens->back().loc;
+                return;
+            }
+            
+            auto& token = peek(this);
+            if (!separator_token->label.empty() && token.label != separator_token->label) {
+                result.error.message = "expected a '" + separator_token->label + "' or '" + stop_token->label + "' but got a '" + token.label + "'";
+                result.error.loc = token.loc;
+            } else {           
+                consume(this);
+                got_separator = true;
+            }
+        }
+        
+        start:
         if (stop_token) {
             StmtMatch stop_match;
             match_token(stop_match, *stop_token, peek(this));
 
             if (stop_match.valid) {
+                if (got_separator) {
+                    result.error.message = "expected a '" + repeat_token.label + "' after the separator but got a '" + peek(this).label + "'";
+                    result.error.loc = tokens->at(pos).loc;
+                    result.valid = false;
+                    return;
+                }
                 result.valid = true;
                 result.error = {};
                 return;
@@ -144,23 +169,7 @@ void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separat
             }
             return;
         }
-
-        if (use_separator) {
-            if (eof(this)) {
-                result.error.message = "expected a '" + separator_token->label + "' but the file ended.";
-                result.error.loc = tokens->back().loc;
-                return;
-            }
-            
-            auto& token = peek(this);
-            if (!separator_token->label.empty() && token.label != separator_token->label) {
-                result.error.message = "expected a '" + separator_token->label + "' but got a '" + token.label + "'";
-                result.error.loc = token.loc;
-                return;
-            }            
-            consume(this);
-            got_separator = true;
-        }
+        got_separator = false;
     }
 
 }

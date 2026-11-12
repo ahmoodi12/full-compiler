@@ -8,7 +8,9 @@
       "program": "${workspaceFolder}/build/main/compiler_main",
       "args": [
         "${workspaceFolder}/tests/grammar/02_control_flow.c",
-        "${workspaceFolder}/config/C/"
+        "${workspaceFolder}/config/C/",
+        "-t",
+        "-w"
       ],
       "cwd": "${workspaceFolder}",
       "preLaunchTask": "build main",

@@ -1,25 +1,30 @@
-# Parser Documentation
 
-## Overview
+# Grammar Parser
 
-The parser is a grammar-driven parser built on top of the lexer. Grammar rules are described using JSON and compiled into parser rules at startup.
+The grammar parser matches a token stream against rules loaded from `parse_config.json`.
 
-The parser has three main responsibilities:
+It uses the lexer to resolve token labels, delegates expression parsing to the Pratt parser, and converts successful statement matches into AST nodes.
 
-1. Match grammar rules against the token stream.
-2. Parse expressions through the Pratt parser.
-3. Convert successful matches into AST nodes.
+Implementation:
 
-The parser is intentionally generic: language-specific constructs should primarily be expressed in the grammar rather than implemented as special cases in C++.
+- `src/parser.cpp`
+- `includes/parser.hpp`
+- `includes/ast.hpp`
 
-## Grammar Structure
+## Configuration layout
 
-Grammar definitions are divided into:
+The parser configuration contains two major sections:
 
-* `statement rules` — rules that can form statements.
-* `variables` — reusable grammar rules that can be referenced by other rules.
+- `expr definition`: Defines expression token roles and binding powers.
+- `grammar`: Contains reusable variables and statement rules.
 
-For example:
+The included C-like language configuration is located at:
+
+```text
+config/C/parse_config.json
+```
+
+A simplified example:
 
 ```json
 {
@@ -32,40 +37,54 @@ For example:
           ["}"]
         ]
       }
+    },
+    "statement rules": {
+      "return_stmt": {
+        "pattern": [
+          ["return"],
+          {"optional": ["__expr__"]},
+          [";"]
+        ]
+      }
     }
   }
 }
 ```
 
-A grammar rule consists of a `pattern`, which is a sequence of pattern elements.
+Each grammar rule contains a `pattern`, which is an ordered list of pattern elements.
 
-## Pattern Elements
+## Pattern elements
 
 ### Token sequences
 
-An array represents a sequence of tokens:
+An array represents a sequence of elements that must match in order.
 
 ```json
-["if", "(", "__expr__", ")"]
+["if", "(", {"condition": "__expr__"}, ")"]
 ```
 
-Each element is matched in order.
+Strings are resolved against lexer rules.
 
 ### Captures
 
-An object represents a captured grammar element:
+An object maps a capture name to the token label or parser construct being matched.
 
 ```json
-{"cond": "__expr__"}
+{"condition": "__expr__"}
 ```
 
-The key is the capture name and the value is the token or grammar construct being matched.
+Captured values are stored in the resulting AST node's `captures` map.
 
-Captured lexer tokens are stored in the resulting `StmtMatch`.
+Captures can contain:
+
+- Lexer tokens.
+- Expressions.
+- Nested statements.
+- Grammar variables.
 
 ### Optional paths
 
-An object containing `optional` creates an alternate path through the grammar:
+An object containing `optional` creates an alternate grammar path.
 
 ```json
 {
@@ -73,66 +92,76 @@ An object containing `optional` creates an alternate path through the grammar:
 }
 ```
 
-The optional path is represented internally as another parser rule whose `parent_i` points to the original rule.
+The parser expands this into another internal rule based on the preceding pattern.
 
-Optional paths are currently restricted according to the `allow_optionals` parameter. Variables do not permit optional paths.
+This allows optional constructs such as:
+
+- Optional initializers.
+- Optional return expressions.
+- Optional else blocks.
+
+The current implementation expects an object containing the `optional` property at that position in the pattern.
 
 ### Repetition
 
-Repetition is the generic mechanism for matching a grammar construct zero or more times:
+A repetition object uses the following format:
 
 ```json
 {
-  "repeat": "declaration"
+  "repeat": "#func_arg",
+  "separator": ","
 }
 ```
 
-A separator can optionally be specified:
+Fields:
 
-```json
-{
-  "repeat": "declaration",
-  "seperator": ","
-}
-```
+- `repeat`: The token, variable, or parser construct to match repeatedly.
+- `separator`: Optional lexer token consumed between repeated items.
 
-This allows constructs such as:
+The correct spelling is `separator`, not `seperator`.
+
+**Important implementation limitation:** The current `repeat()` implementation consumes a configured separator after each successful item, including the final item before a following stop token. Consequently, separator-based repetition currently behaves as though the final item also requires a separator.
+
+Do not assume conventional comma-separated list behavior until this implementation is corrected and covered by tests.
+
+Repetition without separators also has edge cases involving failed matches and AST accumulation.
+
+### Reusable variables
+
+Rules under `grammar.variables` can be referenced by their names.
+
+Examples:
 
 ```text
-foo(int x, int y, int z)
+#block
+#func_arg
 ```
 
-without requiring a dedicated `__declarations__` parser construct.
+Variable rules are matched separately from top-level statement rules.
 
-The intention is for repetition to replace specialized constructs such as:
+### Special parser constructs
 
-```text
-__exprs__
-__statements__
-__declarations__
-```
+The grammar parser recognizes two special labels.
 
-with one generic mechanism.
+#### `__expr__`
 
-## Parser Meta-Constructs
+Invokes the Pratt expression parser.
 
-Some labels have special meaning to the parser.
+Its resulting AST is stored as a capture when a capture name is provided. Otherwise, it is appended to the expression list of the current statement match.
 
-### `__expr__`
-
-`__expr__` invokes the Pratt parser:
+Example:
 
 ```json
-{"cond": "__expr__"}
+{"value": "__expr__"}
 ```
 
-The resulting expression AST is stored in `StmtMatch::exprs`.
+#### `__stmt__`
 
-### `__stmt__`
+Attempts to match a top-level statement rule.
 
-`__stmt__` represents a generic statement and should invoke statement-rule matching.
+Its resulting AST is stored as a capture or appended to the current match's child statements.
 
-This is particularly useful with repetition:
+Example:
 
 ```json
 {
@@ -140,279 +169,57 @@ This is particularly useful with repetition:
 }
 ```
 
-For example, a block can therefore be represented as:
+Other labels must resolve to lexer tokens or declared grammar variables.
 
-```json
-{
-  "pattern": [
-    ["{"],
-    {"repeat": "__stmt__"},
-    ["}"]
-  ]
-}
-```
+Unknown labels cause a matching failure.
 
-### Deprecated/superseded constructs
+## Matching and rule selection
 
-Earlier versions used specialized constructs such as:
+The parser uses speculative matching.
 
-```text
-__exprs__
-__statements__
-__declarations__
-```
+For each input position, `try_all_statements()` attempts every rule in the selected rule collection.
 
-These do not scale well because every new repeated grammar concept requires another parser-specific construct.
+Each attempt:
 
-They should be replaced by `repeat`.
+1. Records the starting token position.
+2. Attempts to match the rule.
+3. Records how many tokens were consumed.
+4. Restores the original token position.
 
-## Matching
+The parser then selects the valid match consuming the most tokens.
 
-`match_stmt()` performs speculative matching.
+If no rule succeeds, the parser reports the error associated with the longest attempted match.
 
-It records the current token position, attempts to match a rule, and reports the number of tokens consumed:
+When two valid matches consume the same number of tokens, the later match replaces the earlier candidate.
 
-```cpp
-result.size = pos - start_pos;
-```
+## AST construction
 
-The parser then restores the original position:
-
-```cpp
-pos = start_pos;
-```
-
-This allows callers to compare multiple possible rules before committing to one.
-
-A successful caller commits a match with:
-
-```cpp
-pos += match.size;
-```
-
-## Longest Match
-
-`parse_statement()` attempts every statement rule at the current token position.
-
-The parser tracks:
-
-* the longest attempted match;
-* the longest valid match.
-
-The longest valid rule wins.
-
-This allows grammars with overlapping prefixes to be resolved without hardcoding individual statement types into the parser.
-
-Conceptually:
-
-```text
-input
-  │
-  ├── rule A → valid, 3 tokens
-  ├── rule B → valid, 7 tokens
-  └── rule C → invalid, 9 tokens
-             │
-             ↓
-       choose rule B
-```
-
-If no rule is valid, the parser can use the longest attempted match to provide a useful error.
-
-## Repetition Semantics
-
-`repeat` should follow this general model:
-
-```text
-check termination
-      │
-      ├── terminated → success
-      │
-      └── not terminated
-              │
-              ↓
-        match repeated rule
-              │
-        ┌─────┴─────┐
-        │           │
-      fail        success
-        │           │
-      error      consume
-                    │
-                    ↓
-             optional separator
-                    │
-                    ↓
-                repeat
-```
-
-For a separator-based repetition:
-
-```json
-{
-  "repeat": "declaration",
-  "seperator": ","
-}
-```
-
-the intended syntax is:
-
-```text
-declaration
-, declaration
-, declaration
-```
-
-rather than requiring a trailing separator.
-
-Thus:
-
-```text
-foo(int x, int y)
-```
-
-is valid, while:
-
-```text
-foo(int x, int y,)
-```
-
-should not be accepted unless the grammar explicitly gains support for trailing separators.
-
-## AST Construction
-
-`parse_stmt()` converts a successful `StmtMatch` into an `ASTNode`.
+Each successful grammar match becomes an `ASTNode`.
 
 The resulting node contains:
 
-* the grammar rule's statement name;
-* captured tokens;
-* expression children;
-* sub-statement children.
+- The grammar rule name as its token label.
+- Named captures in `ASTNode::captures`.
+- Expression nodes in its children.
+- Nested statement nodes in its children.
 
 For example:
 
 ```text
-assignment
-├── lhs capture
-├── expression
-└── ...
+return_stmt
+└── expression
+    └── addition
+        ├── identifier
+        └── integer_literal
 ```
 
-Repeated statements should be accumulated into `sub_stmts` so that a block such as:
+Captured lexer tokens retain their token IDs, labels, source text, and source locations.
 
-```text
-{
-    foo();
-    bar();
-}
-```
+## Current limitations
 
-produces multiple child AST nodes rather than discarding repeated matches.
+- The parser is still a prototype.
+- Not every grammar shape or repetition case is fully reliable.
+- Separator-based repetition has implementation edge cases.
+- The grammar JSON schema validates structure and types, but token and variable references also require runtime lookup.
 
-## Current Design Goal
-
-The parser should remain mostly grammar-agnostic.
-
-Prefer:
-
-```json
-{
-  "repeat": "some_rule",
-  "seperator": ","
-}
-```
-
-over adding a C++ parser special case such as:
-
-```text
-__some_rules__
-```
-
-The parser's built-in constructs should describe **parser behavior**, not individual language constructs.
-
-The desired architecture is:
-
-```text
-JSON grammar
-     │
-     ↓
-Parser rules
-     │
-     ↓
-generic matching
-     │
-     ├── token
-     ├── variable
-     ├── expression
-     ├── optional
-     └── repeat
-             │
-             ↓
-            AST
-```
-
-## Known Work Remaining
-
-* Complete `parse_statement()`.
-* Integrate `__stmt__` with generic statement matching.
-* Finish `repeat()` accumulation and position handling.
-* Ensure repeated matches become AST sub-statements.
-* Define precise zero-or-more semantics.
-* Decide how repetition determines its termination condition.
-* Rename `seperator` to `separator` if the grammar format is not intended to preserve the existing spelling.
-* Add parser tests for empty and non-empty repetitions.
-* Add tests for separator-based repetition.
-* Add tests for nested repetition and blocks.
-
-
-
-
-
-# Parser Changelog
-
-## Unreleased
-
-### Changed
-
-* Reworked the grammar design around a generic `repeat` construct.
-* Moved away from specialized repeated grammar constructs such as `__exprs__`, `__statements__`, and `__declarations__`.
-* Repetition is now intended to work with arbitrary grammar rules.
-* Added optional separator support to repeated grammar rules.
-* Added the foundation for generic statement repetition through `__stmt__`.
-* Continued using speculative rule matching and longest-valid-match selection for statement parsing.
-
-### Grammar
-
-Repeated constructs can now be expressed as:
-
-```json
-{
-  "repeat": "declaration",
-  "seperator": ","
-}
-```
-
-rather than introducing a dedicated parser construct for declaration lists.
-
-Blocks can similarly use:
-
-```json
-{
-  "repeat": "__stmt__"
-}
-```
-
-### In Progress
-
-* Finish integration of `repeat()` into `match_stmt()`.
-* Finish generic `__stmt__` handling.
-* Complete `parse_statement()`.
-* Preserve repeated matches in the resulting AST.
-* Establish final repetition termination and separator semantics.
-* Add parser regression tests.
-
-### Design Direction
-
-The parser is being kept deliberately generic.
-
-New grammar concepts should preferably be expressible through combinations of existing primitives rather than requiring new hardcoded `__something__` constructs in the C++ parser.
+When modifying grammar behavior, use `src/parser.cpp` and `config/C/parse_config.json` as the primary references.
