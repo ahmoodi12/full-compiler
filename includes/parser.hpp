@@ -16,14 +16,13 @@ class Parser {
         "",
         T::Object,
         {
-            {"prefix binding power", T::Int},
-
             {"expr definition", T::Object, {
                 {".+", T::Object, {
                     {"([rl]bp|precedence)", T::Int, {}, true},
                     {"associativity", T::String, {}, true},
+                    {"(postfix bp|prefix bp)", T::Int, {}, true},
                     {"types", T::Array, {
-                        {"(value|prefix|infix|expr terminator|opening wrapper|closing wrapper|ternary separator|ternary|argument separator)", T::String}
+                        {"(value|prefix|infix|postfix|opening wrapper|closing wrapper|ternary separator|ternary|argument separator|expr terminator)", T::String}
                     }}
                 }}
             }},
@@ -157,7 +156,7 @@ public:
         Lexer &lexer,
         std::vector<PrattParser::Rule> pratt_rules = {});
 
-    void repeat(StmtMatch &result, TokenRule &repeat_token, bool use_separator, TokenRule *stop_token, std::function<bool(const Token &)> separator_func);
+    void repeat(StmtMatch &result, TokenRule &repeat_token, bool use_separator, TokenRule *stop_token, TokenRule *separator_token);
 
     Parser::StmtMatch try_all_statements(std::vector<Parser::Rule> &rules, bool error_enabled = 1);
 

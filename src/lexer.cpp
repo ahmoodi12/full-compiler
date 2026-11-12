@@ -85,10 +85,7 @@ std::vector<Token> Lexer::run(const std::string& input) {
             utils::error(
                 "invalid or unrecognized token.",
                 cxt,
-                &loc,
-                "",
-                false,
-                false
+                &loc
             );
             break;
         }

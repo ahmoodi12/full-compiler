@@ -18,7 +18,7 @@ std::pair<PrattParser::Rule*, ErrorInfo> PrattParser::find_rule(const Token& t) 
 }
 
 bool PrattParser::valid_expr(PrattParser::ExprResult& expr) {
-    return expr.error.loc.line == -1 || expr.error.message.empty();
+    return expr.error.message.empty();
 }
 
 PrattParser::PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos)
@@ -39,8 +39,6 @@ void PrattParser::load_json(ordered_json& data, Lexer& lexer) {
     auto& expr_data = data.at("expr definition");
 
     rules.reserve(expr_data.size());
-
-    prefix_bp = data.at("prefix binding power");
 
     for (auto& [key, value] : expr_data.items()) {
         Rule rule;
@@ -65,7 +63,7 @@ void PrattParser::load_json(ordered_json& data, Lexer& lexer) {
         }
 
         // precedence
-        if (has(rule.type_mask, Infix)) {
+        if (has(rule.type_mask, Infix) || has(rule.type_mask, Ternary)) {
             if (value.contains("lbp") && value.contains("rbp")) {
                 rule.lbp = value["lbp"];
                 rule.rbp = value["rbp"];
@@ -73,12 +71,19 @@ void PrattParser::load_json(ordered_json& data, Lexer& lexer) {
                 uint16_t p = value["precedence"];
                 std::string assoc = value.value("associativity", "left");
 
-                rule.lbp = p;
-                rule.rbp = (assoc == "right") ? p - 1 : p + 1;
+                rule.lbp = (assoc == "right") ? p + 1 : p;
+                rule.rbp = (assoc == "right") ? p : p + 1;
             } else {
                 utils::error("infix missing precedence or associativity: " + key, cxt);
             }
 
+        }
+
+        if (has(rule.type_mask, Prefix) && value.contains("prefix bp")) {
+            rule.rbp = value["prefix bp"];
+        }
+        if (has(rule.type_mask, Postfix) && value.contains("postfix bp")) {
+            rule.lbp = value["postfix bp"];
         }
 
         rules.push_back(rule);
@@ -108,7 +113,7 @@ PrattParser::ExprResult PrattParser::parse_atom() {
     if (has(rule->type_mask, Prefix)) {
         ASTNode node(tok);
 
-        ExprResult right = parse_expr(prefix_bp);
+        ExprResult right = parse_expr(rule->rbp);
 
         if (!valid_expr(right)) {
             return right;
@@ -145,8 +150,13 @@ PrattParser::ExprResult PrattParser::parse_atom() {
     return {.error = {"invalid atom: " + tok.label, tok.loc}};
 }
 
-// TODO: add support for postfix operators
-PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
+
+/* TODO: refractor this to be more generic and less hardcoded for function calls and ternary operators.
+ have , infix using lbp and rbp, wrappers like parentheses and brackets, they get attached to the left node easily representing function calls,
+and a representation of infinite precedence for representing prefix, postfix and ternary operators with infix.
+i need to also handle if two infinite precedence operators are fighting for the same node. most likely just give one of them hardcoded priority.
+*/
+ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
     if (eof(this)) return {};
     ExprResult left_expr = parse_atom();
 
@@ -159,24 +169,26 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
         Rule* rule = rule_pair.first;
 
         if (!rule) return {.error = rule_pair.second};
+        if (has(rule->type_mask, ExprTerminator)) {
+            return {std::move(left)};
+        }
 
         if (has(rule->type_mask, OpeningWrapper)) {
 
-            consume(this); // '('
+            consume(this);
 
-            ASTNode call;
+            ASTNode wrapper_contents;
 
-            call.token.label = "func_call";
-
-            add_child(call, left);
+            add_child(wrapper_contents, left);
 
             if (eof(this)) {
-                return {.error = {"unclosed function call", tokens->back().loc}};
+                return {.error = {"unclosed wrapper '" + rule->label + "'", tokens->back().loc}};
             }
 
             auto rule_pair = find_rule(peek(this));
             if (!rule_pair.first) return {.error = rule_pair.second};
-
+            
+            bool is_call = false;
             if (!has(rule_pair.first->type_mask, ClosingWrapper)) {
                 while (true) {
                     ExprResult arg_expr = parse_expr(0);
@@ -184,17 +196,16 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
                     if (!valid_expr(arg_expr)) return arg_expr;
                     ASTNode& arg = arg_expr.node;
 
-                    add_child(call, arg);
+                    add_child(wrapper_contents, arg);
 
                     if (eof(this)) {
-                        return {.error = {"unclosed function call", tokens->back().loc}};
+                        return {.error = {"unclosed wrapper '" + rule->label + "'", tokens->back().loc}};
                     }
 
                     auto next_pair = find_rule(peek(this));
                     Rule* next = next_pair.first;
                     if (!next) return {.error = next_pair.second};
 
-                    // end call
                     if (has(next->type_mask, ClosingWrapper)) {
                         consume(this);
                         break;
@@ -203,17 +214,19 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
                     // comma / separator
                     if (has(next->type_mask, ArgSep)) {
                         consume(this);
+                        is_call = true;
                         continue;
                     }
 
                     return {.error = {"invalid function argument separator", next_pair.second.loc}};
                 }
             } else {
-                // empty call, consume ')'
                 consume(this);
             }
 
-            left = std::move(call);
+            if (is_call) wrapper_contents.token.label = "func_call";
+            else wrapper_contents.token.label = "wrapper_contents";
+            left = std::move(wrapper_contents);
             continue;
         }
 
@@ -240,10 +253,10 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
             Token stmt_sep = consume(this);
 
             auto seperator_pair = find_rule(stmt_sep);
-            if (!seperator_pair.first) return {.error = {"ternary separator is invalid.", stmt_sep.loc}};
+            if (!seperator_pair.first) return {.error = {"expected ternary separator, got '" + stmt_sep.label + "'.", stmt_sep.loc}};
 
             if (!has(seperator_pair.first->type_mask, TernarySeperator)) {
-                return {.error = {"ternary separator is invalid.", stmt_sep.loc}};
+                return {.error = {"expected ternary separator, got '" + stmt_sep.label + "'.", stmt_sep.loc}};
             }
             
             ExprResult false_stmt_expr = parse_expr(0);
@@ -258,7 +271,7 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
             continue;
         }
         
-        if (!has(rule->type_mask, Infix) || rule->lbp <= rbp) break;
+        if (!has(rule->type_mask, Postfix) && (!has(rule->type_mask, Infix) || rule->lbp <= rbp)) break;
 
         Token op = consume(this);
 
@@ -269,10 +282,8 @@ PrattParser::ExprResult PrattParser::parse_expr(uint16_t rbp) {
 
         left = std::move(node);
 
-        if (has(rule->type_mask, Postfix)) {
-            continue;
-        }
-
+        if (has(rule->type_mask, Postfix)) break;
+        
         ExprResult right_expr = parse_expr(rule->rbp);
 
         if (!valid_expr(right_expr)) return right_expr;

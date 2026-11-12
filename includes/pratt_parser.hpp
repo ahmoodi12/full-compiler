@@ -23,7 +23,8 @@ public:
         OpeningWrapper = 1 << 5,
         ClosingWrapper = 1 << 6,
         ArgSep = 1 << 7,
-        TernarySeperator = 1 << 8
+        TernarySeperator = 1 << 8,
+        ExprTerminator = 1 << 9
     };
 
     struct Rule : RuleBase {
@@ -47,6 +48,7 @@ public:
         {"closing wrapper", ClosingWrapper},
         {"argument separator", ArgSep},
         {"ternary separator", TernarySeperator},
+        {"expr terminator", ExprTerminator}
     };
 
 
@@ -58,8 +60,6 @@ public:
 
     std::vector<Token>* tokens = nullptr;
     int64_t& pos;
-
-    uint16_t prefix_bp = 100;
 
     PrattParser(CompilerCxt& cxt, std::vector<Rule> rules, int64_t& pos);
 

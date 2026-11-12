@@ -87,5 +87,5 @@ int main(int argc, char **argv)
     auto parse_output = parser.run(&lex_output);
 
     ASTPrinter().print(&parse_output);
-    return 0;
+        return 0;
 }

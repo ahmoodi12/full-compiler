@@ -120,15 +120,17 @@ Parser::Parser(
     cxt.current_file = old;
 }
 
-void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separator, TokenRule* stop_token, std::function<bool(const Token&)> separator_func) {
+void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separator, TokenRule* stop_token, TokenRule* separator_token) {
     result.valid = false;
     bool got_separator = false;
     while (!eof(this)) {       
-        // if the main repeated token stops matching that means we should've reached the end of the repetition.
         if (stop_token) {
-            match_token(result, *stop_token, peek(this));
+            StmtMatch stop_match;
+            match_token(stop_match, *stop_token, peek(this));
 
-            if (result.valid) {
+            if (stop_match.valid) {
+                result.valid = true;
+                result.error = {};
                 return;
             }
         }
@@ -145,14 +147,15 @@ void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separat
 
         if (use_separator) {
             if (eof(this)) {
-                result.error.message = "expected a separator but the file ended.";
+                result.error.message = "expected a '" + separator_token->label + "' but the file ended.";
                 result.error.loc = tokens->back().loc;
                 return;
             }
             
             auto& token = peek(this);
-            if (!separator_func(token)) { // if the seperator stops matching that means we should've reached the end of the repetition.
-                result.valid = true;
+            if (!separator_token->label.empty() && token.label != separator_token->label) {
+                result.error.message = "expected a '" + separator_token->label + "' but got a '" + token.label + "'";
+                result.error.loc = token.loc;
                 return;
             }            
             consume(this);
@@ -291,10 +294,7 @@ Parser::StmtMatch Parser::match_stmt(Rule& rule) {
             }
 
             repeat(result, exp_token, exp_token.separator != nullptr, stop_token,
-                [&exp_token](const Token& token){
-                    // no seperator or valid seperator
-                    return exp_token.separator == nullptr || exp_token.separator->label == token.label;
-                });
+                exp_token.separator ? exp_token.separator.get() : nullptr);
 
             if (!result.valid) {
                 goto failed;
