@@ -1,127 +1,299 @@
 {
   "expr definition": {
     "(": {
-      "types": ["opening wrapper"]
+      "types": [
+        "opening wrapper"
+      ]
     },
-
+    "[": {
+      "types": [
+        "opening wrapper"
+      ]
+    },
     ")": {
-      "types": ["closing wrapper"]
+      "types": [
+        "closing wrapper"
+      ]
     },
-
+    "]": {
+      "types": [
+        "closing wrapper"
+      ]
+    },
     "identifier": {
-      "types": ["value"]
+      "types": [
+        "value"
+      ]
     },
-
     "int_literal": {
-      "types": ["value"]
+      "types": [
+        "value"
+      ]
     },
-
     "float_literal": {
-      "types": ["value"]
+      "types": [
+        "value"
+      ]
     },
-
     "string_literal": {
-      "types": ["value"]
+      "types": [
+        "value"
+      ]
     },
-
     "char_literal": {
-      "types": ["value"]
+      "types": [
+        "value"
+      ]
     },
-
-    "++": {
-      "types": ["prefix", "postfix"],
-      "prefix bp": 100,
-      "postfix bp": 100
-    },
-    
-    "--": {
-      "types": ["prefix", "postfix"],
-      "prefix bp": 100,
-      "postfix bp": 100
-    },
-
-    "+": {
-      "lbp": 50,
-      "rbp": 51,
-      "types": ["prefix", "infix"]
-    },
-
-    "-": {
-      "lbp": 50,
-      "rbp": 51,
-      "types": ["prefix", "infix"]
-    },
-
-    "*": {
-      "lbp": 60,
-      "rbp": 61,
-      "types": ["infix"]
-    },
-
-    "/": {
-      "lbp": 60,
-      "rbp": 61,
-      "types": ["infix"]
-    },
-
-    "%": {
-      "lbp": 60,
-      "rbp": 61,
-      "types": ["infix"]
-    },
-
-    "<": {
-      "lbp": 40,
-      "rbp": 41,
-      "types": ["infix"]
-    },
-
-    "<=": {
-      "lbp": 40,
-      "rbp": 41,
-      "types": ["infix"]
-    },
-
-    ">": {
-      "lbp": 40,
-      "rbp": 41,
-      "types": ["infix"]
-    },
-
-    ">=": {
-      "lbp": 40,
-      "rbp": 41,
-      "types": ["infix"]
-    },
-
-    "==": {
-      "lbp": 30,
-      "rbp": 31,
-      "types": ["infix"]
-    },
-
-    "!=": {
-      "lbp": 30,
-      "rbp": 31,
-      "types": ["infix"]
-    },
-
-    "?": {
-      "lbp": 20,
-      "rbp": 19,
-      "types": ["ternary"]
-    },
-
-    ":": {
-      "types": ["ternary separator"]
-    },
-
-    ",": {
-      "types": ["argument separator"]
-    },
-
     ";": {
-      "types": ["expr terminator"]
+      "types": [
+        "expr terminator"
+      ]
+    },
+    ",": {
+      "types": [
+        "argument separator"
+      ]
+    },
+    ":": {
+      "types": [
+        "ternary separator"
+      ]
+    },
+    "?": {
+      "types": [
+        "ternary"
+      ],
+      "lbp": 20,
+      "rbp": 19
+    },
+    "++": {
+      "types": [
+        "prefix",
+        "postfix"
+      ],
+      "prefix bp": 100,
+      "postfix bp": 100
+    },
+    "--": {
+      "types": [
+        "prefix",
+        "postfix"
+      ],
+      "prefix bp": 100,
+      "postfix bp": 100
+    },
+    "!": {
+      "types": [
+        "prefix"
+      ],
+      "prefix bp": 80
+    },
+    "~": {
+      "types": [
+        "prefix"
+      ],
+      "prefix bp": 80
+    },
+    "*": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 60,
+      "rbp": 61
+    },
+    "&": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 32,
+      "rbp": 33
+    },
+    "+": {
+      "types": [
+        "prefix",
+        "infix"
+      ],
+      "lbp": 50,
+      "rbp": 51,
+      "prefix bp": 80
+    },
+    "-": {
+      "types": [
+        "prefix",
+        "infix"
+      ],
+      "lbp": 50,
+      "rbp": 51,
+      "prefix bp": 80
+    },
+    "/": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 60,
+      "rbp": 61
+    },
+    "%": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 60,
+      "rbp": 61
+    },
+    "<<": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 45,
+      "rbp": 46
+    },
+    ">>": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 45,
+      "rbp": 46
+    },
+    "<": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 40,
+      "rbp": 41
+    },
+    "<=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 40,
+      "rbp": 41
+    },
+    ">": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 40,
+      "rbp": 41
+    },
+    ">=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 40,
+      "rbp": 41
+    },
+    "==": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 35,
+      "rbp": 36
+    },
+    "!=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 35,
+      "rbp": 36
+    },
+    "^": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 31,
+      "rbp": 32
+    },
+    "|": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 30,
+      "rbp": 31
+    },
+    "&&": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 25,
+      "rbp": 26
+    },
+    "||": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 22,
+      "rbp": 23
+    },
+    "=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    "+=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    "-=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    "*=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    "/=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    "%=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    "<<=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    ">>=": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 10,
+      "rbp": 10
+    },
+    ".": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 90,
+      "rbp": 91
+    },
+    "->": {
+      "types": [
+        "infix"
+      ],
+      "lbp": 90,
+      "rbp": 91
     }
   },
 
@@ -139,6 +311,8 @@
       "if_stmt": { "pattern": [["if", "(", {"cond": "__expr__"}, ")", "#block"], { "optional": ["else", "#block"] }] },
       
       "while_stmt": { "pattern": [["while", "(", {"cond": "__expr__"}, ")", "#block"]] },
+
+      "scope": {"pattern": [["#block"]]},
       
       "return_stmt": { "pattern": [["return"], { "optional": ["__expr__"] }, [";"]] },
       
@@ -149,7 +323,6 @@
       "func_stmt": { "pattern": [[{"type": "identifier", "func_name": "identifier"}, "("], {"repeat": "#func_arg", "separator": ","}, [")", "#block"]] },
       
       "expression": { "pattern": [["__expr__", ";"]] }
-    }
+    } 
   }
 }
-

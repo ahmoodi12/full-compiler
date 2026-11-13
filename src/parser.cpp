@@ -171,7 +171,9 @@ void Parser::repeat(StmtMatch& result, TokenRule& repeat_token, bool use_separat
         }
         got_separator = false;
     }
-
+    result.valid = false;
+    result.error.message = "expected a '" + stop_token->label + "' but the file ended";
+    result.error.loc = tokens->back().loc;
 }
 
 Parser::StmtMatch Parser::try_all_statements(std::vector<Parser::Rule>& rules, bool error_enabled) {
